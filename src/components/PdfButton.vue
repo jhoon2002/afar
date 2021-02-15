@@ -24,7 +24,11 @@
                 type: String,
                 default: "2"
             },
-            compress: {
+            quality: { //0.00~1.00
+                type: String,
+                default: "0.92"
+            },
+            compression: {
                 type: String,
                 default: "slow"
             },
@@ -70,6 +74,7 @@
                 let pdf = new jsPDF('p', 'mm', 'A4')
                 let canvas = pdf.canvas
                 let scale = parseInt(that.scale) //이미지 렌더링 스케일(높을 수로 해상도 증가)
+                let quality = parseInt(that.quality*100)/100 //인코딩 옵션 (0.00~1.00)
 
                 //PAGE 설정
                 const PAGE_W_MM = 210 //캔버스 너비 mm
@@ -156,7 +161,8 @@
                     }).then((canvas) => {
 
                         if (i > 1) pdf.addPage()
-                        pdf.addImage(canvas.toDataURL('image/jpeg', 0.5), 'jpeg', LEFT_M_MM, TOP_M_MM, CONTENT_W_MM, CONTENT_H_MM, undefined, that.compress)
+                        console.log("---------------")
+                        pdf.addImage(canvas.toDataURL('image/jpeg', quality), 'jpeg', LEFT_M_MM, TOP_M_MM, CONTENT_W_MM, CONTENT_H_MM, undefined, that.compression)
 
                     }).then(() => {
 
@@ -179,7 +185,7 @@
                     }).then((canvas) => {
 
                         if (footerHmm > whiteSpaceHmm) pdf.addPage()
-                        pdf.addImage(canvas.toDataURL('image/jpeg', 0.5), 'jpeg', LEFT_M_MM, TOP_M_MM + CONTENT_H_MM - footerHmm, CONTENT_W_MM, footerHmm, undefined, that.compress)
+                        pdf.addImage(canvas.toDataURL('image/jpeg', quality), 'jpeg', LEFT_M_MM, TOP_M_MM + CONTENT_H_MM - footerHmm, CONTENT_W_MM, footerHmm, undefined, that.compression)
 
                     }).then(() => {
 

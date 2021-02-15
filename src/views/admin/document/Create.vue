@@ -81,8 +81,8 @@
             <v-col>
                 <v-card style="width: 210mm" elevation="4" id="docu">
                     <v-sheet style="padding: 20mm 20mm 15mm 20mm">
-                        <div id="printArea" ref="printArea">
-                            <v-sheet id="docu-head">
+                        <div id="printArea">
+                            <v-sheet id="docu-header">
                                 <v-row class="mb-7">
                                     <v-col cols="2" class="d-flex flex-column align-center justify-center">
                                         <v-img src="@/assets/karts-black.png" width="100" max-height="20"></v-img>
@@ -111,7 +111,7 @@
 
                                     </v-col>
                                 </v-row>
-                                <v-row class="ma-0 pa-1 mb-4">
+                                <v-row class="ma-0 pa-1 mb-1">
                                     <v-col cols="1" class="ma-0 pa-0">
                                         제목
                                     </v-col>
@@ -120,6 +120,7 @@
                                     </v-col>
                                 </v-row>
                             </v-sheet>
+                            <v-divider style="border-color: black; height: 10px;" class="mb-2"></v-divider>
                             <!--
                             <el-tiptap
                                     :extensions="myExtensions"
@@ -127,7 +128,7 @@
                                     width="100%"
                             />
                             -->
-                            <editor-content class="editor__content" :editor="editor" id="docu-body" />
+                            <editor-content class="editor__content pa-1" :editor="editor" id="docu-body" />
                         </div>
                         <div id="docu-footer">
                             <v-sheet class="mt-4">
@@ -141,56 +142,21 @@
                                 </v-row>
                             </v-sheet>
                             <v-progress-linear
-                                    color="grey lighten-1"
+                                    color="grey lighten-2"  
                                     value="100"
                                     height="10"
-                                    class="mb-1"
+                                    class="mb-2"
                             ></v-progress-linear>
+
                             <v-row class="d-flex justify-space-between ma-0 pa-0 mb-4">
-                                <v-sheet class="approver-box mb-2">
-                                    <v-row class="pa-0 ma-0">
-                                        <v-col class="d-flex pa-0 ma-0 align-center role-name" style="max-width:13mm; line-height: 100%">주무관</v-col>
-                                        <v-col class="pa-0 ma-0">
-                                            <v-sheet style="height: 11pt; font-size: 8pt"></v-sheet>
-                                            <v-sheet class="font-weight-bold">최형준</v-sheet>
-                                        </v-col>
-                                    </v-row>
-                                </v-sheet>
-                                <v-sheet class="approver-box mb-2">
-                                    <v-row class="pa-0 ma-0">
-                                        <v-col class="d-flex pa-0 ma-0 align-center role-name" style="max-width:13mm; line-height: 100%">전략기획팀장</v-col>
-                                        <v-col class="pa-0 ma-0">
-                                            <v-sheet style="height: 11pt; font-size: 8pt"></v-sheet>
-                                            <v-sheet class="font-weight-bold">마진욱</v-sheet>
-                                        </v-col>
-                                    </v-row>
-                                </v-sheet>
-                                <v-sheet class="approver-box mb-2">
-                                    <v-row class="pa-0 ma-0">
-                                        <v-col class="d-flex pa-0 ma-0 align-center role-name" style="max-width:13mm; line-height: 100%">부단장</v-col>
-                                        <v-col class="pa-0 ma-0">
-                                            <v-sheet style="height: 11pt; font-size: 8pt"></v-sheet>
-                                            <v-sheet class="font-weight-bold">여종훈</v-sheet>
-                                        </v-col>
-                                    </v-row>
-                                </v-sheet>
-                                <v-sheet class="approver-box mb-2">
-                                    <v-row class="pa-0 ma-0">
-                                        <v-col class="d-flex pa-0 ma-0 align-center role-name" style="max-width:13mm; line-height: 100%">단장</v-col>
-                                        <v-col class="pa-0 ma-0">
-                                            <v-sheet style="height: 11pt; font-size: 8pt; letter-spacing: -0.5px;">결재 2021.12.10.</v-sheet>
-                                            <v-sheet class="font-weight-bold">이정민</v-sheet>
-                                        </v-col>
-                                    </v-row>
-                                </v-sheet>
-                                <v-sheet class="approver-box mb-2">
-                                    <v-row class="pa-0 ma-0">
-                                        <v-col class="d-flex pa-0 ma-0 align-center role-name" style="max-width:13mm; line-height: 100%">총장</v-col>
-                                        <v-col class="pa-0 ma-0">
-                                            <v-sheet style="height: 11pt; font-size: 8pt">결재 2021.12.10.</v-sheet>
-                                            <v-sheet class="font-weight-bold">김봉렬</v-sheet>
-                                        </v-col>
-                                    </v-row>
+                                <v-sheet class="d-flex align-center mb-2 mr-3"
+                                         style="height:10mm; max-width: 36mm" v-for=" (approver, i) in approvers " :key="i">
+                                    <v-sheet style="max-width:13mm" class="mr-2">{{approver.role}}</v-sheet>
+                                    <v-sheet style="" class="">
+                                        <v-sheet style="font-size:8pt; height:10pt; line-height:100%; margin-bottom: 0.2mm"
+                                        >{{approver.confirmed}}</v-sheet>
+                                        <v-sheet class="">{{approver.name}}</v-sheet>
+                                    </v-sheet>
                                 </v-sheet>
                             </v-row>
                             <v-row class="ma-0 pa-1">
@@ -391,7 +357,9 @@
                 </v-card>
                 <pdf-button area="printArea"
                             footer="docu-footer"
-                            scale="4"
+                            scale="3"
+                            quality="0.8"
+                            compression="FAST"
                             style="width:10rem"
                             class="red white--text text-body-1"
                 >
@@ -538,6 +506,33 @@
                     ],
                     content: ``,
                 }),
+                approvers: [
+                    {
+                        name: "최형준",
+                        role: "주무관",
+                        confirmed: ""
+                    },
+                    {
+                        name: "마진욱",
+                        role: "전략기획팀장",
+                        confirmed: ""
+                    },
+                    {
+                        name: "여종훈",
+                        role: "부단장",
+                        confirmed: ""
+                    },
+                    {
+                        name: "이정민",
+                        role: "단장",
+                        confirmed: ""
+                    },
+                    {
+                        name: "김봉렬",
+                        role: "총장",
+                        confirmed: "결재 2021.12.30."
+                    }
+                ]
             }
         },
         computed: {
@@ -595,28 +590,32 @@
     .el-tiptap-editor__content [data-indent="2"] {
         text-indent: -20px;
     }
-    #docu {
-        line-height: 100%;
+    #docu * {
+        line-height: 140%;
     }
-    #docu-head {
-        font-family: 돋움;
+    #docu-header {
+        /* font-family: 돋움; */
         font-size: 12pt;
         color: black;
     }
     #docu-body {
-        font-family: 돋움체;
+        /* font-family: 돋움체; */
         font-size: 12pt;
         color: black;
     }
     #docu-footer {
-        font-family: 돋움;
+        /* font-family: 돋움; */
         font-size: 9pt;
+    }
+    #docu-footer * {
+        font-size: 9pt;
+        line-height: 110%;
     }
     #docu-footer div {
         color: black;
     }
     .approver-box {
-        width: 41mm;
+        width: 34mm;
     }
     .role-name {
         font-size: 9pt;
