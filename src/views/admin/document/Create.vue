@@ -9,33 +9,31 @@
                         <p>문서 기본 정보 설정</p>
                     </v-card-text>
                     <v-radio-group
-                            v-model="row"
+                            v-model="kind"
                             label="문서종류"
                             row
                     >
                         <v-radio
                                 label="내부결재"
-                                value="radio-1"
+                                value="in"
                         ></v-radio>
                         <v-radio
                                 label="시행문"
-                                value="radio-2"
+                                value="out"
                         ></v-radio>
                     </v-radio-group>
                     <v-select
-                            v-model="value"
-                            :items="['전략기획팀장', '사업운영팀장', '총무관리팀장', '협력종합예술활동 책임자', '예술세상마을 책임자']"
+                            v-model="receiver"
+                            :items="['전략기획팀장', '사업운영팀장', '총무관리팀장', '협력종합예술활동 책임자', '예술세상마을 책임자', '단장', '정신문화연구소장']"
                             attach
                             label="수신자"
                             chips
                             multiple
-                            :disabled="row === 'radio-1'"
+                            :disabled="kind === 'in'"
                     ></v-select>
                     <v-text-field label="제목" v-model="subject"></v-text-field>
-
-
                     <v-radio-group
-                            v-model="row"
+                            v-model="open"
                             label="열람범위"
                             row
                     >
@@ -81,45 +79,47 @@
                 </v-card>
             </v-col>
             <v-col>
-                <v-card style="width: 210mm" elevation="4">
+                <v-card style="width: 210mm" elevation="4" id="docu">
                     <v-sheet style="padding: 20mm 20mm 15mm 20mm">
                         <div id="printArea" ref="printArea">
-                            <v-row class="mb-7">
-                                <v-col cols="2" class="d-flex flex-column align-center justify-center">
-                                    <v-img src="@/assets/karts-black.png" width="100" max-height="20"></v-img>
-                                </v-col>
-                                <v-col cols="8">
-                                    <div class="text-center text-body-1 mb-3">미래의 고전</div>
-                                    <div class="text-center text-h5">한국예술종합학교 산학협력단</div>
-                                </v-col>
-                                <v-col cols="2">
+                            <v-sheet id="docu-head">
+                                <v-row class="mb-7">
+                                    <v-col cols="2" class="d-flex flex-column align-center justify-center">
+                                        <v-img src="@/assets/karts-black.png" width="100" max-height="20"></v-img>
+                                    </v-col>
+                                    <v-col cols="8">
+                                        <div class="text-center text-body-1 mb-3">창작의 산실</div>
+                                        <div class="text-center text-h5">한국예술종합학교 산학협력단</div>
+                                    </v-col>
+                                    <v-col cols="2">
 
-                                </v-col>
-                            </v-row>
-                            <v-row class="ma-0 pa-1">
-                                <v-col cols="1" class="ma-0 pa-0">
-                                    수신
-                                </v-col>
-                                <v-col cols="11" class="ma-0 pa-0">
-                                    한국대학교육협의회
-                                </v-col>
-                            </v-row>
-                            <v-row class="ma-0 pa-1">
-                                <v-col cols="1" class="ma-0 pa-0">
-                                    (경유)
-                                </v-col>
-                                <v-col cols="11" class="ma-0 pa-0">
+                                    </v-col>
+                                </v-row>
+                                <v-row class="ma-0 pa-1">
+                                    <v-col cols="1" class="ma-0 pa-0">
+                                        수신
+                                    </v-col>
+                                    <v-col cols="11" class="ma-0 pa-0">
+                                        {{receiverName}}
+                                    </v-col>
+                                </v-row>
+                                <v-row class="ma-0 pa-1">
+                                    <v-col cols="1" class="ma-0 pa-0">
+                                        (경유)
+                                    </v-col>
+                                    <v-col cols="11" class="ma-0 pa-0">
 
-                                </v-col>
-                            </v-row>
-                            <v-row class="ma-0 pa-1 mb-4">
-                                <v-col cols="1" class="ma-0 pa-0">
-                                    제목
-                                </v-col>
-                                <v-col cols="11" class="ma-0 pa-0">
-                                    {{subject}}
-                                </v-col>
-                            </v-row>
+                                    </v-col>
+                                </v-row>
+                                <v-row class="ma-0 pa-1 mb-4">
+                                    <v-col cols="1" class="ma-0 pa-0">
+                                        제목
+                                    </v-col>
+                                    <v-col cols="11" class="ma-0 pa-0">
+                                        {{subject}}
+                                    </v-col>
+                                </v-row>
+                            </v-sheet>
                             <!--
                             <el-tiptap
                                     :extensions="myExtensions"
@@ -127,22 +127,71 @@
                                     width="100%"
                             />
                             -->
-                            <editor-content class="editor__content" :editor="editor" />
+                            <editor-content class="editor__content" :editor="editor" id="docu-body" />
                         </div>
-                        <div id="printFooter">
-                            <v-sheet style="height:2rem"></v-sheet>
+                        <div id="docu-footer">
+                            <v-sheet class="mt-4">
+                                <v-row class="mb-2">
+                                    <v-col style="max-width:4rem">
+                                        {{receiverTitle}}
+                                    </v-col>
+                                    <v-col>
+                                        {{receiverList}}
+                                    </v-col>
+                                </v-row>
+                            </v-sheet>
                             <v-progress-linear
-                                    color="grey lighten-3"
+                                    color="grey lighten-1"
                                     value="100"
-                                    height="15"
-                                    class="mb-3"
+                                    height="10"
+                                    class="mb-1"
                             ></v-progress-linear>
-                            <v-row class="ma-0 pa-1">
-                                <v-col class="ma-0 pa-0">행정원 최형준 (1.21.)<br>기안</v-col>
-                                <v-col class="ma-0 pa-0">팀장 마진욱 (1.22.)<br>검토</v-col>
-                                <v-col class="ma-0 pa-0">부단장 여종훈 (1.22.)<br>검토</v-col>
-                                <v-col class="ma-0 pa-0">단장 이정민 (1.25.)<br>대결</v-col>
-                                <v-col class="ma-0 pa-0">총장 김봉렬 (1.25.)<br>출장</v-col>
+                            <v-row class="d-flex justify-space-between ma-0 pa-0 mb-4">
+                                <v-sheet class="approver-box mb-2">
+                                    <v-row class="pa-0 ma-0">
+                                        <v-col class="d-flex pa-0 ma-0 align-center role-name" style="max-width:13mm; line-height: 100%">주무관</v-col>
+                                        <v-col class="pa-0 ma-0">
+                                            <v-sheet style="height: 11pt; font-size: 8pt"></v-sheet>
+                                            <v-sheet class="font-weight-bold">최형준</v-sheet>
+                                        </v-col>
+                                    </v-row>
+                                </v-sheet>
+                                <v-sheet class="approver-box mb-2">
+                                    <v-row class="pa-0 ma-0">
+                                        <v-col class="d-flex pa-0 ma-0 align-center role-name" style="max-width:13mm; line-height: 100%">전략기획팀장</v-col>
+                                        <v-col class="pa-0 ma-0">
+                                            <v-sheet style="height: 11pt; font-size: 8pt"></v-sheet>
+                                            <v-sheet class="font-weight-bold">마진욱</v-sheet>
+                                        </v-col>
+                                    </v-row>
+                                </v-sheet>
+                                <v-sheet class="approver-box mb-2">
+                                    <v-row class="pa-0 ma-0">
+                                        <v-col class="d-flex pa-0 ma-0 align-center role-name" style="max-width:13mm; line-height: 100%">부단장</v-col>
+                                        <v-col class="pa-0 ma-0">
+                                            <v-sheet style="height: 11pt; font-size: 8pt"></v-sheet>
+                                            <v-sheet class="font-weight-bold">여종훈</v-sheet>
+                                        </v-col>
+                                    </v-row>
+                                </v-sheet>
+                                <v-sheet class="approver-box mb-2">
+                                    <v-row class="pa-0 ma-0">
+                                        <v-col class="d-flex pa-0 ma-0 align-center role-name" style="max-width:13mm; line-height: 100%">단장</v-col>
+                                        <v-col class="pa-0 ma-0">
+                                            <v-sheet style="height: 11pt; font-size: 8pt; letter-spacing: -0.5px;">결재 2021.12.10.</v-sheet>
+                                            <v-sheet class="font-weight-bold">이정민</v-sheet>
+                                        </v-col>
+                                    </v-row>
+                                </v-sheet>
+                                <v-sheet class="approver-box mb-2">
+                                    <v-row class="pa-0 ma-0">
+                                        <v-col class="d-flex pa-0 ma-0 align-center role-name" style="max-width:13mm; line-height: 100%">총장</v-col>
+                                        <v-col class="pa-0 ma-0">
+                                            <v-sheet style="height: 11pt; font-size: 8pt">결재 2021.12.10.</v-sheet>
+                                            <v-sheet class="font-weight-bold">김봉렬</v-sheet>
+                                        </v-col>
+                                    </v-row>
+                                </v-sheet>
                             </v-row>
                             <v-row class="ma-0 pa-1">
                                 <v-col class="ma-0 pa-0">시행 전략기획팀2021-109</v-col>
@@ -341,8 +390,8 @@
                     </editor-menu-bar>
                 </v-card>
                 <pdf-button area="printArea"
-                            footer="printFooter"
-                            scale="3"
+                            footer="docu-footer"
+                            scale="4"
                             style="width:10rem"
                             class="red white--text text-body-1"
                 >
@@ -425,10 +474,12 @@
         data () {
             return {
                 value: "",
-                row: "radio-1",
+                kind: "in",
+                receiver: [],
                 subject: "",
                 confirm1: "",
                 confirm2: "",
+                open: "",
                 /*
                 myExtensions: [
                     new Doc(),
@@ -489,6 +540,26 @@
                 }),
             }
         },
+        computed: {
+            receiverName() {
+                if (this.kind == "in") return "내부결재"
+                if (this.receiver.length > 1) return "수신자 참조"
+                else if (this.receiver.length == 0) return ""
+                else return this.receiver[0]
+            },
+            receiverTitle: function() {
+                if (this.kind == "out" && this.receiver.length > 1) {
+                    return "수신자"
+                }
+                return ""
+            },
+            receiverList: function () {
+                if (this.kind == "out" && this.receiver.length > 1) {
+                    return this.receiver.toString().replace(/,/g, ", ")
+                }
+                return ""
+            }
+        },
         methods: {
         }
     }
@@ -523,5 +594,31 @@
     }
     .el-tiptap-editor__content [data-indent="2"] {
         text-indent: -20px;
+    }
+    #docu {
+        line-height: 100%;
+    }
+    #docu-head {
+        font-family: 돋움;
+        font-size: 12pt;
+        color: black;
+    }
+    #docu-body {
+        font-family: 돋움체;
+        font-size: 12pt;
+        color: black;
+    }
+    #docu-footer {
+        font-family: 돋움;
+        font-size: 9pt;
+    }
+    #docu-footer div {
+        color: black;
+    }
+    .approver-box {
+        width: 41mm;
+    }
+    .role-name {
+        font-size: 9pt;
     }
 </style>
