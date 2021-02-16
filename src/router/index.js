@@ -62,6 +62,15 @@ const routes = [
     meta: { isDirectory: true },
     children: [
       {
+        name: "캐러셀",
+        path: "/admin/document/carousels",
+        component: () => import("@/views/admin/document/Carousels.vue"),
+        props: true,
+        isShow: false,
+        isOn: false,
+        meta: { model: "document" }
+      },
+      {
         name: "문서작성",
         path: "/admin/document/create1",
         component: () => import("@/views/admin/document/Create1.vue"),
