@@ -24,12 +24,13 @@
                     </v-radio-group>
                     <v-select
                             v-model="receiver"
-                            :items="['전략기획팀장', '사업운영팀장', '총무관리팀장', '협력종합예술활동 책임자', '예술세상마을 책임자', '단장', '정신문화연구소장']"
+                            :items="['전략기획팀장', '사업운영팀장', '총무관리팀장', '산학협력단 부단장', '협력종합예술활동 책임자', '예술세상마을 책임자', '산학협력단 단장', '정신문화연구소장']"
                             attach
                             label="수신자"
                             chips
                             multiple
                             :disabled="kind === 'in'"
+                            v-if="kind === 'out'"
                     ></v-select>
                     <v-text-field label="제목" v-model="subject"></v-text-field>
                     <v-radio-group
@@ -142,7 +143,7 @@
                                 </v-row>
                             </v-sheet>
                             <v-progress-linear
-                                    color="grey lighten-2"  
+                                    color="grey lighten-1"
                                     value="100"
                                     height="10"
                                     class="mb-2"
@@ -155,7 +156,7 @@
                                     <v-sheet style="" class="">
                                         <v-sheet style="font-size:8pt; height:10pt; line-height:100%; margin-bottom: 0.2mm"
                                         >{{approver.confirmed}}</v-sheet>
-                                        <v-sheet class="">{{approver.name}}</v-sheet>
+                                        <v-sheet class="font-weight-bold">{{approver.name}}</v-sheet>
                                     </v-sheet>
                                 </v-sheet>
                             </v-row>

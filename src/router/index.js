@@ -49,15 +49,35 @@ const routes = [
         isShow: false,
         isOn: false,
         meta: { model: "board" }
-      },
+      }
+    ]
+  },
+  {
+    name: "문서관리",
+    icon: "mdi-file-document-edit-outline",
+    path: "/admin/document",
+    component: Blank,
+    isShow: false,
+    isOn: false,
+    meta: { isDirectory: true },
+    children: [
       {
         name: "문서작성",
+        path: "/admin/document/create1",
+        component: () => import("@/views/admin/document/Create1.vue"),
+        props: true,
+        isShow: false,
+        isOn: false,
+        meta: { model: "document" }
+      },
+      {
+        name: "문서작성(구)",
         path: "/admin/document/create",
         component: () => import("@/views/admin/document/Create.vue"),
         props: true,
         isShow: false,
         isOn: false,
-        meta: { model: "board" }
+        meta: { model: "document" }
       },
       {
         name: "문서작성2",
@@ -66,7 +86,7 @@ const routes = [
         props: true,
         isShow: false,
         isOn: false,
-        meta: { model: "board" }
+        meta: { model: "document" }
       },
       {
         name: "문서작성3",
@@ -75,7 +95,7 @@ const routes = [
         props: true,
         isShow: false,
         isOn: false,
-        meta: { model: "board" }
+        meta: { model: "document" }
       },
       {
         name: "프린트",
@@ -84,7 +104,7 @@ const routes = [
         props: true,
         isShow: false,
         isOn: false,
-        meta: { model: "board" }
+        meta: { model: "document" }
       },
       {
         name: "프린트2",
