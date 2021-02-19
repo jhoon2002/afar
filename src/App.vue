@@ -34,7 +34,7 @@
       </v-container>
     </v-main>
 
-    <v-footer app inset dark class="text-overline grey darken-2">
+    <v-footer inset dark class="text-overline grey darken-2">
       <v-icon size="18" class="mr-1">mdi-copyright</v-icon>
       Korea National University of Arts K-Aco
     </v-footer>

@@ -16,7 +16,7 @@
 
                 <v-stepper-items>
                     <v-stepper-content step="1">
-                        <v-card style="width: 210mm" class="pa-10" outlined elevation="4" title="문서관리카드">
+                        <v-card style="width: 210mm" class="pa-5" elevation="0" title="문서관리카드">
                             <v-card-text>
                                 <p class="display-1 text--primary">
                                     문서관리카드
