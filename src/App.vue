@@ -19,22 +19,22 @@
       </v-sheet>
     </v-navigation-drawer>
 
-    <v-app-bar app flat dark class="grey darken-1">
+    <v-app-bar app flat hide-on-scroll dark class="grey darken-2">
       <v-app-bar-nav-icon @click="show = !show"></v-app-bar-nav-icon>
-      <v-app-bar-title>
+      <div class="text-h6">
         <section-title></section-title>
-      </v-app-bar-title>
+      </div>
     </v-app-bar>
 
     <v-main class="grey darken-1">
-      <v-container fluid>
+      <v-container fluid class="pa-7">
         <v-scroll-x-transition>
           <router-view></router-view>
         </v-scroll-x-transition>
       </v-container>
     </v-main>
 
-    <v-footer inset dark class="text-overline grey darken-2">
+    <v-footer app inset dark class="text-overline grey darken-2">
       <v-icon size="18" class="mr-1">mdi-copyright</v-icon>
       Korea National University of Arts K-Aco
     </v-footer>
