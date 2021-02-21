@@ -30,7 +30,7 @@
                                     class="font-weight-bold text-body-1"
                     >
                         본문 작성
-                    </v-stepper-step>
+                    </v-stepper-st ep>
                 </v-stepper-header>
 
                 <v-stepper-items>
