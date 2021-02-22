@@ -4,68 +4,101 @@
             <div class="mr-7">수신자 지정</div>
         </v-card-title>
         <v-divider></v-divider>
-        <v-container>
-            <v-row no-gutters>
-                <v-col cols="7">
-                    <v-text-field
-                            v-model="search"
-                            label="검색"
-                            clearable
-                            prepend-inner-icon="mdi-magnify"
-                            class="ml-7"
-                            style="max-width: 20rem"
-                    ></v-text-field>
-                    <v-switch
-                            class="ml-7"
-                            dense
-                            v-model="leaf"
-                            label="하위 전체 선택"
-                            style="max-width: 10rem"
-                    >
-                        하위선택
-                    </v-switch>
-                    <v-card style="height: 30rem; overflow-y: auto;" elevation="0" class="px-5">
-                        <v-treeview
-                            v-model="selection"
-                            :items="items"
-                            :search="search"
-                            :filter="filter"
-                            :selection-type="leaf == true ? 'leaf' : 'independent'"
-                            :item-disabled="leaf == true ? false : 'locked'"
-                            selectable
-                            return-object
-                            open-all
-                            dense
-                    ></v-treeview>
-                    </v-card>
-                </v-col>
-                <v-divider vertical></v-divider>
-                <v-col cols="4">
-                    <v-card style="height: 30rem; overflow-y: auto;" elevation="0" class="pa-5">
-                        <v-card-title>
-                            선택 목록
-                        </v-card-title>
-                        <template v-if="!selection.length">
-                            선택 내역이 없습니다
-                        </template>
-                        <template v-else>
-                            <template v-for="node in selection">
-                                <v-chip
-                                        :key="node.id"
-                                        class="ma-1"
-                                        close
-                                        color="secondary"
-                                        text-color="white"
-                                        @click:close="remove(node.id, selection)"
+
+        <v-tabs v-model="tab">
+            <v-tab key="1">대내</v-tab>
+            <v-tab key="2">문서24</v-tab>
+            <v-tab key="3">직접입력</v-tab>
+        </v-tabs>
+
+        <v-tabs-items v-model="tab">
+            <v-tab-item key="1" style="height: 38rem">
+                <v-container>
+                    <v-row no-gutters>
+                        <v-col cols="7">
+                            <v-text-field
+                                    v-model="search"
+                                    label="검색"
+                                    clearable
+                                    prepend-inner-icon="mdi-magnify"
+                                    class="ml-7"
+                                    style="max-width: 20rem"
+                            ></v-text-field>
+                            <v-switch
+                                    class="ml-7"
+                                    dense
+                                    v-model="leaf"
+                                    label="하위 전체 선택"
+                                    style="max-width: 10rem"
+                            >
+                                하위선택
+                            </v-switch>
+                            <v-card style="height: 30rem; overflow-y: auto;" elevation="0" class="px-5">
+                                <v-treeview
+                                        v-model="selection"
+                                        :items="items"
+                                        :search="search"
+                                        :filter="filter"
+                                        :selection-type="leaf == true ? 'leaf' : 'independent'"
+                                        :item-disabled="leaf == true ? false : 'locked'"
+                                        selectable
+                                        return-object
+                                        open-all
+                                        dense
+                                ></v-treeview>
+                            </v-card>
+                        </v-col>
+                        <v-divider vertical></v-divider>
+                        <v-col cols="4">
+                            <v-card style="height: 30rem; overflow-y: auto;" elevation="0" class="pa-5">
+                                <v-card-title>
+                                    선택 목록
+                                </v-card-title>
+                                <template v-if="!selection.length">
+                                    선택 내역이 없습니다
+                                </template>
+                                <template v-else>
+                                    <template v-for="node in selection">
+                                        <v-chip
+                                                :key="node.id"
+                                                class="ma-1"
+                                                close
+                                                color="secondary"
+                                                text-color="white"
+                                                @click:close="remove(node.id, selection)"
+                                        >
+                                            <span class="text-truncate">{{ node.name }} ({{ node.role }} {{ node.chief }})</span>
+                                        </v-chip>
+                                    </template>
+                                </template>
+                            </v-card>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-tab-item>
+            <v-tab-item key="2" style="height: 38rem">
+                문서24
+            </v-tab-item>
+            <v-tab-item key="3" style="height: 38rem">
+                <v-container>
+                    <v-row no-gutters>
+                        <v-col cols="7" class="pa-10">
+                            <v-card flat>
+                                <v-text-field label="수신자" ref="aaa"
                                 >
-                                    <span class="text-truncate">{{ node.name }} ({{ node.role }} {{ node.chief }})</span>
-                                </v-chip>
-                            </template>
-                        </template>
-                    </v-card>
-                </v-col>
-            </v-row>
-        </v-container>
+                                </v-text-field>
+                            </v-card>
+                            <v-btn @click="this.console.log('aaaaaa')">추가</v-btn>
+                        </v-col>
+                        <v-divider vertical></v-divider>
+                        <v-col cols="4">
+                            {{selection}}
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-tab-item>
+        </v-tabs-items>
+
         <v-divider></v-divider>
         <v-card-actions class="justify-end">
             <v-btn
@@ -167,7 +200,9 @@
                         ]
                     }
                 ],
-                leaf: false
+                leaf: false,
+                tab: null,
+                total: 1,
             }
         },
         methods: {
@@ -175,6 +210,9 @@
                 const itemToFind = arr.find( function(item) { return item.id === id})
                 const idx = arr.indexOf(itemToFind)
                 if (idx > -1) arr.splice(idx, 1)
+            },
+            abc() {
+                alert("aaaaaaaaaaa")
             }
         },
         computed: {

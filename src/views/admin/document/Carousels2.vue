@@ -111,6 +111,7 @@
                                                         <v-dialog
                                                                 v-model="dialog"
                                                                 max-width="50rem"
+                                                                width="50rem"
                                                         >
                                                             <template v-slot:activator="{ on, attrs }">
                                                                 <v-sheet outlined class="transparent ml-16">
@@ -133,7 +134,11 @@
                                                 </v-sheet>
                                             </v-col>
                                         </v-row>
-                                        <v-divider class="my-5"></v-divider>
+                                        <v-row>
+                                            <v-col cols="12">
+                                                <v-text-field label="(경유)"></v-text-field>
+                                            </v-col>
+                                        </v-row>
                                         <v-row>
                                             <v-col cols="6">
                                                 <v-select :items="['산학협력단', '협력예술종합활동 사업단']" v-model="sendi" label="발신기관"
