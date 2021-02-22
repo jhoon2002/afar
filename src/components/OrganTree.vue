@@ -84,15 +84,15 @@
                     <v-row no-gutters>
                         <v-col cols="7" class="pa-10">
                             <v-card flat>
-                                <v-text-field label="수신자" ref="aaa"
+                                <v-text-field label="수신자" v-model="inputReceiver"
                                 >
                                 </v-text-field>
                             </v-card>
-                            <v-btn @click="this.console.log('aaaaaa')">추가</v-btn>
+                            <v-btn @click="pushData">추가</v-btn>
                         </v-col>
                         <v-divider vertical></v-divider>
                         <v-col cols="4">
-                            {{selection}}
+                            {{selection}} {{selection.length}}
                         </v-col>
                     </v-row>
                 </v-container>
@@ -120,6 +120,7 @@
                 저장
             </v-btn>
         </v-card-actions>
+
     </v-card>
 </template>
 <script>
@@ -200,6 +201,7 @@
                         ]
                     }
                 ],
+                inputReceiver: "",
                 leaf: false,
                 tab: null,
                 total: 1,
@@ -211,8 +213,10 @@
                 const idx = arr.indexOf(itemToFind)
                 if (idx > -1) arr.splice(idx, 1)
             },
-            abc() {
-                alert("aaaaaaaaaaa")
+            pushData() {
+                this.selection.push("aaaa")
+                this.selection.push("bbb")
+                console.log("this.selection", this.selection)
             }
         },
         computed: {
