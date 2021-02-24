@@ -285,36 +285,63 @@
 
                     <v-stepper-content step="2">
                         <v-card style="width: 210mm" class="pa-5" elevation="0" title="결재 경로">
+
+                            <organization-chart
+                                                :search="true"
+                                                :folderonly="false"
+                                                :leaf="false"
+                                                :selectable="false"
+                                                @touched="addApprover"
+                            ></organization-chart>
+
                             <v-card-text>
                                 <p class="display-1 text--primary">
                                     결재 경로
                                 </p>
                             </v-card-text>
                             <v-row>
-                                <v-col>
-                                    결재선 지정
-                                    <v-btn x-small class="blue mr-1" elevation="0" dark>추가</v-btn>
-                                    <v-btn x-small class="red" elevation="0" dark>삭제</v-btn>
-                                </v-col>
-                            </v-row>
-                            <v-row v-for=" n in 3 " :key="n">
-                                <v-col cols="1">
-                                    {{n}}
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-select
-                                            v-model="confirm1[n]"
-                                            :items="['검토', '협조', '병렬협조', '전결', '결재', '대결']"
-                                            label="결재종류"
-                                    ></v-select>
-                                </v-col>
-                                <v-col cols="7">
-                                    <v-select
-                                            v-model="confirm2[n]"
-                                            :items="['팀장 마진욱', '부단장 여종훈', '단장 이정민', '총장 김봉렬']"
-                                            label="결재자"
-                                    ></v-select>
-                                </v-col>
+                                <v-simple-table>
+                                    <template v-slot:default>
+                                        <thead>
+                                            <tr>
+                                                <th>순서</th>
+                                                <th>결재종류</th>
+                                                <th>직책</th>
+                                                <th>이름</th>
+                                                <th>이동</th>
+                                                <th>삭제</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for=" (node, index) in approvers " :key="index">
+                                                <td>
+                                                    {{index+1}}
+                                                </td>
+                                                <td>
+                                                    <v-select style="max-width: 7rem"
+                                                            :items="approvalKind"
+                                                            label=""
+                                                            :value="node.kind"
+                                                            @input="addProperty($event, index)"
+                                                    ></v-select>
+                                                </td>
+                                                <td>
+                                                    {{node.role}}
+                                                </td>
+                                                <td>
+                                                    {{node.name}}
+                                                </td>
+                                                <td>
+                                                    <v-icon @click="move(index, -1)">mdi-chevron-up</v-icon>
+                                                    <v-icon @click="move(index, 1)">mdi-chevron-down</v-icon>
+                                                </td>
+                                                <td>
+                                                    <v-icon @click="del(index)">mdi-trash-can-outline</v-icon>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </template>
+                                </v-simple-table>
                             </v-row>
                         </v-card>
 
@@ -610,7 +637,7 @@
     // import PdfButton from "@/components/PdfButton.vue"
     import Alignment from '@/Alignment'
     import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
-    import OrganTree from "@/components/OrganTree";
+    import OrganTree from "@/components/OrganTree"
     import {
         Blockquote,
         CodeBlock,
@@ -636,8 +663,10 @@
         TableRow,
     } from 'tiptap-extensions'
     import Icon from "@/components/Icon/index";
+    import OrganizationChart from "@/components/OrganizationChart";
     export default {
         components: {
+            OrganizationChart,
             // PdfButton,
             EditorContent,
             EditorMenuBar,
@@ -699,33 +728,9 @@
                     ],
                     content: ``,
                 }),
-                approvers: [
-                    {
-                        name: "최형준",
-                        role: "주무관",
-                        confirmed: ""
-                    },
-                    {
-                        name: "마진욱",
-                        role: "전략기획팀장",
-                        confirmed: ""
-                    },
-                    {
-                        name: "여종훈",
-                        role: "부단장",
-                        confirmed: ""
-                    },
-                    {
-                        name: "이정민",
-                        role: "단장",
-                        confirmed: ""
-                    },
-                    {
-                        name: "김봉렬",
-                        role: "총장",
-                        confirmed: "결재 2021.12.30."
-                    }
-                ]
+                approvers: [],
+                approvalKind: ['협조', '병렬협조', '검토', '전대결', '대결', '전결', '결재'],
+                absenceKind: ["출장", "휴가", "교육", "외출", "조퇴", "연가", "병가", "공가", "특별휴가", "결근", "지각", "부재", "기타", "미발령", "대체휴무"],
             }
         },
         computed: {
@@ -768,6 +773,40 @@
                 const itemToFind = arr.find( function(item) { return item.id === id})
                 const idx = arr.indexOf(itemToFind)
                 if (idx > -1) arr.splice(idx, 1)
+            },
+            addApprover(obj) {
+                this.approvers.push(obj)
+            },
+            changeArrayOrder(list, targetIdx, moveValue) {
+                // 배열값이 없는 경우 나가기
+                if (list.length < 0) return;
+
+                // 이동할 index 값을 변수에 선언
+                const newPosition = targetIdx + moveValue;
+
+                // 이동할 값이 0보다 작거나 최대값을 벗어나는 경우 종료
+                if (newPosition < 0 || newPosition >= list.length) return;
+
+                // 임의의 변수를 하나 만들고 배열 값 저장
+                const tempList = JSON.parse(JSON.stringify(list));
+
+                // 옮길 대상을 target 변수에 저장하기
+                const target = tempList.splice(targetIdx, 1)[0];
+
+                // 새로운 위치에 옮길 대상을 추가하기
+                tempList.splice(newPosition, 0, target);
+
+                return tempList;
+            },
+            move(targetIdx, moveValue) {
+                this.approvers = this.changeArrayOrder(this.approvers, targetIdx, moveValue)
+            },
+            addProperty(event, index) {
+                this.approvers[index].kind = event
+                this.approvers.push()
+            },
+            del(index) {
+                this.approvers.splice(index, 1)
             }
         },
         watch: {

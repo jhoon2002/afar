@@ -7,8 +7,8 @@
 
         <v-tabs v-model="tab">
             <v-tab key="1">대내</v-tab>
-            <v-tab key="2">문서24</v-tab>
-            <v-tab key="3">직접입력</v-tab>
+            <v-tab key="2">대외(문서24)</v-tab>
+            <v-tab key="3">대외(직접입력)</v-tab>
         </v-tabs>
 
         <v-tabs-items v-model="tab">
@@ -77,7 +77,7 @@
                 </v-container>
             </v-tab-item>
             <v-tab-item key="2" style="height: 38rem">
-                문서24
+
             </v-tab-item>
             <v-tab-item key="3" style="height: 38rem">
                 <v-container>
@@ -88,11 +88,22 @@
                                 >
                                 </v-text-field>
                             </v-card>
-                            <v-btn @click="pushData">추가</v-btn>
+                            <v-btn @click="pushData(inputReceiver)">추가</v-btn>
                         </v-col>
                         <v-divider vertical></v-divider>
                         <v-col cols="4">
-                            {{selection}} {{selection.length}}
+                            <template v-for="node in selection2">
+                                <v-chip
+                                        :key="node"
+                                        class="ma-1"
+                                        close
+                                        color="secondary"
+                                        text-color="white"
+                                        @click:close="remove2(node, selection2)"
+                                >
+                                    <span class="text-truncate">{{ node }}</span>
+                                </v-chip>
+                            </template>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -129,6 +140,8 @@
             return {
                 search: null,
                 selection: [],
+                selection2: [],
+                result: [],
                 items: [
                     {
                         id: 1,
@@ -213,10 +226,16 @@
                 const idx = arr.indexOf(itemToFind)
                 if (idx > -1) arr.splice(idx, 1)
             },
-            pushData() {
-                this.selection.push("aaaa")
-                this.selection.push("bbb")
-                console.log("this.selection", this.selection)
+            remove2(id, arr) {
+                const itemToFind = arr.find( function(item) { return item === id})
+                const idx = arr.indexOf(itemToFind)
+                if (idx > -1) arr.splice(idx, 1)
+            },
+            pushData(id) {
+                const itemToFind = this.selection2.find( function(item) { return item === id})
+                if (itemToFind == undefined) {
+                    this.selection2.push(this.inputReceiver)
+                }
             }
         },
         computed: {
@@ -225,6 +244,12 @@
                     ? (item, search, textKey) => item[textKey].indexOf(search) > -1
                     : undefined
             },
-        }
+        },
+        /*
+        watch: {
+            selection() {
+                console.log("this.selection2", this.selection2)
+            }
+        }*/
     }
 </script>
