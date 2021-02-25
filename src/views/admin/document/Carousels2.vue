@@ -32,249 +32,255 @@
                         본문 작성
                     </v-stepper-step>
                 </v-stepper-header>
-
                 <v-stepper-items>
                     <v-stepper-content step="1">
-                        <v-card style="width: 210mm" class="pa-5" elevation="0" title="기본 정보">
-                            <v-card-text>
-                                <v-row class="align-center">
-                                    <v-radio-group
-                                            v-model="kind"
-                                            label=""
-                                            row
-                                    >
-                                        <v-radio
-                                                label="내부결재"
-                                                value="in"
-                                                on-icon="mdi-checkbox-marked"
-                                                off-icon="mdi-checkbox-blank-outline"
-                                        >
-                                            <template v-slot:label>
-                                                <span class="font-weight-medium text-h6">내부결재</span>
-                                            </template>
-                                        </v-radio>
-                                        <v-radio
-                                                label="시행문"
-                                                value="out"
-                                                on-icon="mdi-checkbox-marked"
-                                                off-icon="mdi-checkbox-blank-outline"
-                                        >
-                                            <template v-slot:label>
-                                                <span class="font-weight-medium text-h6">시행문</span>
-                                            </template>
-                                        </v-radio>
-                                    </v-radio-group>
-                                </v-row>
-                                <v-row class="align-center" :style="kind === 'out' ?
-                                        'opacity: 1; max-height: 20rem;                  transition: all 0.3s ease-out;' :
-                                        'opacity: 0; max-height: 0;     overflow: hidden; transition: all 0.3s ease-out;'"
+                        <v-container style="width: 210mm" elevation="0" title="기본 정보">
+                            <v-row no-gutters class="align-center">
+                                <v-radio-group
+                                        v-model="kind"
+                                        label=""
+                                        row
+                                        class="mt-0 pt-0"
                                 >
-                                    <v-sheet outlined rounded style="width: 100%;" class="mb-7 pa-6">
-                                        <v-row class="align-center">
-                                            <v-col style="max-width: 5rem">
-                                                <v-badge :dot="receivers.length > 0 ? false : true"
-                                                         color="primary"
-                                                         :content="receivers.length"
-                                                         offset-x="5"
-                                                         offset-y="7"
+                                    <v-radio
+                                            label="내부결재"
+                                            value="in"
+                                            on-icon="mdi-checkbox-marked"
+                                            off-icon="mdi-checkbox-blank-outline"
+                                    >
+                                        <template v-slot:label>
+                                            <span class="font-weight-medium text-h6">내부결재</span>
+                                        </template>
+                                    </v-radio>
+                                    <v-radio
+                                            label="시행문"
+                                            value="out"
+                                            on-icon="mdi-checkbox-marked"
+                                            off-icon="mdi-checkbox-blank-outline"
+                                    >
+                                        <template v-slot:label>
+                                            <span class="font-weight-medium text-h6">시행문</span>
+                                        </template>
+                                    </v-radio>
+                                </v-radio-group>
+                            </v-row>
+                            <v-row no-gutters class="align-center" :style="kind === 'out' ?
+                                    'opacity: 1; max-height: 30rem;                  transition: all 0.3s ease-out;' :
+                                    'opacity: 0; max-height: 0;     overflow: hidden; transition: all 0.3s ease-out;'"
+                            >
+                                <v-sheet outlined rounded style="width: 100%;" class="mb-7 pa-6">
+                                    <v-row no-gutters class="align-center">
+                                        <v-col style="max-width: 5rem">
+                                            <v-badge :value="receivers.length > 0 ? true : false"
+                                                     color="primary"
+                                                     :content="receivers.length"
+                                                     offset-x="5"
+                                                     offset-y="7"
+                                            >
+                                                <span class="text-body-1 font-weight-medium"
+                                                      style="color: rgba(0, 0, 0, 0.6)"
                                                 >
-                                                    <span class="text-body-1 font-weight-medium"
-                                                          style="color: rgba(0, 0, 0, 0.6)"
+                                                    수신자
+                                                </span>
+                                            </v-badge>
+                                        </v-col>
+                                        <v-col>
+                                            <v-sheet class="pa-1 transparent" width="100%" style="max-height: 7.4rem; overflow-y: auto">
+                                                <template v-if="receivers.length <= 0">
+                                                    <v-dialog
+                                                            v-model="dialog"
+                                                            max-width="50rem"
+                                                            width="50rem"
                                                     >
-                                                        수신자
-                                                    </span>
-                                                </v-badge>
-                                            </v-col>
-                                            <v-col>
-                                                <v-sheet class="pa-1 transparent" width="100%" style="max-height: 7.4rem; overflow-y: auto">
-                                                    <template v-if="receivers.length > 0">
-                                                        <template v-for="(receiver, index) in receivers">
-                                                            <v-chip :key="index"
-                                                                    close
-                                                                    @click:close="remove(receiver.id, receivers)"
-                                                                    class="mr-1 mb-1"
-                                                                    style="max-width: 15rem"
-                                                            >
-                                                                <span class="text-truncate">{{ receiver.name }}</span>
-                                                            </v-chip>
+                                                        <template v-slot:activator="{ on, attrs }">
+                                                            <v-sheet>
+                                                                <v-btn
+                                                                        color="secondary"
+                                                                        dark
+                                                                        v-bind="attrs"
+                                                                        v-on="on"
+                                                                        icon
+                                                                        class="grey lighten-3"
+                                                                        style="margin-top: -2px"
+                                                                >
+                                                                    <v-icon>mdi-plus</v-icon>
+                                                                </v-btn>
+                                                            </v-sheet>
                                                         </template>
-                                                        <template v-if="receivers.length > 1">
-                                                            <v-btn
-                                                                   icon
-                                                                   @click="receivers = []"
-                                                            >
-                                                                <v-icon>mdi-close</v-icon>
-                                                            </v-btn>
-                                                        </template>
-                                                    </template>
-                                                    <template v-else>
-                                                        <v-dialog
-                                                                v-model="dialog"
-                                                                max-width="50rem"
-                                                                width="50rem"
+                                                        <organ-tree @send="setReceivers" @close="dialog = false"></organ-tree>
+                                                    </v-dialog>
+                                                </template>
+                                                <template v-else>
+                                                    <template v-for="(receiver, index) in receivers">
+                                                        <v-chip :key="index"
+                                                                close
+                                                                @click:close="remove(receiver.id, receivers)"
+                                                                class="mr-1 mb-1"
+                                                                style="max-width: 15rem"
                                                         >
-                                                            <template v-slot:activator="{ on, attrs }">
-                                                                <v-sheet outlined class="transparent ml-16">
-                                                                    <v-btn
-                                                                            color="secondary"
-                                                                            dark
-                                                                            v-bind="attrs"
-                                                                            v-on="on"
-                                                                            icon
-                                                                            class="grey lighten-3 ml-16"
-                                                                            style="margin-top: -2px"
-                                                                    >
-                                                                        <v-icon>mdi-plus</v-icon>
-                                                                    </v-btn>
-                                                                </v-sheet>
-                                                            </template>
-                                                            <organ-tree @send="setReceivers" @close="dialog = false"></organ-tree>
-                                                        </v-dialog>
+                                                            <span class="text-truncate">{{ receiver.name }}{{ receiver.nameBlank ? ' ' : '' }}{{ receiver.chief }}</span>
+                                                        </v-chip>
                                                     </template>
-                                                </v-sheet>
-                                            </v-col>
-                                        </v-row>
-                                        <v-row>
-                                            <v-col cols="12">
-                                                <v-text-field label="(경유)"></v-text-field>
-                                            </v-col>
-                                        </v-row>
-                                        <v-row>
-                                            <v-col cols="6">
-                                                <v-select :items="['산학협력단', '협력예술종합활동 사업단']" v-model="sendi" label="발신기관"
-                                                >
-                                                </v-select>
-                                            </v-col>
-                                            <v-col cols="6">
-                                                <v-select :items="['단장', '연구책임자']" v-model="sender"
-                                                          label="발신인"
-                                                >
-                                                </v-select>
-                                            </v-col>
-                                        </v-row>
-                                    </v-sheet>
-                                </v-row>
-                                <v-row class="align-center">
-                                    <v-text-field label="제목*" v-model="subject">
-                                        <template v-slot:label>
-                                            <span class="font-weight-medium">제목*</span>
-                                        </template>
-                                    </v-text-field>
-                                </v-row>
-                                <v-row class="align-center">
-                                    <v-textarea label="문서 요지" v-model="summary"
-                                                rows="3"
+                                                    <template v-if="receivers.length > 1">
+                                                        <v-btn
+                                                               icon
+                                                               @click="receivers = []"
+                                                        >
+                                                            <v-icon>mdi-close</v-icon>
+                                                        </v-btn>
+                                                    </template>
+                                                </template>
+
+                                            </v-sheet>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row no-gutters>
+                                        <v-col cols="12">
+                                            <v-text-field label="(경유)"></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row no-gutters>
+                                        <v-col cols="6">
+                                            <v-select :items="['산학협력단', '협력예술종합활동 사업단']"
+                                                      v-model="sendi" label="발신기관"
+                                                      class="mr-5"
+                                            >
+                                            </v-select>
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-select :items="['단장', '연구책임자']" v-model="sender"
+                                                      label="발신인"
+                                            >
+                                            </v-select>
+                                        </v-col>
+                                    </v-row>
+                                </v-sheet>
+                            </v-row>
+                            <v-row no-gutters class="align-center mt-0">
+                                <v-text-field label="제목*"
+                                              class="mt-0"
+                                              v-model="subject"
+                                >
+                                    <template v-slot:label>
+                                        <span class="font-weight-medium">제목*</span>
+                                    </template>
+                                </v-text-field>
+                            </v-row>
+                            <v-row no-gutters class="align-center mt-0">
+                                <v-textarea label="문서 요지" v-model="summary"
+                                            rows="3"
+                                            class="mt-0"
+                                >
+                                    <template v-slot:label>
+                                        <span class="font-weight-medium">문서 요지</span>
+                                    </template>
+                                </v-textarea>
+                            </v-row>
+                            <v-row no-gutters class="align-center">
+                                <v-radio-group
+                                        v-model="open"
+                                        label="열람범위"
+                                        row
+                                        class="mt-0 pt-0"
+                                >
+                                    <v-radio
+                                            label="비공개"
+                                            value="no"
+                                            on-icon="mdi-checkbox-marked"
+                                            off-icon="mdi-checkbox-blank-outline"
                                     >
-                                        <template v-slot:label>
-                                            <span class="font-weight-medium">문서 요지</span>
-                                        </template>
-                                    </v-textarea>
-                                </v-row>
-                                <v-row class="align-center">
-                                    <v-radio-group
-                                            v-model="open"
-                                            label="열람범위"
-                                            row
+                                    </v-radio>
+                                    <v-radio
+                                            label="부서"
+                                            value="department"
+                                            on-icon="mdi-checkbox-marked"
+                                            off-icon="mdi-checkbox-blank-outline"
                                     >
-                                        <v-radio
-                                                label="비공개"
-                                                value="no"
-                                                on-icon="mdi-checkbox-marked"
-                                                off-icon="mdi-checkbox-blank-outline"
-                                        >
-                                        </v-radio>
-                                        <v-radio
-                                                label="부서"
-                                                value="department"
-                                                on-icon="mdi-checkbox-marked"
-                                                off-icon="mdi-checkbox-blank-outline"
-                                        >
-                                        </v-radio>
-                                        <v-radio
-                                                label="기관"
-                                                value="all"
-                                                on-icon="mdi-checkbox-marked"
-                                                off-icon="mdi-checkbox-blank-outline"
-                                        >
-                                        </v-radio>
-                                        <template v-slot:label>
-                                            <span class="font-weight-medium mr-10" style="font-size: 16px">열람범위</span>
-                                        </template>
-                                    </v-radio-group>
-                                </v-row>
-                                <v-row class="align-center">
-                                    <v-radio-group
-                                            v-model="limit"
-                                            label=""
-                                            row
+                                    </v-radio>
+                                    <v-radio
+                                            label="기관"
+                                            value="all"
+                                            on-icon="mdi-checkbox-marked"
+                                            off-icon="mdi-checkbox-blank-outline"
                                     >
-                                        <v-radio
-                                                label="설정안함"
-                                                value="no"
-                                                on-icon="mdi-checkbox-marked"
-                                                off-icon="mdi-checkbox-blank-outline"
-                                        >
-                                        </v-radio>
-                                        <v-radio
-                                                label="설정"
-                                                value="yes"
-                                                on-icon="mdi-checkbox-marked"
-                                                off-icon="mdi-checkbox-blank-outline"
-                                        >
-                                        </v-radio>
-                                        <template v-slot:label>
-                                            <span class="font-weight-medium" style="font-size: 16px; margin-right: 0.7rem;">열람제한기간</span>
-                                        </template>
-                                    </v-radio-group>
-                                    <v-menu
-                                            ref="menu"
-                                            v-model="menu"
-                                            :close-on-content-click="false"
-                                            :return-value.sync="date"
-                                            transition="scale-transition"
-                                            offset-y
-                                            min-width="auto"
-                                            rounded
-                                            v-if="limit === 'yes'"
+                                    </v-radio>
+                                    <template v-slot:label>
+                                        <span class="font-weight-medium mr-10" style="font-size: 16px">열람범위</span>
+                                    </template>
+                                </v-radio-group>
+                            </v-row>
+                            <v-row no-gutters class="align-center">
+                                <v-radio-group
+                                        v-model="limit"
+                                        label=""
+                                        row
+                                        class="mt-0 pt-0"
+                                >
+                                    <v-radio
+                                            label="설정안함"
+                                            value="no"
+                                            on-icon="mdi-checkbox-marked"
+                                            off-icon="mdi-checkbox-blank-outline"
                                     >
-                                        <template v-slot:activator="{ on, attrs }">
-                                            <v-text-field
-                                                    v-model="date"
-                                                    readonly
-                                                    label="제한 종료일"
-                                                    clearable
-                                                    v-bind="attrs"
-                                                    v-on="on"
-                                                    style="max-width:10rem"
-                                                    class="mt-0"
-                                            ></v-text-field>
-                                        </template>
-                                        <v-date-picker
+                                    </v-radio>
+                                    <v-radio
+                                            label="설정"
+                                            value="yes"
+                                            on-icon="mdi-checkbox-marked"
+                                            off-icon="mdi-checkbox-blank-outline"
+                                    >
+                                    </v-radio>
+                                    <template v-slot:label>
+                                        <span class="font-weight-medium" style="font-size: 16px; margin-right: 0.7rem;">열람제한기간</span>
+                                    </template>
+                                </v-radio-group>
+                                <v-menu
+                                        ref="menu"
+                                        v-model="menu"
+                                        :close-on-content-click="false"
+                                        :return-value.sync="date"
+                                        transition="scale-transition"
+                                        offset-y
+                                        min-width="auto"
+                                        rounded
+                                        v-if="limit === 'yes'"
+                                >
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-text-field
                                                 v-model="date"
-                                                scrollable
+                                                readonly
+                                                label="제한 종료일"
+                                                clearable
+                                                v-bind="attrs"
+                                                v-on="on"
+                                                style="max-width:10rem; margin-top: -1.3rem"
+                                        ></v-text-field>
+                                    </template>
+                                    <v-date-picker
+                                            v-model="date"
+                                            scrollable
+                                            color="primary"
+                                            :day-format="getDay"
+                                    >
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                                text
                                                 color="primary"
-                                                :day-format="getDay"
+                                                @click="menu = false"
                                         >
-                                            <v-spacer></v-spacer>
-                                            <v-btn
-                                                    text
-                                                    color="primary"
-                                                    @click="menu = false"
-                                            >
-                                                취소
-                                            </v-btn>
-                                            <v-btn
-                                                    text
-                                                    color="primary"
-                                                    @click="$refs.menu.save(date)"
-                                            >
-                                                확인
-                                            </v-btn>
-                                        </v-date-picker>
-                                    </v-menu>
-                                </v-row>
-                            </v-card-text>
-                        </v-card>
+                                            취소
+                                        </v-btn>
+                                        <v-btn
+                                                text
+                                                color="primary"
+                                                @click="$refs.menu.save(date)"
+                                        >
+                                            확인
+                                        </v-btn>
+                                    </v-date-picker>
+                                </v-menu>
+                            </v-row>
+                        </v-container>
 
                         <!--
                         <v-btn color="primary" class="mt=5" @click="nextStep(1)">
@@ -284,8 +290,7 @@
                     </v-stepper-content>
 
                     <v-stepper-content step="2">
-                        <v-card style="width: 210mm" class="pa-5" elevation="0" title="결재 경로">
-
+                        <v-sheet style="width: 210mm" elevation="0" title="결재 경로">
                             <organization-chart
                                                 :search="true"
                                                 :folderonly="false"
@@ -293,57 +298,71 @@
                                                 :selectable="false"
                                                 @touched="addApprover"
                             ></organization-chart>
-
-                            <v-card-text>
-                                <p class="display-1 text--primary">
-                                    결재 경로
-                                </p>
-                            </v-card-text>
-                            <v-row>
-                                <v-simple-table>
-                                    <template v-slot:default>
-                                        <thead>
-                                            <tr>
-                                                <th>순서</th>
-                                                <th>결재종류</th>
-                                                <th>직책</th>
-                                                <th>이름</th>
-                                                <th>이동</th>
-                                                <th>삭제</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for=" (node, index) in approvers " :key="index">
-                                                <td>
-                                                    {{index+1}}
-                                                </td>
-                                                <td>
-                                                    <v-select style="max-width: 7rem"
-                                                            :items="approvalKind"
-                                                            label=""
-                                                            :value="node.kind"
-                                                            @input="addProperty($event, index)"
-                                                    ></v-select>
-                                                </td>
-                                                <td>
-                                                    {{node.role}}
-                                                </td>
-                                                <td>
-                                                    {{node.name}}
-                                                </td>
-                                                <td>
+                            <v-divider></v-divider>
+                            <p class="text-h6 mt-5">
+                                결재 경로
+                            </p>
+                            <v-simple-table v-if="approvers.length > 0">
+                                <template v-slot:default>
+                                    <thead>
+                                        <tr>
+                                            <th>순서</th>
+                                            <th>결재 종류</th>
+                                            <th>직책</th>
+                                            <th>이름</th>
+                                            <th>이동</th>
+                                            <th>삭제</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for=" (node, index) in approvers " :key="index">
+                                            <td>
+                                                {{index+1}}
+                                            </td>
+                                            <td>
+                                                <v-select
+                                                        :items="approvalKind"
+                                                        label=""
+                                                        :value="node.kind"
+                                                        style="max-width: 7rem"
+                                                        @input="addProperty($event, index)"
+                                                ></v-select>
+                                            </td>
+                                            <td>
+                                                {{node.role}}
+                                            </td>
+                                            <td>
+                                                {{node.name}}
+                                            </td>
+                                            <td>
+                                                <v-btn icon
+                                                       :disabled="index == 0"
+                                                       title="위로"
+                                                >
                                                     <v-icon @click="move(index, -1)">mdi-chevron-up</v-icon>
+                                                </v-btn>
+                                                <v-btn icon
+                                                       :disabled="index == approvers.length-1"
+                                                       title="아래로"
+                                                >
                                                     <v-icon @click="move(index, 1)">mdi-chevron-down</v-icon>
-                                                </td>
-                                                <td>
+                                                </v-btn>
+                                            </td>
+                                            <td>
+                                                <v-btn icon title="삭제">
                                                     <v-icon @click="del(index)">mdi-trash-can-outline</v-icon>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </template>
-                                </v-simple-table>
-                            </v-row>
-                        </v-card>
+                                                </v-btn>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </template>
+                            </v-simple-table>
+                            <p class="error--text" v-else>
+                                결재자를 선택하십시오.
+                            </p>
+                            <br/>
+                            <br/>
+                        </v-sheet>
 
                         <!--
                         <v-btn color="primary" @click="nextStep(1)">
@@ -736,19 +755,23 @@
         computed: {
             receiverName() {
                 if (this.kind == "in") return "내부결재"
-                if (this.receiver.length > 1) return "수신자 참조"
-                else if (this.receiver.length == 0) return ""
-                else return this.receiver[0]
+                if (this.receivers.length > 1) return "수신자 참조"
+                else if (this.receivers.length == 0) return ""
+                else return this.receivers[0]
             },
             receiverTitle: function() {
-                if (this.kind == "out" && this.receiver.length > 1) {
+                if (this.kind == "out" && this.receivers.length > 1) {
                     return "수신자"
                 }
                 return ""
             },
             receiverList: function () {
-                if (this.kind == "out" && this.receiver.length > 1) {
-                    return this.receiver.toString().replace(/,/g, ", ")
+                if (this.kind == "out" && this.receivers.length > 1) {
+                    let arr = []
+                    for (let obj of this.receivers) {
+                        arr.push(obj.name)
+                    }
+                    return arr.toString().replace(/,/g, ", ")
                 }
                 return ""
             }
