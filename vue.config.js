@@ -13,4 +13,5 @@ module.exports = {
       }
     }
   },
+  // outputDir: '../afar-backend/public',
 }

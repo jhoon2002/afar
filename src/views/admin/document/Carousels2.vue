@@ -123,8 +123,8 @@
                                                     </template>
                                                     <template v-if="receivers.length > 1">
                                                         <v-btn
-                                                               icon
-                                                               @click="receivers = []"
+                                                                icon
+                                                                @click="receivers = []"
                                                         >
                                                             <v-icon>mdi-close</v-icon>
                                                         </v-btn>
@@ -289,14 +289,14 @@
                         -->
                     </v-stepper-content>
 
-                    <v-stepper-content step="2">
+                    <v-stepper-content step="2" class="pt-1">
                         <v-sheet style="width: 210mm" elevation="0" title="결재 경로">
                             <organization-chart
-                                                :search="true"
-                                                :folderonly="false"
-                                                :leaf="false"
-                                                :selectable="false"
-                                                @touched="addApprover"
+                                    :search="true"
+                                    :folderonly="false"
+                                    :leaf="false"
+                                    :selectable="false"
+                                    @touched="addApprover"
                             ></organization-chart>
                             <v-divider></v-divider>
                             <p class="text-h6 mt-5">
@@ -305,55 +305,55 @@
                             <v-simple-table v-if="approvers.length > 0">
                                 <template v-slot:default>
                                     <thead>
-                                        <tr>
-                                            <th>순서</th>
-                                            <th>결재 종류</th>
-                                            <th>직책</th>
-                                            <th>이름</th>
-                                            <th>이동</th>
-                                            <th>삭제</th>
-                                        </tr>
+                                    <tr>
+                                        <th>순서</th>
+                                        <th>결재 종류</th>
+                                        <th>직책</th>
+                                        <th>이름</th>
+                                        <th>이동</th>
+                                        <th>삭제</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for=" (node, index) in approvers " :key="index">
-                                            <td>
-                                                {{index+1}}
-                                            </td>
-                                            <td>
-                                                <v-select
-                                                        :items="approvalKind"
-                                                        label=""
-                                                        :value="node.kind"
-                                                        style="max-width: 7rem"
-                                                        @input="addProperty($event, index)"
-                                                ></v-select>
-                                            </td>
-                                            <td>
-                                                {{node.role}}
-                                            </td>
-                                            <td>
-                                                {{node.name}}
-                                            </td>
-                                            <td>
-                                                <v-btn icon
-                                                       :disabled="index == 0"
-                                                       title="위로"
-                                                >
-                                                    <v-icon @click="move(index, -1)">mdi-chevron-up</v-icon>
-                                                </v-btn>
-                                                <v-btn icon
-                                                       :disabled="index == approvers.length-1"
-                                                       title="아래로"
-                                                >
-                                                    <v-icon @click="move(index, 1)">mdi-chevron-down</v-icon>
-                                                </v-btn>
-                                            </td>
-                                            <td>
-                                                <v-btn icon title="삭제">
-                                                    <v-icon @click="del(index)">mdi-trash-can-outline</v-icon>
-                                                </v-btn>
-                                            </td>
-                                        </tr>
+                                    <tr v-for=" (node, index) in approvers " :key="index">
+                                        <td>
+                                            {{index+1}}
+                                        </td>
+                                        <td>
+                                            <v-select
+                                                    :items="approvalKind"
+                                                    label=""
+                                                    :value="node.kind"
+                                                    style="max-width: 7rem"
+                                                    @input="addProperty($event, index)"
+                                            ></v-select>
+                                        </td>
+                                        <td>
+                                            {{node.role}}
+                                        </td>
+                                        <td>
+                                            {{node.name}}
+                                        </td>
+                                        <td>
+                                            <v-btn icon
+                                                   :disabled="index == 0"
+                                                   title="위로"
+                                            >
+                                                <v-icon @click="move(index, -1)">mdi-chevron-up</v-icon>
+                                            </v-btn>
+                                            <v-btn icon
+                                                   :disabled="index == approvers.length-1"
+                                                   title="아래로"
+                                            >
+                                                <v-icon @click="move(index, 1)">mdi-chevron-down</v-icon>
+                                            </v-btn>
+                                        </td>
+                                        <td>
+                                            <v-btn icon title="삭제">
+                                                <v-icon @click="del(index)">mdi-trash-can-outline</v-icon>
+                                            </v-btn>
+                                        </td>
+                                    </tr>
                                     </tbody>
                                 </template>
                             </v-simple-table>
