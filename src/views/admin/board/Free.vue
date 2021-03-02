@@ -3,7 +3,7 @@
         <div>
             <v-data-table
                     :headers="headers"
-                    :items="employees"
+                    :items="desserts"
                     :items-per-page="5"
                     class="elevation-1"
             ></v-data-table>
@@ -11,21 +11,20 @@
     </div>
 </template>
 <script>
-    import { storeNamespace } from "@/api/util";
-    import { mapState, mapMutations, mapActions } from 'vuex';
-    import { mapFields } from "vuex-map-fields";
+    import axios from "axios";
 
     export default {
         data () {
             return {
                 headers: [
                     {
-                        text: '이름',
+                        text: 'Name',
                         align: 'start',
                         sortable: false,
                         value: 'name',
                     },
-                    { text: '사번', value: 'no' },
+                    { text: 'Calories', value: 'calories' },
+                    { text: 'Fat', value: 'fat' },
                 ],
                 desserts: [
                     {
@@ -111,18 +110,36 @@
                 ],
             }
         },
-        computed: {
-            ...mapState( storeNamespace(), ["params", "employee", "employees", "isBusy", "STATUS_TYPE"] ),
-            ...mapFields( storeNamespace(), ["params", "employee"] ),
-        },
         methods: {
-            ...mapMutations(storeNamespace(), ["setPage", "setField", "setAscend", "setPageSync"]),
-            ...mapActions(storeNamespace(), ["fetchAsync", "fetchOneAsync", "defaultEmployee"]),
         },
         mounted() {
-            this.fetchAsync().then(() => {
-            }).catch(() => {
-            })
+            let obj = {
+                boid: "free",
+                page: 1,
+                limit: 5
+            }
+            /*
+            try {
+                http.get("/api/posts", {
+                    params: obj,
+                })
+            } catch (e) {
+                console.log(e)
+            }
+            */
+            axios.get(
+                "/api/posts",
+                { params: obj }
+            ).then(
+                (ret) => {
+                    console.log(ret)
+                }
+            ).catch(
+                () => {
+                    console.log("catch~~~")
+                }
+            )
+
         }
     }
 </script>
