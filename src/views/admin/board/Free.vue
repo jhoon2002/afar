@@ -3,10 +3,18 @@
         <div>
             <v-data-table
                     :headers="headers"
-                    :items="desserts"
-                    :items-per-page="5"
+                    :items="items"
+                    :server-items-length="count"
+                    :options.sync="options"
+                    :loading="loading"
                     class="elevation-1"
+                    sort-by="created"
+                    :sort-desc=true
             ></v-data-table>
+            <v-list>
+                <v-list-item>count: {{count}}</v-list-item>
+                <v-list-item>options: {{options}}</v-list-item>
+            </v-list>
         </div>
     </div>
 </template>
@@ -16,15 +24,20 @@
     export default {
         data () {
             return {
+                items: [],
+                count: 0,
+                options: {},
+                loading: false,
                 headers: [
                     {
-                        text: 'Name',
+                        text: 'Id',
                         align: 'start',
                         sortable: false,
-                        value: 'name',
+                        value: '_id',
                     },
-                    { text: 'Calories', value: 'calories' },
-                    { text: 'Fat', value: 'fat' },
+                    { text: '제목', value: 'subject' },
+                    { text: '이름', value: 'userId' },
+                    { text: '날짜', value: 'created' },
                 ],
                 desserts: [
                     {
@@ -111,35 +124,31 @@
             }
         },
         methods: {
+            load() {
+                this.loading = true
+                axios.get("/api/posts",{
+                    params: this.options
+                }).then((ret) => {
+                    console.log(ret)
+                    this.items = ret.data.items
+                    this.count = ret.data.totalCount
+                    this.loading = false
+                }).catch((error) => {
+                    console.log(error)
+                    this.loading = false
+                })
+            }
         },
         mounted() {
-            let obj = {
-                boid: "free",
-                page: 1,
-                limit: 5
-            }
-            /*
-            try {
-                http.get("/api/posts", {
-                    params: obj,
-                })
-            } catch (e) {
-                console.log(e)
-            }
-            */
-            axios.get(
-                "/api/posts",
-                { params: obj }
-            ).then(
-                (ret) => {
-                    console.log(ret)
-                }
-            ).catch(
-                () => {
-                    console.log("catch~~~")
-                }
-            )
-
+            this.load()
+        },
+        watch: {
+            options: {
+                handler () {
+                    this.load()
+                },
+                deep: true
+            },
         }
     }
 </script>
