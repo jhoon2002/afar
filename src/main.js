@@ -6,11 +6,8 @@ import vuetify from '@/plugins/vuetify.js'
 import  "@/ElementTiptap.js"
 import "@/assets/basic.css"
 import Data from "@/data.js"
-//import ElementUI from 'element-ui'
-//import locale from 'element-ui/lib/locale/lang/ko'
-//import './styles.scss'
-
-//Vue.use(ElementUI, { locale })
+import vueMoment from "vue-moment"
+Vue.use(vueMoment)
 
 Vue.prototype.$_DATA = Data
 Vue.config.productionTip = false
