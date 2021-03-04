@@ -15,7 +15,8 @@
                     :footer-props="{ itemsPerPageOptions: [1,2,5,7,10,15,20,30,40] }"
             >
                 <template v-slot:item.created="{ item }">
-                    {{ $moment().format('YYYY-MM-DD') == $moment(item.created).format('YYYY-MM-DD') ? $moment(item.created).format('hh:mm:ss') : $moment(item.created).format('YYYY-MM-DD') }}
+                    {{ $moment().format('YYYY-MM-DD') == $moment(item.created).format('YYYY-MM-DD') ?
+                    $moment(item.created).format('hh:mm:ss') : $moment(item.created).format('YYYY-MM-DD') }}
                 </template>
                 <template v-slot:item.userId="{ item }">
                     {{ names[item.userId] }}
@@ -28,7 +29,7 @@
     import axios from "axios";
 
     export default {
-        data () {
+        data() {
             return {
                 items: [],
                 count: 0,
@@ -36,41 +37,29 @@
                 loading: false,
                 names: {},
                 headers: [
-                    {
-                        text: 'Id',
-                        align: 'start',
-                        sortable: false,
-                        value: '_id',
-                    },
-                    { text: '제목', value: 'subject' },
-                    { text: '이름', value: 'userId' },
-                    {
-                        text: '날짜',
-                        value: 'created',
-                    },
+                    {text: 'Id', align: 'start', sortable: false, value: '_id'},
+                    {text: '제목', value: 'subject'},
+                    {text: '이름', value: 'userId', sortable: false,},
+                    {text: '날짜', value: 'created'},
                 ],
             }
         },
         methods: {
             load() {
                 this.loading = true
-                let url = "/api/posts"
-                let config = {
+
+                axios.get("/api/posts", {
                     params: this.options
-                }
-
-                console.log("send:", url, config.params)
-
-                axios.get(url, config).then((ret) => {
-                    console.log("return: ", ret)
+                }).then((ret) => {
+                    // console.log("return: ", ret)
                     this.items = ret.data.items
                     this.count = ret.data.totalCount
                     this.names = ret.data.names
-                    setTimeout(() => ( this.loading = false ), 250)
-                }).catch((error) => {
-                    console.log(error)
-                    setTimeout(() => ( this.loading = false ), 250)
-                })
+                }).catch(
+                    console.log
+                ).finally(
+                    setTimeout(() => (this.loading = false), 500)
+                )
 
             }
         },
