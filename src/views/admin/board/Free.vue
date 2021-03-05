@@ -1,6 +1,7 @@
 <template>
     <div>
         <div>
+
             <v-data-table
                     :headers="headers"
                     :items="items"
@@ -18,10 +19,56 @@
                     {{ $moment().format('YYYY-MM-DD') == $moment(item.created).format('YYYY-MM-DD') ?
                     $moment(item.created).format('hh:mm:ss') : $moment(item.created).format('YYYY-MM-DD') }}
                 </template>
+                <template v-slot:item.subject="{ item }">
+                    <div @click="viewDoc(item._id)">{{ item.subject }}</div>
+                </template>
                 <template v-slot:item.userId="{ item }">
                     {{ names[item.userId] }}
                 </template>
             </v-data-table>
+            <v-dialog
+                    v-model="dialog"
+                    width="600"
+                    scrollable
+            >
+                <v-card>
+                    <v-card-title class="grey lighten-2 text-body-1 d-block">
+                        <div>{{doc.subject}}</div>
+                        <v-sheet class="text-caption transparent mt-1">
+                            {{ names[doc.userId] }}({{doc.userId}}) / {{$moment(doc.created).format('YYYY-MM-DD hh:mm:ss')}}
+                        </v-sheet>
+                    </v-card-title>
+                    <v-divider></v-divider>
+
+                    <v-card-text class="pt-5">
+                        {{ doc.content }}
+                        <v-divider></v-divider>
+                        <v-data-table
+                                :headers="commentHeaders"
+                                :hide-default-header="true"
+                                :items="doc.comments"
+                                :items-per-page="5"
+                        >
+                            <template v-slot:items.userId="{ item }">
+                                {{ item.comments.content }}
+                            </template>
+                        </v-data-table>
+                    </v-card-text>
+
+                    <v-divider></v-divider>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                                color="primary"
+                                text
+                                @click="dialog = false"
+                        >
+                            확인
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </div>
     </div>
 </template>
@@ -42,6 +89,13 @@
                     {text: '이름', value: 'userId', sortable: false,},
                     {text: '날짜', value: 'created'},
                 ],
+                commentHeaders: [
+                    {text: '이름', value: 'userId'},
+                    {text: '내용', value: 'content'},
+                    {text: '날짜', value: 'created'},
+                ],
+                doc: {},
+                dialog: false
             }
         },
         methods: {
@@ -61,6 +115,15 @@
                     setTimeout(() => (this.loading = false), 500)
                 )
 
+            },
+            async loadPost(id) {
+                await axios.get("/api/posts/" + id).then(ret => {
+                    this.doc = ret.data
+                })
+            },
+            async viewDoc(id) {
+                await this.loadPost(id)
+                this.dialog = true
             }
         },
         mounted() {
