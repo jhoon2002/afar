@@ -1,6 +1,7 @@
 <template>
     <div>
         <div>
+
             <v-data-table
                     :headers="headers"
                     :items="items"
@@ -14,15 +15,12 @@
                     :sort-desc=false
                     :footer-props="{ itemsPerPageOptions: [1,2,5,7,10,15,20,30,40] }"
             >
-                <template v-slot:item.No="{ index }">
-                    {{topNumber - index}}
-                </template>
                 <template v-slot:item.created="{ item }">
                     {{ $moment().format('YYYY-MM-DD') == $moment(item.created).format('YYYY-MM-DD') ?
                     $moment(item.created).format('hh:mm:ss') : $moment(item.created).format('YYYY-MM-DD') }}
                 </template>
                 <template v-slot:item.subject="{ item }">
-                    <span @click="viewDoc(item._id)" style="cursor: pointer">{{ item.subject }}{{ item.commentCount > 0 ? " (" + item.commentCount + ")" : "" }}</span>
+                    <div @click="viewDoc(item._id)">{{ item.subject }}</div>
                 </template>
                 <template v-slot:item.userId="{ item }">
                     {{ names[item.userId] }}
@@ -30,49 +28,41 @@
             </v-data-table>
             <v-dialog
                     v-model="dialog"
-                    width="800"
+                    width="600"
                     scrollable
             >
                 <v-card>
                     <v-card-title class="grey lighten-2 text-body-1 d-block">
-                        <v-row no-gutters>
-                            <v-col>
-                                <div>{{doc.subject}}</div>
-                                <v-sheet class="transparent mt-1">
-                                    <span class="text-body-2">{{ names[doc.userId] }}</span>
-                                    <span class="text-caption">({{doc.userId}}) / {{$moment(doc.created).format('YYYY-MM-DD hh:mm:ss')}}</span>
-                                </v-sheet>
-                            </v-col>
-                            <v-col style="max-width: 3rem" class="text-right">
-                                <v-icon @click="dialog=false">mdi-close</v-icon>
-                            </v-col>
-                        </v-row>
+                        <div>{{doc.subject}}</div>
+                        <v-sheet class="text-caption transparent mt-1">
+                            {{ names[doc.userId] }}({{doc.userId}}) / {{$moment(doc.created).format('YYYY-MM-DD hh:mm:ss')}}
+                        </v-sheet>
                     </v-card-title>
                     <v-divider></v-divider>
 
-                    <v-card-text class="pa-5" style="min-height: 20rem">
+                    <v-card-text class="pa-5">
                         {{ doc.content }}
-                        <v-sheet class="mt-10" v-if="doc.comments && doc.comments.length > 0">
-                            <!--
-                            <v-chip class="mb-2"
-                                    color="black"
-                                    label
-                                    small
-                                    text-color="white">Comments</v-chip>
-                            -->
-                            <v-tooltip top>
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-icon v-bind="attrs"
-                                            v-on="on" class="mb-2 text-h4">mdi-comment-account-outline</v-icon>
-                                </template>
-                                <span>코멘트</span>
-                            </v-tooltip>
-
-                            <comment :items="doc.comments" :offset=0 :names="docNames"></comment>
-                        </v-sheet>
                     </v-card-text>
 
+
+                    <v-data-table
+                            :headers="commentHeaders"
+                            hide-default-footer
+                            :items="doc.comments"
+                            :items-per-page="10"
+                            dense
+                    >
+                        <template v-slot:item.userId="{ item }">
+                            <p class="ma-0 pa-0 mt-2 text-body-2">{{ names[item.userId] }}</p>
+                            <p class="ma-0 pa-0 mb-2 text-caption">{{ $moment(item.created).format('YYYY-MM-DD hh:mm:ss') }}</p>
+                        </template>
+                        <template v-slot:item.content="{ item }">
+                            <p class="my-2 pa-0">{{ item.content }}</p>
+                        </template>
+                    </v-data-table>
+
                     <v-divider></v-divider>
+
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn
@@ -89,22 +79,18 @@
     </div>
 </template>
 <script>
-    import axios from "axios"
-    import Comment from "@/components/Comment.vue"
+    import axios from "axios";
+
     export default {
-        components: {
-            Comment,
-        },
         data() {
             return {
                 items: [],
                 count: 0,
                 options: {},
-                topNumber: 0,
                 loading: false,
                 names: {},
                 headers: [
-                    {text: 'No', align: 'start', sortable: false, value: "No"},
+                    {text: 'Id', align: 'start', sortable: false, value: '_id'},
                     {text: '제목', value: 'subject'},
                     {text: '이름', value: 'userId', sortable: false,},
                     {text: '날짜', value: 'created'},
@@ -114,7 +100,6 @@
                     {text: '', sortable: false, value: 'content'},
                 ],
                 doc: {},
-                docNames: {},
                 dialog: false
             }
         },
@@ -129,7 +114,6 @@
                     this.items = ret.data.items
                     this.count = ret.data.totalCount
                     this.names = ret.data.names
-                    this.topNumber = this.count-( (this.options.page-1) * this.options.itemsPerPage )
                 }).catch(
                     console.log
                 ).finally(
@@ -139,9 +123,7 @@
             },
             async loadPost(id) {
                 await axios.get("/api/posts/" + id).then(ret => {
-                    console.log("docRet", ret)
-                    this.doc = ret.data.item
-                    this.docNames = ret.data.names
+                    this.doc = ret.data
                 })
             },
             async viewDoc(id) {

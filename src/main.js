@@ -4,6 +4,7 @@ import router from '@/router'
 import store from '@/store'
 import vuetify from '@/plugins/vuetify.js'
 import  "@/ElementTiptap.js"
+import "@/VeeValidate.js";
 import "@/assets/basic.css"
 import Data from "@/data.js"
 import vueMoment from "vue-moment"
