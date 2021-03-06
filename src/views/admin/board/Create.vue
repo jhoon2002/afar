@@ -64,6 +64,7 @@
     </validation-observer>
 </template>
 <script>
+    import axios from "axios"
     export default {
         data: function() {
             return {
@@ -76,13 +77,15 @@
             }
         },
         methods: {
-            // submit () {
-            //     this.$refs.observer.validate();
-            // },
-            // onSubmit(event) {
-            //         event.preventDefault();
-            //     //alert("Form submitted!");
-            // }
+            submit () {
+                this.$refs.observer.validate()
+                axios.post("/api/posts", {
+                    boardId: this.boardId,
+                    userId: this.userId,
+                    subject: this.subject,
+                    content: this.content
+                })
+            }
         }
     }
 </script>
