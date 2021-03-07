@@ -9,17 +9,18 @@
                 </v-col>
                 <v-col class="d-flex align-center justify-end pr-12">
                     <v-select
-                            v-model="search.field"
+                            v-model="search.fields"
                             :items="searchFields"
                             hide-details
                             dense
                             class="mt-5 mr-5 mb-5"
                             style="max-width: 7rem"
+                            multiple
                     >
                     </v-select>
                     <v-text-field
                             v-model="search.word"
-                            label="검색"
+                            label="검색어"
                             single-line
                             hide-details
                             dense
@@ -27,17 +28,22 @@
                             style="max-width: 16rem"
                             @keypress.enter="searchSubmit"
                     ></v-text-field>
-                    <v-btn
-                            elevation="0"
-                            color="secondary"
-                            fab
-                            dark
-                            x-small
-                            style="max-width: 1.4rem; max-height: 1.4rem"
-                            @click="searchSubmit"
-                    >
-                        <v-icon dark>mdi-magnify</v-icon>
-                    </v-btn>
+                    <v-tooltip bottom v-model="tooltip" color="primary">
+                        <template v-slot:activator="{  }">
+                            <v-btn
+                                    elevation="0"
+                                    color="secondary"
+                                    fab
+                                    dark
+                                    x-small
+                                    style="max-width: 1.4rem; max-height: 1.4rem"
+                                    @click="searchSubmit"
+                            >
+                                <v-icon dark>mdi-magnify</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>필드를 선택하고 검색어를 입력하십시오</span>
+                    </v-tooltip>
                 </v-col>
             </v-row>
             <v-data-table
@@ -68,9 +74,6 @@
                 <template v-slot:item.subject="{ item }">
                     <span @click="viewDoc(item._id)" style="cursor: pointer">{{ item.subject }}{{ item.commentCount > 0 ? " (" + item.commentCount + ")" : "" }}</span>
                 </template>
-                <template v-slot:item.userId="{ item }">
-                    {{ names[item.userId] }}
-                </template>
             </v-data-table>
         </v-card>
 
@@ -85,7 +88,7 @@
                         <v-col>
                             <div>{{doc.subject}}</div>
                             <v-sheet class="transparent mt-1">
-                                <span class="text-body-2">{{ names[doc.userId] }}</span>
+                                <span class="text-body-2">{{ doc.name }}</span>
                                 <span class="text-caption">({{doc.userId}}) / {{$moment(doc.created).format('YYYY-MM-DD hh:mm:ss')}}</span>
                             </v-sheet>
                         </v-col>
@@ -114,7 +117,7 @@
                             <span>코멘트</span>
                         </v-tooltip>
 
-                        <comment :items="doc.comments" :offset=0 :names="docNames"></comment>
+                        <comment :items="doc.comments" :offset=0></comment>
                     </v-sheet>
                 </v-card-text>
 
@@ -145,55 +148,54 @@
                 items: [],
                 count: 0,
                 options: {},
-                totalPage: 0,
+                totalPages: 0,
                 topNumber: 0,
                 loading: false,
-                names: {},
                 headers: [
                     {text: 'No', align: 'center', sortable: false, value: "No"},
                     {text: '제목', value: 'subject'},
-                    {text: '이름', align: 'center', value: 'userId', sortable: false,},
+                    {text: '이름', align: 'center', value: 'name', sortable: true,},
+                    {text: '조회', align: 'center', value: 'hit', sortable: true,},
                     {text: '날짜', align: 'center', value: 'created'},
                 ],
                 commentHeaders: [
-                    {text: 'Comments', sortable: false, value: 'userId', width: 150},
+                    {text: 'Comments', sortable: false, value: 'name', width: 150},
                     {text: '', sortable: false, value: 'content'},
                 ],
                 doc: {
                     content: ""
                 },
-                docNames: {},
                 dialog: false,
                 searchFields: [
                     { text: "제목", value: "subject" },
-                    { text: "내용", value: "content" },
-                    { text: "제목+내용", value: "subject+content" }
+                    { text: "내용", value: "content" }
                 ],
                 search: {
-                    field: "subject",
+                    fields: ["subject"],
                     word: ""
-                }
+                },
+                tooltip: false
             }
         },
         methods: {
-            load(search) {
+            load(isSearch) {
                 this.loading = true
 
-                if (search) {
-                    this.options.searchField = this.search.field
-                    this.options.searchWord = this.search.word
-                }
+                this.options["search.boardId"] = "free"
 
-                console.log("this.search", this.search)
+                if (isSearch) {
+                    for(let one of this.search.fields) {
+                        this.options["search." + one] = this.search.word
+                    }
+                }
 
                 axios.get("/api/posts", {
                     params: this.options
                 }).then((ret) => {
-                    // console.log("return: ", ret)
+                    console.log("return: ", ret)
                     this.items = ret.data.items
-                    this.totalPage = ret.data.totalPage
-                    this.count = ret.data.totalCount
-                    this.names = ret.data.names
+                    this.totalPages = ret.data.totalPages
+                    this.count = ret.data.count
                     this.topNumber = this.count-( (this.options.page-1) * this.options.itemsPerPage )
                 }).catch(
                     console.log
@@ -203,9 +205,7 @@
             },
             async loadPost(id) {
                 await axios.get("/api/posts/" + id).then(ret => {
-                    console.log("docRet", ret)
                     this.doc = ret.data.item
-                    this.docNames = ret.data.names
                 })
             },
             async viewDoc(id) {
@@ -213,7 +213,13 @@
                 this.dialog = true
             },
             async searchSubmit() {
-                await this.load(true)
+                if (this.search.fields.length == 0 || this.search.word == "") {
+                    this.tooltip = true
+                    setTimeout(() => (this.tooltip = false), 2000)
+                } else {
+                    await this.load(true)
+                }
+                return
             }
         },
         mounted() {
