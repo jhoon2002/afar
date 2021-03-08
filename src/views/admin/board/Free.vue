@@ -3,8 +3,8 @@
         <v-card class="pb-2">
             <v-row>
                 <v-col>
-                    <v-card-title>
-                        자유게시판
+                    <v-card-title @click="refresh()">
+                        자유게시판 {{search}}
                     </v-card-title>
                 </v-col>
                 <v-col class="d-flex align-center justify-end pr-12">
@@ -26,7 +26,7 @@
                             dense
                             class="mt-5 mb-5"
                             style="max-width: 16rem"
-                            @keypress.enter="searchSubmit"
+                            @keypress.enter="searchSubmit()"
                     ></v-text-field>
                     <v-tooltip bottom v-model="tooltip" color="primary">
                         <template v-slot:activator="{  }">
@@ -37,27 +37,39 @@
                                     dark
                                     x-small
                                     style="max-width: 1.4rem; max-height: 1.4rem"
-                                    @click="searchSubmit"
+                                    @click="searchSubmit()"
                             >
                                 <v-icon dark>mdi-magnify</v-icon>
                             </v-btn>
                         </template>
-                        <span>필드를 선택하고 검색어를 입력하십시오</span>
+                        <span>검색 필드를 선택하십시오</span>
                     </v-tooltip>
+                    <v-btn
+                            elevation="0"
+                            color="grey"
+                            fab
+                            dark
+                            x-small
+                            style="max-width: 1.4rem; max-height: 1.4rem"
+                            @click="refresh()"
+                            class="ml-1"
+                    >
+                        <v-icon dark>mdi-refresh</v-icon>
+                    </v-btn>
                 </v-col>
             </v-row>
             <v-data-table
+                    loader-height="1"
                     :headers="headers"
                     :items="items"
-                    :items-per-page="5"
                     :server-items-length="count"
                     :options.sync="options"
                     :loading="loading"
-                    loader-height="1"
-                    sort-by="created"
-                    :sort-desc=true
+                    :items-per-page="defaultLimit"
+                    :sort-by="defaultSortBy"
+                    :sort-desc="defaultSortDesc"
                     :footer-props="{
-                        itemsPerPageOptions: [5,10,15,20,30,40,50,100],
+                        itemsPerPageOptions: [1,5,10,15,20,30,40,50,100],
                         showFirstLastPage: true,
                         firstIcon: 'mdi-menu-left',
                         lastIcon: 'mdi-menu-right',
@@ -145,6 +157,9 @@
         },
         data() {
             return {
+                defaultLimit: 5,           //table default value
+                defaultSortBy: "created",  //table default value
+                defaultSortDesc: true,     //table default value
                 items: [],
                 count: 0,
                 options: {},
@@ -172,7 +187,8 @@
                 ],
                 search: {
                     fields: ["subject"],
-                    word: ""
+                    word: "",
+                    onSearch: false
                 },
                 tooltip: false
             }
@@ -181,16 +197,21 @@
             load(isSearch) {
                 this.loading = true
 
-                this.options["search.boardId"] = "free"
+                let params = Object.assign({}, this.options)
+                params["search.boardId"] = "free"
 
-                if (isSearch) {
+                if (isSearch && this.search.word) {
                     for(let one of this.search.fields) {
-                        this.options["search." + one] = this.search.word
+                        params["search." + one] = this.search.word
                     }
                 }
 
+                //if (this.search.onSearch) {
+                //
+                //}
+
                 axios.get("/api/posts", {
-                    params: this.options
+                    params: params
                 }).then((ret) => {
                     console.log("return: ", ret)
                     this.items = ret.data.items
@@ -212,14 +233,43 @@
                 await this.loadPost(id)
                 this.dialog = true
             },
+            optionsReset() {
+                /* options {                {
+                       page: number,
+                       itemsPerPage: number,
+                       sortBy: string[],
+                       sortDesc: boolean[],
+                       groupBy: string[],
+                       groupDesc: boolean[],
+                       multiSort: boolean,
+                       mustSort: boolean
+                }*/
+                this.options.page = 1
+                this.options.itemsPerPage = this.defaultLimit
+                this.options.sortBy = [this.defaultSortBy]
+                this.options.sortDesc = [this.defaultSortDesc]
+                this.options.groupBy = []
+                this.options.groupDesc = []
+                this.options.multiSort = false
+                this.options.mustSort = false
+            },
             async searchSubmit() {
-                if (this.search.fields.length == 0 || this.search.word == "") {
+                if (this.search.fields.length == 0) {
                     this.tooltip = true
                     setTimeout(() => (this.tooltip = false), 2000)
                 } else {
+                    this.optionsReset()
                     await this.load(true)
+                    this.search.onSearch = true
                 }
                 return
+            },
+            refresh() {
+                this.search.fields = ["subject"]
+                this.search.word = ""
+                this.onSearch = false
+                this.optionsReset()
+                this.load()
             }
         },
         mounted() {
@@ -227,7 +277,9 @@
         },
         watch: {
             options: {
-                handler: "load", //or handler() { this.load() }
+                handler() {
+                    this.load(this.search.onSearch)
+                },
                 deep: true,
                 // immediate: true
             }
