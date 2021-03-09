@@ -1,6 +1,6 @@
 <template>
     <v-sheet>
-        <v-card v-for="(item, index) in items" :key="index" elevation="0">
+        <v-card v-for="(doc, index) in items" :key="index" elevation="0">
             <v-divider></v-divider>
             <v-sheet :class="`ml-`+ offset*3">
                 <v-row no-gutters>
@@ -8,15 +8,15 @@
                         <v-icon class="text-body-1 j-rotate-180">mdi-reply</v-icon>
                     </v-col>
                     <v-col align-self="center" class="py-5" style="max-width: 8rem">
-                        <p class="ma-0 pa-0 text-body-2">{{ names[item.userId] }}</p>
-                        <p class="ma-0 pa-0 text-caption">{{ $moment(item.created).format('YYYY-MM-DD hh:mm') }}</p>
+                        <p class="ma-0 pa-0 text-body-2">{{ doc.name }}</p>
+                        <p class="ma-0 pa-0 text-caption">{{ $moment(doc.created).format('YYYY-MM-DD hh:mm') }}</p>
                     </v-col>
                     <v-col align-self="center" class="py-5">
-                        {{item.content}}
+                        <div v-html="doc.content.replace(/\n/g, '<br/>')">{{doc.content}}</div>
                     </v-col>
                 </v-row>
             </v-sheet>
-            <comment :items="item.comments" :offset="offset + 1" :names="names"></comment>
+            <comment :items="doc.comments" :offset="offset + 1"></comment>
         </v-card>
     </v-sheet>
 </template>
@@ -28,7 +28,6 @@
         props: [
             "items",
             "offset",
-            "names"
         ],
         data() {
             return {
