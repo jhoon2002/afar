@@ -1,6 +1,6 @@
 <template>
-    <v-sheet>
-        <v-card class="pb-2">
+    <v-sheet class="pa-5">
+        <v-card flat>
             <v-row>
                 <v-col>
                     <v-card-title @click="resetTable()">
@@ -8,45 +8,7 @@
                     </v-card-title>
                 </v-col>
                 <v-col class="d-flex align-center justify-end pr-12" style="max-width: 30rem">
-                    <v-select
-                            v-model="search.fields"
-                            :items="selectItems"
-                            hide-details
-                            dense
-                            class="mt-5 mr-5 mb-5"
-                            style="max-width: 7rem"
-                            multiple
-                            @keypress.enter="searchSubmit()"
-                    >
-                    </v-select>
-                    <v-text-field
-                            v-model="search.word"
-                            label="검색어"
-                            single-line
-                            hide-details
-                            dense
-                            class="mt-5 mb-5"
 
-                            @keypress.enter="searchSubmit()"
-                    ></v-text-field>
-                    <v-tooltip bottom v-model="tooltip1" color="primary">
-                        <template v-slot:activator="{}">
-                            <v-icon
-                                    color="secondary"
-                                    @click="searchSubmit()"
-                            >
-                                mdi-magnify
-                            </v-icon>
-                        </template>
-                        <span>검색 필드를 선택하십시오</span>
-                    </v-tooltip>
-                    <v-icon
-                            v-if="this.search.word"
-                            color="secondary"
-                            @click="firstPageNoSearch()"
-                    >
-                        mdi-refresh
-                    </v-icon>
                 </v-col>
             </v-row>
             <v-data-table
@@ -69,10 +31,56 @@
                 </template>
                 <template v-slot:item.subject="{ item }">
                     <span @click="viewDoc(item._id)" style="cursor: pointer">
-                        <span v-html="item.subject.replace(new RegExp(search.word, 'g'), '<span style=color:#ee0a43>'+search.word+'</span>')"></span>{{ item.commentCount > 0 ? ` (${item.commentCount})` : "" }}
+                        <span v-html="markWord(item.subject, 'subject', search)"></span> <span class="text-overline grey--text" v-if="item.commentCount">[{{item.commentCount}}]</span>
                     </span>
                 </template>
+                <template v-slot:item.name="{ item }">
+                    <span v-html="markWord(item.name, 'name', search)"></span> <span class="text-overline grey--text" v-if="item.commentCount">[{{item.commentCount}}]</span>
+                </template>
             </v-data-table>
+            <v-row no-gutters class="d-flex justify-space-between">
+                <v-btn class="justify-end" color="primary" dark elevation="0">글쓰기</v-btn>
+                <v-sheet class="d-flex align-center" style="max-width: 25rem">
+                    <v-select
+                            v-model="search.fields"
+                            :items="selectItems"
+                            hide-details
+                            class="mr-5"
+                            :style="{'max-width': `${4+(search.fields.length*2)}rem`}"
+                            multiple
+                            @keypress.enter="searchSubmit()"
+                    >
+                    </v-select>
+
+                    <v-text-field
+                            v-model="search.word"
+                            label="검색어"
+                            single-line
+                            hide-details
+                            class=""
+                            @keypress.enter="searchSubmit()"
+                    ></v-text-field>
+                    <v-tooltip bottom v-model="tooltip1" color="primary">
+                        <template v-slot:activator="{}">
+                            <v-icon
+                                    color="grey darken-1"
+                                    class="mt-5"
+                                    @click="searchSubmit()"
+                            >
+                                mdi-magnify
+                            </v-icon>
+                        </template>
+                        <span>검색 필드를 선택하십시오</span>
+                    </v-tooltip>
+                    <v-icon
+                            color="grey darken-1"
+                            class="mt-5"
+                            @click="firstPageNoSearch()"
+                    >
+                        mdi-refresh
+                    </v-icon>
+                </v-sheet>
+            </v-row>
         </v-card>
 
         <v-dialog
@@ -86,8 +94,8 @@
                         <v-col>
                             <div style="font-size: 1.2rem">{{doc.subject}}</div>
                             <v-sheet class="transparent mt-1">
-                                <span class="text-body-2">{{ doc.name }}</span>
-                                <span class="text-caption">({{doc.userId}}) / {{$moment(doc.created).format("YYYY-MM-DD hh:mm:ss")}}</span>
+                                <span class="text-body-2" v-html="markWord(doc.name, 'name', search)"></span>
+                                <span class="text-caption" v-html="'(' + markWord(doc.userId, 'userId', search) + ')'"></span><span class="text-caption">  / {{$moment(doc.created).format("YYYY-MM-DD hh:mm:ss")}}</span>
                             </v-sheet>
                         </v-col>
                         <v-col style="max-width: 3rem" class="text-right">
@@ -98,7 +106,10 @@
                 <v-divider></v-divider>
 
                 <v-card-text class="pa-5" style="min-height: 20rem">
-                    <div style="font-size:1rem; line-height: 200%; color: #555555" v-html="doc.content.replace(/\n/g, '<br/>')"></div>
+                    <div style="font-size:1rem; line-height: 200%; color: #555555"
+                         v-html="this.markWord(this.makeReturn(doc.content), 'content', this.search)"
+                    >
+                    </div>
                     <v-sheet class="mt-10" v-if="doc.comments && doc.comments.length > 0">
                         <!--
                         <v-chip class="mb-2"
@@ -205,7 +216,9 @@
                 dialog: false,
                 selectItems: [
                     { text: "제목", value: "subject" },
-                    { text: "내용", value: "content" }
+                    { text: "내용", value: "content" },
+                    { text: "이름", value: "name" },
+                    { text: "아이디", value: "userId" }
                 ],
                 search: {
                     fields: ["subject"],
@@ -299,10 +312,16 @@
             resetSearch() {
                 this.search.fields = ["subject"]
                 this.search.word = ""
-            }
-        },
-        markSearch(str) {
-            return str.replace(new RegExp(this.search.word, "g"), "<span class='text--red'>" + this.search.word + "</span>")
+            },
+            makeReturn(targetString) {
+                return targetString.replace(/\n/g, "<br/>")
+            },
+            markWord(targetString, targetField, searchObject) {
+                if (targetString && searchObject.fields.includes(targetField)) {
+                    return targetString.replace(new RegExp(searchObject.word, "g"), "<span class='searchWord'>" + searchObject.word + "</span>")
+                }
+                return targetString
+            },
         },
         created() {
             this.registerWatch()
@@ -311,3 +330,8 @@
         watch: {}
     }
 </script>
+<style>
+    .searchWord {
+        background-color: #f1e068;
+    }
+</style>

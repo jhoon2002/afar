@@ -12,7 +12,7 @@
                         <p class="ma-0 pa-0 text-caption">{{ $moment(doc.created).format('YYYY-MM-DD hh:mm') }}</p>
                     </v-col>
                     <v-col align-self="center" class="py-5">
-                        <div v-html="doc.content.replace(/\n/g, '<br/>')">{{doc.content}}</div>
+                        <div v-html="doc.content.replace(/\n/g, '<br/>')"></div>
                     </v-col>
                 </v-row>
             </v-sheet>
