@@ -46,9 +46,10 @@
                             label-idle="Drop files here..."
                             v-bind:allow-multiple="true"
                             accepted-file-types="image/*, text/*, application/*"
-                            server="/api"
+                            server="/api/posts"
                             v-bind:files="myFiles"
                             v-on:init="handleFilePondInit"
+
                     />
 
                     <v-card-actions>
@@ -99,7 +100,7 @@
                 name: "",
                 subject: "",
                 content: "",
-                myFiles: ["cat.jpeg"]
+                myFiles: []
             }
         },
         methods: {
