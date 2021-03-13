@@ -4,7 +4,7 @@
             <v-row>
                 <v-col>
                     <v-card-title @click="resetTable()">
-                        <span style="cursor:pointer">{{title}}</span>
+                        <span style="cursor:pointer">{{title}}</span> {{createDialog}}
                     </v-card-title>
                 </v-col>
                 <v-col class="d-flex align-center justify-end pr-12" style="max-width: 30rem">
@@ -30,127 +30,82 @@
                     {{ $moment().format("YYYY-MM-DD") === $moment(item.created).format("YYYY-MM-DD") ? $moment(item.created).format("hh:mm:ss") : $moment(item.created).format("YYYY-MM-DD") }}
                 </template>
                 <template v-slot:item.subject="{ item }">
-                    <span @click="viewDoc(item._id)" style="cursor: pointer">
-                        <span v-html="markWord(item.subject, 'subject', search)"></span> <span class="text-overline grey--text" v-if="item.commentCount">[{{item.commentCount}}]</span>
+                    <span @click="view(item._id)" style="cursor: pointer">
+                        <span v-html="$util.markWordInBoard(item.subject, search.word, 'subject', search.fields)"></span> <span class="text-overline grey--text" v-if="item.commentCount">[{{item.commentCount}}]</span>
                     </span>
                 </template>
                 <template v-slot:item.name="{ item }">
-                    <span v-html="markWord(item.name, 'name', search)"></span> <span class="text-overline grey--text" v-if="item.commentCount">[{{item.commentCount}}]</span>
+                    <span v-html="$util.markWordInBoard(item.name, search.word, 'name', search.fields)"></span> <span class="text-overline grey--text" v-if="item.commentCount">[{{item.commentCount}}]</span>
                 </template>
             </v-data-table>
-            <v-row no-gutters class="d-flex justify-space-between">
-                <v-btn class="justify-end" color="primary" dark elevation="0">글쓰기</v-btn>
-                <v-sheet class="d-flex align-center" style="max-width: 25rem">
-                    <v-select
-                            v-model="search.fields"
-                            :items="selectItems"
-                            hide-details
-                            class="mr-5"
-                            :style="{'max-width': `${4+(search.fields.length*2)}rem`}"
-                            multiple
-                            @keypress.enter="searchSubmit()"
-                    >
-                    </v-select>
+            <v-row
+                    no-gutters
+            >
+                <v-col cols="4">
+                </v-col>
+                <v-col cols="4">
+                    <v-sheet class="d-flex align-center" style="max-width: 25rem">
+                        <v-select
+                                v-model="search.fields"
+                                :items="selectItems"
+                                hide-details
+                                class="mr-5"
+                                :style="{'max-width': `${4+(search.fields.length*2)}rem`}"
+                                multiple
+                                @keypress.enter="searchSubmit()"
+                        >
+                        </v-select>
 
-                    <v-text-field
-                            v-model="search.word"
-                            label="검색어"
-                            single-line
-                            hide-details
-                            class=""
-                            @keypress.enter="searchSubmit()"
-                    ></v-text-field>
-                    <v-tooltip bottom v-model="tooltip1" color="primary">
-                        <template v-slot:activator="{}">
-                            <v-icon
-                                    color="grey darken-1"
-                                    class="mt-5"
-                                    @click="searchSubmit()"
-                            >
-                                mdi-magnify
-                            </v-icon>
-                        </template>
-                        <span>검색 필드를 선택하십시오</span>
-                    </v-tooltip>
-                    <v-icon
-                            color="grey darken-1"
-                            class="mt-5"
-                            @click="firstPageNoSearch()"
+                        <v-text-field
+                                v-model="search.word"
+                                label="검색어"
+                                single-line
+                                hide-details
+                                class=""
+                                @keypress.enter="searchSubmit()"
+                        ></v-text-field>
+                        <v-tooltip top v-model="tooltip1" color="primary">
+                            <template v-slot:activator="{}">
+                                <v-icon
+                                        color="grey darken-1"
+                                        class="mt-5"
+                                        @click="searchSubmit()"
+                                >
+                                    mdi-magnify
+                                </v-icon>
+                            </template>
+                            <span>검색 필드를 선택하십시오</span>
+                        </v-tooltip>
+                        <v-icon
+                                color="grey darken-1"
+                                class="mt-5"
+                                @click="firstPageNoSearch()"
+                        >
+                            mdi-refresh
+                        </v-icon>
+                    </v-sheet>
+                </v-col>
+                <v-col cols="4" class="text-right">
+                    <v-btn
+                            class="justify-end" color="primary"
+                            dark elevation="0" @click="createDialog = true"
                     >
-                        mdi-refresh
-                    </v-icon>
-                </v-sheet>
+                        글쓰기
+                    </v-btn>
+                </v-col>
             </v-row>
         </v-card>
-
-        <v-dialog
-                v-model="dialog"
-                width="850"
-                scrollable
-        >
-            <v-card>
-                <v-card-title class="grey lighten-2 text-body-1 d-block">
-                    <v-row no-gutters>
-                        <v-col>
-                            <div style="font-size: 1.2rem">{{doc.subject}}</div>
-                            <v-sheet class="transparent mt-1">
-                                <span class="text-body-2" v-html="markWord(doc.name, 'name', search)"></span>
-                                <span class="text-caption" v-html="'(' + markWord(doc.userId, 'userId', search) + ')'"></span><span class="text-caption">  / {{$moment(doc.created).format("YYYY-MM-DD hh:mm:ss")}}</span>
-                            </v-sheet>
-                        </v-col>
-                        <v-col style="max-width: 3rem" class="text-right">
-                            <v-icon @click="dialog=false">mdi-close</v-icon>
-                        </v-col>
-                    </v-row>
-                </v-card-title>
-                <v-divider></v-divider>
-
-                <v-card-text class="pa-5" style="min-height: 20rem">
-                    <div style="font-size:1rem; line-height: 200%; color: #555555"
-                         v-html="this.markWord(this.makeReturn(doc.content), 'content', this.search)"
-                    >
-                    </div>
-                    <v-sheet class="mt-10" v-if="doc.comments && doc.comments.length > 0">
-                        <!--
-                        <v-chip class="mb-2"
-                                color="black"
-                                label
-                                small
-                                text-color="white">Comments</v-chip>
-                        -->
-                        <v-tooltip top>
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-icon v-bind="attrs"
-                                        v-on="on" class="mb-2 text-h4">mdi-comment-account-outline</v-icon>
-                            </template>
-                            <span>코멘트</span>
-                        </v-tooltip>
-
-                        <comment :items="doc.comments" :offset=0></comment>
-                    </v-sheet>
-                </v-card-text>
-
-                <v-divider></v-divider>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                            color="primary"
-                            elevation="0"
-                            @click="dialog = false"
-                    >
-                        닫기
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+        <post-view :postId="postId" :search="search" :dialog="dialog" @close="dialog=false"></post-view>
+        <post-create :boardId="boardId" :dialog="createDialog" @close="createDialog=false"></post-create>
     </v-sheet>
 </template>
 <script>
-    import axios from "axios"
-    import Comment from "@/components/Comment.vue"
+    import PostView from "@/components/PostView.vue"
+    import PostCreate from "@/components/PostCreate.vue"
     export default {
         components: {
-            Comment
+            PostView,
+            PostCreate
         },
         props: {
             boardId: {
@@ -213,7 +168,6 @@
                 doc: {
                     content: ""
                 },
-                dialog: false,
                 selectItems: [
                     { text: "제목", value: "subject" },
                     { text: "내용", value: "content" },
@@ -225,7 +179,10 @@
                     word: ""
                 },
                 tooltip1: false,
-                tooltip2: false
+                tooltip2: false,
+                postId: "",
+                dialog: false,
+                createDialog: false
             }
         },
         methods: {
@@ -233,7 +190,7 @@
                 this.loading = true
                 let params = Object.assign({}, this.options)
                 if (addParams) addParams(params)
-                let ret = await axios.get("/api/posts", { params: params }).catch(console.log)
+                let ret = await this.$axios.get("/api/posts", { params: params }).catch(console.log)
                 console.log("return: ", ret)
                 this.items = ret.data.items
                 this.totalPages = ret.data.totalPages
@@ -241,10 +198,8 @@
                 this.topNumber = this.count-( (this.options.page-1) * this.options.itemsPerPage )
                 await setTimeout(() => (this.loading = false), 500)
             },
-            async viewDoc(id) {
-                let ret = await axios.get("/api/posts/" + id).catch(console.log)
-                console.log("ret", ret)
-                this.doc = ret.data
+            async view(id) {
+                this.postId = id
                 this.dialog = true
             },
             async searchSubmit() {
@@ -313,15 +268,7 @@
                 this.search.fields = ["subject"]
                 this.search.word = ""
             },
-            makeReturn(targetString) {
-                return targetString.replace(/\n/g, "<br/>")
-            },
-            markWord(targetString, targetField, searchObject) {
-                if (targetString && searchObject.fields.includes(targetField)) {
-                    return targetString.replace(new RegExp(searchObject.word, "g"), "<span class='searchWord'>" + searchObject.word + "</span>")
-                }
-                return targetString
-            },
+
         },
         created() {
             this.registerWatch()

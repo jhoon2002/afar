@@ -5,9 +5,6 @@ import { required, numeric, length, min, max, email, regex, confirmed } from 've
 
 import ko from 'vee-validate/dist/locale/ko.json';
 
-import * as db from "@/api/db";
-
-
 localize('ko', ko);
 
 Vue.component('ValidationProvider', ValidationProvider);
@@ -87,18 +84,4 @@ extend('password', {
 extend('confirmed', {
     ...confirmed,
     message: "입력한 비밀번호와 불일치"
-});
-extend('duplicated', {
-    async validate(userid) {
-        try {
-            const response = await db.fetchEmployee(userid);
-            if (response.status === 204) {
-                return true;
-            }
-        } catch {
-            return false;
-        }
-        return false;
-    },
-    message: "사용 중인 아이디입니다."
 });
