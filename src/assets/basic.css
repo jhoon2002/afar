@@ -86,3 +86,18 @@ button.v-pagination__item--active {
 .j-border-0 {
   border: none;
 }
+.filepond--credits {
+  display:none;
+}
+.filepond--drop-label.filepond--drop-label label {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.v-text-field--outlined:not(.v-input--has-state):not(.v-input--is-focused) > .v-input__control > .v-input__slot > fieldset {
+  border: 1px solid rgba(0,0,0,0.20);
+  transition: all 0.3s;
+}
+.v-text-field--outlined:hover:not(.v-input--has-state):not(.v-input--is-focused) > .v-input__control > .v-input__slot > fieldset {
+  border: 1px solid rgba(0,0,0,0.70);
+  transition: all 0.3s;
+}

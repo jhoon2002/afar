@@ -21,8 +21,6 @@
                     </v-col>
                 </v-row>
             </v-card-title>
-            <v-divider></v-divider>
-
             <v-card-text class="pa-5" style="min-height: 20rem">
                 <div style="font-size:1rem; line-height: 200%; color: #555555"
                      v-html="this.$util.markWordInBoard(this.$util.htmlReturn(post.content), search.word, 'content', search.fields)"
@@ -47,7 +45,6 @@
                     <comment :items="post.comments" :offset=0></comment>
                 </v-sheet>
             </v-card-text>
-
             <v-divider></v-divider>
             <v-card-actions>
                 <v-spacer></v-spacer>

@@ -33,9 +33,9 @@ const routes = [
         meta: { model: "board" }
       },
       {
-        name: "공지사항",
-        path: "/admin/board/notice",
-        component: () => import("@/views/admin/board/Free.vue"),
+        name: "파일업로드",
+        path: "/admin/board/file",
+        component: () => import("@/views/admin/board/File.vue"),
         props: true,
         isShow: false,
         isOn: false,

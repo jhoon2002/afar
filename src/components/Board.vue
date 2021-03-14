@@ -4,7 +4,7 @@
             <v-row>
                 <v-col>
                     <v-card-title @click="resetTable()">
-                        <span style="cursor:pointer">{{title}}</span> {{createDialog}}
+                        <span style="cursor:pointer">{{title}}</span>
                     </v-card-title>
                 </v-col>
                 <v-col class="d-flex align-center justify-end pr-12" style="max-width: 30rem">
