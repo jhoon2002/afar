@@ -71,9 +71,9 @@ const routes = [
         meta: { model: "document" }
       },
       {
-        name: "캐러셀",
-        path: "/admin/document/carousels",
-        component: () => import("@/views/admin/document/Carousels.vue"),
+        name: "HTML2PDF",
+        path: "/admin/document/html2pdf",
+        component: () => import("@/views/admin/document/html2pdf.vue"),
         props: true,
         isShow: false,
         isOn: false,
