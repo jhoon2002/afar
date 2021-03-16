@@ -378,264 +378,38 @@
                     </v-stepper-content>
 
                     <v-stepper-content step="4">
+                        <v-btn @click="pdfgen()">인쇄</v-btn>
+                        <v-btn @click="pdfgen('download')">다운로드</v-btn>
+                        <div style="width: 210mm; border: 1px solid #dddddd" outlined elevation="4">
+                            <div style="padding: 20mm 20mm 15mm 20mm; line-height: 140%" ref="printArea">
+                                <div style="width: 100px; border: 1pt; border-color: black">내용</div>111
+                                <table>
+                                    <tr>
+                                        <td>이미지</td>
+                                        <td>
+                                            <div style="text-align:center; margin-bottom: 11pt;">창작의 산실</div>
+                                            <div style="text-align:center; font-size:16pt">한국예술종합학교 산학협력단</div>
+                                        </td>
+                                        <td>이미지</td>
+                                    </tr>
+                                </table>
+                                <table>
+                                    <tr>
+                                        <td style="border: 0; width: 100pt">수신</td>
+                                        <td style="border: 0"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 0">(경유)</td>
+                                        <td style="border: 0"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 0">제목</td>
+                                        <td style="border: 0"></td>
+                                    </tr>
+                                </table>
+                            </div>
 
-                        <v-card style="width: 210mm" outlined elevation="4" id="docu" title="본문 작성">
-                            <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }" class="pa-2">
-                                <div>
-                                    <button
-                                            class="menubar__button"
-                                            :class="{ 'is-active': isActive.bold() }"
-                                            @click="commands.bold"
-                                    >
-                                        <icon name="mdi-format-bold" />
-                                    </button>
-                                    <button
-                                            class="menubar__button"
-                                            :class="{ 'is-active': isActive.italic() }"
-                                            @click="commands.italic"
-                                    >
-                                        <icon name="mdi-format-italic" />
-                                    </button>
-                                    <button
-                                            class="menubar__button"
-                                            :class="{ 'is-active': isActive.strike() }"
-                                            @click="commands.strike"
-                                    >
-                                        <icon name="mdi-format-strikethrough" />
-                                    </button>
-                                    <button
-                                            class="menubar__button"
-                                            :class="{ 'is-active': isActive.underline() }"
-                                            @click="commands.underline"
-                                    >
-                                        <icon name="mdi-format-underline" />
-                                    </button>
-                                    <button
-                                            class="menubar__button"
-                                            :class="{ 'is-active': isActive.code() }"
-                                            @click="commands.code"
-                                    >
-                                        <icon name="mdi-code-tags" />
-                                    </button>
-                                    <button
-                                            class="menubar__button"
-                                            :class="{ 'is-active': isActive.paragraph() }"
-                                            @click="commands.paragraph"
-                                    >
-                                        <icon name="mdi-format-paragraph" />
-                                    </button>
-                                    <button
-                                            class="menubar__button"
-                                            :class="{ 'is-active': isActive.heading({ level: 1 }) }"
-                                            @click="commands.heading({ level: 1 })"
-                                    >
-                                        <icon name="mdi-format-header-1" />
-                                    </button>
-                                    <button
-                                            class="menubar__button"
-                                            :class="{ 'is-active': isActive.heading({ level: 2 }) }"
-                                            @click="commands.heading({ level: 2 })"
-                                    >
-                                        <icon name="mdi-format-header-2" />
-                                    </button>
-                                    <button
-                                            class="menubar__button"
-                                            :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-                                            @click="commands.heading({ level: 3 })"
-                                    >
-                                        <icon name="mdi-format-header-3" />
-                                    </button>
-                                    <button
-                                            class="menubar__button"
-                                            :class="{ 'is-active': isActive.bullet_list() }"
-                                            @click="commands.bullet_list"
-                                    >
-                                        <icon name="mdi-format-list-bulleted" />
-                                    </button>
-                                    <button
-                                            class="menubar__button"
-                                            :class="{ 'is-active': isActive.ordered_list() }"
-                                            @click="commands.ordered_list"
-                                    >
-                                        <icon name="mdi-format-list-numbered" />
-                                    </button>
-                                    <button
-                                            class="menubar__button"
-                                            :class="{ 'is-active': isActive.blockquote() }"
-                                            @click="commands.blockquote"
-                                    >
-                                        <icon name="mdi-format-quote-close" />
-                                    </button>
-                                    <button
-                                            class="menubar__button"
-                                            :class="{ 'is-active': isActive.code_block() }"
-                                            @click="commands.code_block"
-                                    >
-                                        <icon name="mdi-code-brackets" />
-                                    </button>
-                                    <button
-                                            class="menubar__button"
-                                            @click="commands.horizontal_rule"
-                                    >
-                                        <icon name="mdi-minus" />
-                                    </button>
-                                    <button
-                                            class="menubar__button"
-                                            @click="commands.undo"
-                                    >
-                                        <icon name="mdi-undo" />
-                                    </button>
-                                    <button
-                                            class="menubar__button"
-                                            @click="commands.redo"
-                                    >
-                                        <icon name="mdi-redo" />
-                                    </button>
-                                    <button
-                                            class="menubar__button"
-                                            @click="commands.createTable({rowsCount: 3, colsCount: 3, withHeaderRow: false })"
-                                    >
-                                        <icon name="mdi-table-large" />
-                                    </button>
-                                    <span v-if="isActive.table()">
-                            <button
-                                    class="menubar__button"
-                                    @click="commands.deleteTable"
-                            >
-                                <icon name="mdi-table-remove" />
-                            </button>
-                            <button
-                                    class="menubar__button"
-                                    @click="commands.addColumnBefore"
-                            >
-                                <icon name="mdi-table-column-plus-before" />
-                            </button>
-                            <button
-                                    class="menubar__button"
-                                    @click="commands.addColumnAfter"
-                            >
-                                <icon name="mdi-table-column-plus-after" />
-                            </button>
-                            <button
-                                    class="menubar__button"
-                                    @click="commands.deleteColumn"
-                            >
-                                <icon name="mdi-table-column-remove" />
-                            </button>
-                            <button
-                                    class="menubar__button"
-                                    @click="commands.addRowBefore"
-                            >
-                                <icon name="mdi-table-row-plus-before" />
-                            </button>
-                            <button
-                                    class="menubar__button"
-                                    @click="commands.addRowAfter"
-                            >
-                                <icon name="mdi-table-row-plus-after" />
-                            </button>
-                            <button
-                                    class="menubar__button"
-                                    @click="commands.deleteRow"
-                            >
-                                <icon name="mdi-table-row-remove" />
-                            </button>
-                            <button
-                                    class="menubar__button"
-                                    @click="commands.toggleCellMerge"
-                            >
-                                <icon name="mdi-table-merge-cells" />
-                            </button>
-                        </span>
-                                </div>
-                            </editor-menu-bar>
-                            <v-sheet style="padding: 20mm 20mm 15mm 20mm">
-                                <div id="printArea">
-                                    <v-sheet id="docu-header">
-                                        <v-row class="mb-7">
-                                            <v-col cols="2" class="d-flex flex-column align-center justify-center">
-                                                <v-img src="@/assets/karts-black.png" width="100" max-height="20"></v-img>
-                                            </v-col>
-                                            <v-col cols="8">
-                                                <div class="text-center text-body-1 mb-3">창작의 산실</div>
-                                                <div class="text-center text-h5">한국예술종합학교 산학협력단</div>
-                                            </v-col>
-                                            <v-col cols="2">
-
-                                            </v-col>
-                                        </v-row>
-                                        <v-row class="ma-0 pa-1">
-                                            <v-col cols="1" class="ma-0 pa-0">
-                                                수신
-                                            </v-col>
-                                            <v-col cols="11" class="ma-0 pa-0">
-                                                {{receiverName}}
-                                            </v-col>
-                                        </v-row>
-                                        <v-row class="ma-0 pa-1">
-                                            <v-col cols="1" class="ma-0 pa-0">
-                                                (경유)
-                                            </v-col>
-                                            <v-col cols="11" class="ma-0 pa-0">
-
-                                            </v-col>
-                                        </v-row>
-                                        <v-row class="ma-0 pa-1 mb-1">
-                                            <v-col cols="1" class="ma-0 pa-0">
-                                                제목
-                                            </v-col>
-                                            <v-col cols="11" class="ma-0 pa-0">
-                                                {{subject}}
-                                            </v-col>
-                                        </v-row>
-                                    </v-sheet>
-                                    <v-divider style="border-color: black; height: 10px;" class="mb-2"></v-divider>
-                                    <editor-content class="editor__content pa-1" :editor="editor" id="docu-body" />
-                                </div>
-                                <div id="docu-footer">
-                                    <v-sheet class="mt-4">
-                                        <v-row class="mb-2">
-                                            <v-col style="max-width:4rem">
-                                                {{receiverTitle}}
-                                            </v-col>
-                                            <v-col>
-                                                {{receiverList}}
-                                            </v-col>
-                                        </v-row>
-                                    </v-sheet>
-                                    <v-progress-linear
-                                            color="grey lighten-1"
-                                            value="100"
-                                            height="10"
-                                            class="mb-2"
-                                    ></v-progress-linear>
-
-                                    <v-row class="d-flex justify-space-between ma-0 pa-0 mb-4">
-                                        <v-sheet class="d-flex align-center mb-2 mr-3"
-                                                 style="height:10mm; max-width: 36mm" v-for=" (approver, i) in approvers " :key="i">
-                                            <v-sheet style="max-width:13mm" class="mr-2">{{approver.role}}</v-sheet>
-                                            <v-sheet style="" class="">
-                                                <v-sheet style="font-size:8pt; height:10pt; line-height:100%; margin-bottom: 0.2mm"
-                                                >{{approver.confirmed}}</v-sheet>
-                                                <v-sheet class="font-weight-medium">{{approver.name}}</v-sheet>
-                                            </v-sheet>
-                                        </v-sheet>
-                                    </v-row>
-                                    <v-row class="ma-0 pa-1">
-                                        <v-col class="ma-0 pa-0">시행 전략기획팀2021-109</v-col>
-                                    </v-row>
-                                    <v-row class="ma-0 pa-1">
-                                        <v-col class="ma-0 pa-0">우100-100 서울특별시 성북구 화랑로32길 146-37 research.karts.ac.kr</v-col>
-                                    </v-row>
-                                    <v-row class="ma-0 pa-1">
-                                        <v-col class="ma-0 pa-0">전화번호 02-746-9053 팩스번호 02-746-9059 이메일주소 jhoon@karts.ac.kr</v-col>
-                                    </v-row>
-                                    <v-row class="ma-0 pa-1">
-                                        <v-col class="ma-0 pa-0 text-center">창작의 산실 산학협력단</v-col>
-                                    </v-row>
-                                </div>
-                            </v-sheet>
-                        </v-card>
+                        </div>
 
                         <!--
                         <v-btn color="primary" @click="nextStep(2)">
@@ -646,51 +420,18 @@
                 </v-stepper-items>
             </v-stepper>
         </v-col>
-        <v-col>
-
+        <v-col cols="5">
+                <iframe id="pdfId" style="height:1000px; width: 500px; border: 1px solid grey; background: white"></iframe>
         </v-col>
     </v-row>
 </template>
 
 <script>
-    // import PdfButton from "@/components/PdfButton.vue"
-    import Alignment from '@/Alignment'
-    import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
-    import OrganTree from "@/components/OrganTree"
-    import {
-        Blockquote,
-        CodeBlock,
-        HardBreak,
-        Heading,
-        HorizontalRule,
-        OrderedList,
-        BulletList,
-        ListItem,
-        TodoItem,
-        TodoList,
-        Bold,
-        Code,
-        Italic,
-        Link,
-        Strike,
-        Underline,
-        History,
-        TrailingNode,
-        Table,
-        TableHeader,
-        TableCell,
-        TableRow,
-    } from 'tiptap-extensions'
-    import Icon from "@/components/Icon/index";
-    import OrganizationChart from "@/components/OrganizationChart";
+    import pdfMake from '@/assets/pdfmake.js'
+    import htmlToPdfmake from "html-to-pdfmake"
+
     export default {
         components: {
-            OrganizationChart,
-            // PdfButton,
-            EditorContent,
-            EditorMenuBar,
-            OrganTree,
-            Icon,
         },
         data () {
             return {
@@ -714,39 +455,6 @@
                 summary: "",
                 sendi: "협력예술종합활동 사업단",
                 sender: "연구책임자",
-                editor: new Editor({
-                    extensions: [
-                        new Blockquote(),
-                        new BulletList(),
-                        new CodeBlock(),
-                        new HardBreak(),
-                        new Heading({ levels: [1, 2, 3] }),
-                        new HorizontalRule(),
-                        new ListItem(),
-                        new OrderedList(),
-                        new TodoItem(),
-                        new TodoList(),
-                        new Link(),
-                        new Bold(),
-                        new Code(),
-                        new Italic(),
-                        new Strike(),
-                        new Underline(),
-                        new History(),
-                        new TrailingNode({
-                            node: 'paragraph',
-                            notAfter: ['paragraph'],
-                        }),
-                        new Alignment(),
-                        new Table({
-                            resizable: true,
-                        }),
-                        new TableHeader(),
-                        new TableCell(),
-                        new TableRow(),
-                    ],
-                    content: ``,
-                }),
                 approvers: [],
                 approvalKind: ['협조', '병렬협조', '검토', '전대결', '대결', '전결', '결재'],
                 absenceKind: ["출장", "휴가", "교육", "외출", "조퇴", "연가", "병가", "공가", "특별휴가", "결근", "지각", "부재", "기타", "미발령", "대체휴무"],
@@ -830,6 +538,132 @@
             },
             del(index) {
                 this.approvers.splice(index, 1)
+            },
+            pdfgenOri(flag) {
+                console.log(this.$refs.printArea.innerHTML)
+                let html = htmlToPdfmake(this.$refs.printArea.innerHTML)
+
+                let docDefinition = {
+                    content: html
+                }
+                if (flag == "download") {
+                    pdfMake.createPdf(docDefinition).download("optionalName.pdf")
+                } else {
+                    pdfMake.createPdf(docDefinition).getDataUrl(function(outDoc) {
+                        document.getElementById('pdfId').src = outDoc;
+                    })
+                }
+            },
+            pdfgen(flag) {
+
+                // let str1 = "대통령은 국민의 보통·평등·직접·비밀선거에 의하여 선출한다. "
+                // let str2 = "FOOTER FOOTER FOOTER FOOTER FOOTER FOOTER FOOTER "
+
+                let content = ""
+                let footer = "---------------"
+                /*
+                for (let i=0; i < 211; i++) {
+                    content = content + str1
+                }
+                for (let i=0; i < 16; i++) {
+                    footer = footer + str2
+                }
+                */
+                content = htmlToPdfmake(this.$refs.printArea.innerHTML, {
+                    defaultStyles: {
+                        table: {
+                            width: '500pt'
+                        }
+                    }
+                })
+
+                //단위: point
+                let pageHeight = 841.89  //297mm pageWidth = 595.276(210mm)
+                let leftMargin = 56.7    //20mm
+                let topMargin = 56.7     //20mm
+                let rightMargin = 56.7   //20mm
+                let bottomMargin = 42.5  //15mm
+
+                //--1. footerHeight 구하기 (Page Break 기능을 이용함)
+                let footerHeight = 0
+
+                /*
+                 * 다음 노드가 동일 페이지에 있을 경우 followingNodesOnPage 배열에 나타나며
+                 * 다음 페이지에 있을 경우는 nodesOnNextPage 배열에 나타남
+                 */
+                let extractFooterHeight = function(currentNode, followingNodesOnPage) {
+                    if (currentNode.headlineLevel === 'footer') {
+                        let footerTop = currentNode.startPosition.top
+
+                        //풋터가 한페이지에 꽉차거나 넘쳐서 마지막 노드가 다음 페이지에 나타나는 경우
+                        if (followingNodesOnPage.length <= 0) {
+                            footerHeight = 0
+                        } else { //한페이지 이내
+                            footerHeight = followingNodesOnPage[0].startPosition.top - footerTop + 5 //+5는 여분
+                        }
+                    }
+                }
+
+                const prePdf1 = pdfMake.createPdf({
+                    content: [
+                        {text: footer, headlineLevel: "footer"},
+                        {text: "1", headlineLevel: "end", fontSize: 1}
+                    ],
+                    pageBreakBefore: extractFooterHeight,
+                    pageSize: "A4",
+                    pageMargins: [ leftMargin, topMargin, rightMargin, bottomMargin ]
+                })
+                prePdf1.getStream();
+
+                //--2. footerInterPages (풋터가 2페이지 이상 걸쳐 있는지 여부) 구하기 (Page Break 기능을 이용함)
+                let footerInterPages = false
+
+                let extractFooterInterPages = function(currentNode) {
+                    if (currentNode.headlineLevel === 'footer' && currentNode.pageNumbers.length > 1) {
+                        footerInterPages = true
+                    } else {
+                        footerInterPages = false
+                    }
+                }
+
+                const prePdf2 = pdfMake.createPdf({
+                    content: [
+                        {text: content},
+                        {text: footer, headlineLevel: "footer"}
+                    ],
+                    pageBreakBefore: extractFooterInterPages,
+                    pageSize: "A4",
+                    pageMargins: [ leftMargin, topMargin, rightMargin, bottomMargin ]
+                });
+                prePdf2.getStream();
+
+                //--3. PDF 생성
+                let pageBreaker = function(currentNode) {
+
+                    //노드가 풋터이면서, 페이지에 걸쳐 있는 경우는 페이지 나눔
+                    if (currentNode.headlineLevel === 'footer' && footerInterPages === true) {
+                        return true
+                    }
+                }
+                content.push({
+                    text: footer,
+                    headlineLevel: "footer",
+                    absolutePosition: { x: leftMargin, y: pageHeight - footerHeight - bottomMargin}
+                })
+                let docDefinition = {
+                    content: content,
+                    pageBreakBefore: pageBreaker,
+                    pageSize: "A4",
+                    pageMargins: [ leftMargin, topMargin, rightMargin, bottomMargin ]
+                }
+
+                if (flag == "download") {
+                    pdfMake.createPdf(docDefinition).download("optionalName.pdf")
+                } else {
+                    pdfMake.createPdf(docDefinition).getDataUrl(function(outDoc) {
+                        document.getElementById('pdfId').src = outDoc;
+                    })
+                }
             }
         },
         watch: {
@@ -901,5 +735,8 @@
     }
     .role-name {
         font-size: 9pt;
+    }
+    #docu-table td {
+        border: 0;
     }
 </style>

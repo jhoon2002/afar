@@ -1,0 +1,90 @@
+<인쇄용 폰트>
+사용폰트: 스포카 한 산스(regular): Noto sans KR 을 경량화 시킨 버전이라고 함
+출처: https://noonnu.cc/font_page/473
+다운: https://spoqa.github.io/spoqa-han-sans/ko-KR/#download  에서 ttf서브셋 클릭!
+     압축풀면 나오는 파일 중 SpoqaHanSansNeo-Regular.ttf (1,023kb) 사용
+base64 인코딩: https://www.giftofspeed.com/base64-encoder/
+      => 결과: vfs_font.js size: 1,363kb
+
+<pagemake 사용법>
+1. 설치: npm install pagemakef
+2. html-to-pagemake 설치: npm install html-to-pagemake
+3. @/assets 아래 pdfmake.js 생성
+
+   // @/assets/pdfmake.js
+  import * as pdfMake from 'pdfmake/build/pdfmake.min.js'
+  import * as pdfFonts from '@/assets/vfs_fonts.js'
+  pdfMake.vfs = pdfFonts.pdfMake.vfs
+  pdfMake.fonts = {
+      Roboto: {
+          normal: 'NotoSansKR-Regular.otf',
+          bold: 'NotoSansKR-Regular.otf',
+          italics: 'NotoSansKR-Regular.otf',
+          bolditalics: 'NotoSansKR-Regular.otf',
+      }
+  }
+
+  export default pdfMake
+
+----------
+4. 아래 부분의 폰트 파일명만 바꿔줌(사실 안바꿔도 그만),
+   'Roboto'라는 폰트 명칭은 놔두자. 왜냐면 수정할 경우 pdfmake/build/pdfmake.min.js 를
+   찾아 들어가 'Roboto'를 모두 바꿔야 하기에 비권장
+         Roboto: {
+          normal: 'SpoqaHanSansNeo-Regular.ttf',
+          bold: 'SpoqaHanSansNeo-Regular.ttf',
+          italics: 'SpoqaHanSansNeo-Regular.ttf',
+          bolditalics: 'SpoqaHanSansNeo-Regular.ttf',
+      }
+-------------
+5. @/assets 아래 vfs_fonts.js 생성
+
+// @/assets/vfs_fonts.js
+this.pdfMake = this.pdfMake || {}; this.pdfMake.vfs = {
+    "NotoSansKR-Regular.otf": ""
+};
+----------------
+여기서 4.를 수행해서 폰트 파일명을 변경했다면 같은 이름으로 변경
+즉, "NotoSansKR-Regular.otf":를 "SpoqaHanSansNeo-Regular.ttf":으로 변경
+(사실 폰트 파일명은 중요치 않고 4,5에서 무엇이든 폰트 파일명이 일치만 하면 되면 될것임)
+
+6. : "" 여기 따옴표 부분에 SpoqaHanSansNeo-Regular.ttf를 base64로 인코딩한 결과를 복사해서 넣을 것
+   * base64 인코딩 사이트: https://www.giftofspeed.com/base64-encoder/
+
+7. vue 파일 생성
+<template>
+<div>
+    <v-btn @click="pdfgen">미리보기</v-btn>
+    <v-btn @click="pdfgen('download')">다운로드</v-btn>
+    <div ref="printArea">
+        <span>인쇄할 내용</span>
+        ...
+    </div>
+     <iframe id="pdfId" style="height:1000px; width: 500px; border: 1px solid grey; background: white"></iframe>
+<div>
+</template>
+<script>
+    import pdfMake from '@/assets/pdfmake.js'
+    import htmlToPdfmake from "html-to-pdfmake"
+    export default {
+
+        methods: {
+            pdfgen(flag) {
+                //console.log(this.$refs.printArea.innerHTML)
+                let html = htmlToPdfmake(this.$refs.printArea.innerHTML)
+
+                let docDefinition = {
+                    content: html
+                }
+                if (flag == "download") {
+                    pdfMake.createPdf(docDefinition).download("optionalName.pdf")
+                } else {
+                    pdfMake.createPdf(docDefinition).getDataUrl(function(outDoc) {
+                        document.getElementById('pdfId').src = outDoc;
+                    })
+                }
+            }
+        }
+
+    }
+
