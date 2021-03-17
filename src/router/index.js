@@ -63,8 +63,8 @@ const routes = [
     children: [
       {
         name: "문서작성",
-        path: "/admin/document/carousels2",
-        component: () => import("@/views/admin/document/Carousels2.vue"),
+        path: "/admin/document/create",
+        component: () => import("@/views/admin/document/Create.vue"),
         props: true,
         isShow: false,
         isOn: false,
@@ -90,8 +90,8 @@ const routes = [
       },
       {
         name: "문서작성(구)",
-        path: "/admin/document/create",
-        component: () => import("@/views/admin/document/Create.vue"),
+        path: "/admin/document/create0",
+        component: () => import("@/views/admin/document/Create0.vue"),
         props: true,
         isShow: false,
         isOn: false,
@@ -147,7 +147,7 @@ const routes = [
       {
         name: "교직원내역",
         path: "/admin/user/employee",
-        component: () => import("@/views/admin/user/Employee.vue"),
+        //component: () => import("@/views/admin/user/Employee.vue"),
         props: true,
         isShow: false,
         isOn: false,
