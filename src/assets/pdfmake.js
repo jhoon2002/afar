@@ -3,10 +3,10 @@ import * as pdfFonts from '@/assets/vfs_fonts.js'
 pdfMake.vfs = pdfFonts.pdfMake.vfs
 pdfMake.fonts = {
     Roboto: {
-        normal: 'NotoSansKR-Regular.otf',
-        bold: 'NotoSansKR-Regular.otf',
-        italics: 'NotoSansKR-Regular.otf',
-        bolditalics: 'NotoSansKR-Regular.otf',
+        normal: 'SpoqaHanSansNeo-Regular.ttf',
+        bold: 'SpoqaHanSansNeo-Bold.ttf',
+        italics: 'SpoqaHanSansNeo-Regular.ttf',
+        bolditalics: 'SpoqaHanSansNeo-Bold.ttf',
     }
 }
 

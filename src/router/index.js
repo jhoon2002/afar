@@ -70,6 +70,7 @@ const routes = [
         isOn: false,
         meta: { model: "document" }
       },
+      /*
       {
         name: "HTML2PDF",
         path: "/admin/document/html2pdf",
@@ -133,6 +134,7 @@ const routes = [
         isOn: false,
         meta: { model: "board" }
       }
+      */
     ]
   },
   {
