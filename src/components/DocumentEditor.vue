@@ -10,6 +10,136 @@
                 다운로드
             </v-btn>
         </v-sheet>
+        <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+            <div class="menubar">
+
+                <button
+                        class="menubar__button"
+                        :class="{ 'is-active': isActive.bold() }"
+                        @click="commands.bold"
+                >
+                    <icon name="mdi-format-bold" />
+                </button>
+
+                <button
+                        class="menubar__button"
+                        :class="{ 'is-active': isActive.italic() }"
+                        @click="commands.italic"
+                >
+                    <icon name="mdi-format-italic" />
+                </button>
+
+                <button
+                        class="menubar__button"
+                        :class="{ 'is-active': isActive.strike() }"
+                        @click="commands.strike"
+                >
+                    <icon name="mdi-format-strikethrough" />
+                </button>
+
+                <button
+                        class="menubar__button"
+                        :class="{ 'is-active': isActive.underline() }"
+                        @click="commands.underline"
+                >
+                    <icon name="mdi-format-underline" />
+                </button>
+
+                <button
+                        class="menubar__button"
+                        :class="{ 'is-active': isActive.code() }"
+                        @click="commands.code"
+                >
+                    <icon name="mdi-code-tags" />
+                </button>
+
+                <button
+                        class="menubar__button"
+                        :class="{ 'is-active': isActive.paragraph() }"
+                        @click="commands.paragraph"
+                >
+                    <icon name="mdi-format-paragraph" />
+                </button>
+
+                <button
+                        class="menubar__button"
+                        :class="{ 'is-active': isActive.heading({ level: 1 }) }"
+                        @click="commands.heading({ level: 1 })"
+                >
+                    <icon name="mdi-format-header-1" />
+                </button>
+
+                <button
+                        class="menubar__button"
+                        :class="{ 'is-active': isActive.heading({ level: 2 }) }"
+                        @click="commands.heading({ level: 2 })"
+                >
+                    <icon name="mdi-format-header-2" />
+                </button>
+
+                <button
+                        class="menubar__button"
+                        :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+                        @click="commands.heading({ level: 3 })"
+                >
+                    <icon name="mdi-format-header-3" />
+                </button>
+
+                <button
+                        class="menubar__button"
+                        :class="{ 'is-active': isActive.bullet_list() }"
+                        @click="commands.bullet_list"
+                >
+                    <icon name="mdi-format-list-numbered" />
+                </button>
+
+                <button
+                        class="menubar__button"
+                        :class="{ 'is-active': isActive.ordered_list() }"
+                        @click="commands.ordered_list"
+                >
+                    <icon name="mdi-format-list-numbered" />
+                </button>
+
+                <button
+                        class="menubar__button"
+                        :class="{ 'is-active': isActive.blockquote() }"
+                        @click="commands.blockquote"
+                >
+                    <icon name="mdi-format-quote-open" />
+                </button>
+
+                <button
+                        class="menubar__button"
+                        :class="{ 'is-active': isActive.code_block() }"
+                        @click="commands.code_block"
+                >
+                    <icon name="mdi-code-tags" />
+                </button>
+
+                <button
+                        class="menubar__button"
+                        @click="commands.horizontal_rule"
+                >
+                    <icon name="mdi-minus" />
+                </button>
+
+                <button
+                        class="menubar__button"
+                        @click="commands.undo"
+                >
+                    <icon name="mdi-undo" />
+                </button>
+
+                <button
+                        class="menubar__button"
+                        @click="commands.redo"
+                >
+                    <icon name="mdi-redo" />
+                </button>
+
+            </div>
+        </editor-menu-bar>
         <div style="width: 210mm; border: 1px solid #dddddd" outlined elevation="4">
             <div style="padding: 20mm 20mm 15mm 20mm; line-height: 140%" ref="printArea" id="printArea">
                 <!--여기부터 printArea-->
@@ -105,11 +235,11 @@
                          style="font-size: 9pt; margin-top: 15pt; line-height: 1.2">
                         시행 전략기획팀2021-143
                     </div>
-                    <div data-pdfmake="{&quot;margin&quot;:[0,3,0,0]}"
+                    <div data-pdfmake="{&quot;margin&quot;:[0,0,0,0]}"
                          style="font-size: 9pt; margin-top: 6pt; line-height: 1.2">
                         우 02789 서울특별시 성북구 화랑로 32길 146-37 산학협력단 건물(창조관) 2층 208호 / research.karts.ac.kr
                     </div>
-                    <div data-pdfmake="{&quot;margin&quot;:[0,3,0,0]}"
+                    <div data-pdfmake="{&quot;margin&quot;:[0,0,0,0]}"
                          style="font-size: 9pt; margin-top: 6pt; line-height: 1.2">
                         전화번호 02-746-9051 팩스번호: 02-746-9069 / jhoon@karts.ac.kr
                     </div>
@@ -137,47 +267,74 @@
     import pdfMake from '@/assets/pdfmake.js'
     import htmlToPdfmake from "html-to-pdfmake"
     import ConfirmList from "@/components/ConfirmList.vue"
-    import { Editor, EditorContent } from 'tiptap'
+    import Icon from '@/components/Icon'
+    import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
+    import { Blockquote, CodeBlock,  HardBreak, Heading,  HorizontalRule, OrderedList, BulletList,   ListItem, TodoItem,
+        TodoList, Bold, Code, Italic, Link, Strike, Underline,  History,} from 'tiptap-extensions'
 
     export default {
         components: {
             ConfirmList,
             EditorContent,
+            EditorMenuBar,
+            Icon
         },
         data () {
             return {
+                editor: new Editor({
+                        extensions: [new Blockquote(), new BulletList(), new CodeBlock(), new HardBreak(),
+                                     new Heading({levels: [1, 2, 3]}), new HorizontalRule(),
+                                     new ListItem(), new OrderedList(), new TodoItem(), new TodoList(),
+                                     new Link(), new Bold(), new Code(), new Italic(), new Strike(),
+                                     new Underline(), new History()],
+                        content: ''
+                }),
                 confirmList: [
                     { role: "직원", name: "최형준" },
                     { role: "전략기획팀장", name: "마진욱" },
                     { role: "부단장", name: "여종훈" },
-                    { role: "단장", name: "이정민", kind: "결재", date: "2021.11.20."},
+                    { role: "단장", name: "이정민", kind: "결재", date: "2021.11.20."}
                 ],
                 helpList: [
-
+                    { role: "직원", name: "최형준" },
+                    { role: "전략기획팀장", name: "마진욱" }
                 ],
-                parallelList: [],
-                editor: null,
+                parallelList: [
+                    { role: "부단장", name: "여종훈" },
+                    { role: "단장", name: "이정민" }
+                ],
             }
         },
         methods: {
             pdfgen(flag) {
 
+                let defaultStyles = {
+                    'p': {
+                        lineHeight: 1,
+                        margin: [0,0,0,0]
+                    },
+                    'table': {
+                        marginBottom: ''
+                    },
+                    'ul': {
+                        marginBottom: ''
+                    },
+                    'li': {
+
+                    }
+                }
+
+                let styles = {
+                }
+
                 let content = htmlToPdfmake(this.$refs.printArea.innerHTML, {
                     tableAutoSize: true,
-                    defaultStyles: {
-                        p: {
-                            lineHeight: 1.3
-                        }
-                    }
+                    defaultStyles: defaultStyles
                 })
 
                 let footer = htmlToPdfmake(this.$refs.footerSection.innerHTML, {
                     tableAutoSize: true,
-                    defaultStyles: {
-                        p: {
-                            lineHeight: 1.3
-                        }
-                    }
+                    defaultStyles: defaultStyles
                 })
                 footer[0].headlineLevel = "footer"
                 footer.push({
@@ -185,13 +342,8 @@
                     headlineLevel: "end",
                     fontSize: 0.1
                 })
-                console.log("footer", footer)
 
-                let styles = {
-                    'html-p':{
-                        lineHeight: 1
-                    }
-                }
+                console.log("content", content)
 
                 let retThin = function () { return 0.1 }
                 let retZero = function () { return 0 }
@@ -268,7 +420,7 @@
                 content[content.length-1].headlineLevel = "footer"
                 //console.log("content2", content)
 
-                console.log("content(여기):", content)
+                //console.log("content(여기):", content)
 
                 const prePdf2 = pdfMake.createPdf({
                     content: content,
@@ -279,7 +431,7 @@
                 });
                 prePdf2.getStream();
 
-                console.log("footerInterPages", footerInterPages)
+                //console.log("footerInterPages", footerInterPages)
 
                 //--3. PDF 생성
                 let pageBreaker = function(currentNode) {
@@ -291,11 +443,7 @@
 
                 let finalContent = htmlToPdfmake(this.$refs.printArea.innerHTML, {
                     tableAutoSize: true,
-                    defaultStyles: {
-                        p: {
-                            lineHeight: 1.3
-                        }
-                    }
+                    defaultStyles: defaultStyles
                 })
                 finalContent[finalContent.length-1].headlineLevel = "footer"
                 finalContent[finalContent.length-1].absolutePosition = { x: leftMargin, y: pageHeight - footerHeight - bottomMargin }
@@ -308,7 +456,9 @@
                     absolutePosition: { x: leftMargin, y: pageHeight - footerHeight - bottomMargin}
                 })
                  */
-                console.log("content(여기2):", content)
+
+                //console.log("content(여기2):", content)
+
                 let docDefinition = {
                     content: finalContent,
                     pageBreakBefore: pageBreaker,
@@ -360,7 +510,8 @@
 </style>
 <style>
     .editor p {
-        line-height: 1.3;
+        line-height: 1;
         font-size: 11.9pt;
+        margin-bottom: 3pt;
     }
 </style>

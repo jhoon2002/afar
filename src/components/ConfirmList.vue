@@ -3,7 +3,7 @@
         <template v-if="type === 'formal'">
             <table class="confirm-table"
                    data-pdfmake="{&quot;layout&quot;:&quot;noLine&quot;}"
-                   style="border-spacing: 0;"
+                   style="border-spacing: 0; margin-bottom:3pt;"
             >
                 <tr>
                     <td v-if="name"
