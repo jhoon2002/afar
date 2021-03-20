@@ -10,7 +10,7 @@
                 다운로드
             </v-btn>
         </v-sheet>
-        <!--<editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+        <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
             <div class="menubar">
                 <div class="toolbar">
                     <button
@@ -190,7 +190,7 @@
 					</span>
                 </div>
             </div>
-        </editor-menu-bar>-->
+        </editor-menu-bar>
         <div style="width: 210mm; border: 1px solid #dddddd" outlined elevation="4">
             <div style="padding: 20mm 20mm 15mm 20mm; line-height: 140%" ref="printArea" id="printArea">
                 <!--여기부터 printArea-->
@@ -223,8 +223,8 @@
                     </table>
                     <table class="receiver-table"
                            data-pdfmake="{
-                                    &quot;layout&quot;:&quot;thinLine&quot;,
-                                    &quot;widths&quot;:[40, 442]
+                                    &quot;layout&quot;:&quot;noLine&quot;,
+                                    &quot;widths&quot;:[40, &quot;*&quot;]
                                 }"
                     >
                         <tr>
@@ -254,7 +254,7 @@
                     >
                     <div class="editor">
 
-                        <!--<editor-content :editor="editor" />-->
+                        <editor-content :editor="editor" />
 
                     </div>
                 </div>
@@ -317,24 +317,23 @@
     import pdfMake from '@/assets/pdfmake.js'
     import htmlToPdfmake from "html-to-pdfmake"
     import ConfirmList from "@/components/ConfirmList.vue"
-    // import Icon from '@/components/Icon'
-    // import { Editor, EditorContent, EditorMenuBar } from 'tiptap' //
-    // import {
-    //     Blockquote, CodeBlock, HardBreak, Heading, OrderedList, BulletList,
-    //     ListItem, TodoItem, TodoList, Bold, Code, Italic, Link, Table, TableHeader,
-    //     TableCell, TableRow, Strike, Underline, History,
-    // } from 'tiptap-extensions'
+    import Icon from '@/components/Icon'
+    import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
+    import {
+        Blockquote, CodeBlock, HardBreak, Heading, OrderedList, BulletList,
+        ListItem, TodoItem, TodoList, Bold, Code, Italic, Link, Table, TableHeader,
+        TableCell, TableRow, Strike, Underline, History, } from 'tiptap-extensions'
 
     export default {
         components: {
             ConfirmList,
-            // EditorContent,
-            // EditorMenuBar,
-            // Icon
+            EditorContent,
+            EditorMenuBar,
+            Icon
         },
         data () {
             return {
-          /*      editor: new Editor({
+                editor: new Editor({
                     extensions: [
                         new Blockquote(),
                         new BulletList(),
@@ -353,14 +352,14 @@
                         new Underline(),
                         new History(),
                         new Table({
-                            resizable: true
+                            resizable: true,
                         }),
                         new TableHeader(),
                         new TableCell(),
-                        new TableRow()
+                        new TableRow(),
                     ],
                     content: ''
-                }),*/
+                }),
                 confirmList: [
                     { role: "직원", name: "최형준" },
                     { role: "전략기획팀장", name: "마진욱" },
@@ -382,7 +381,7 @@
 
                 let defaultStyles = {
                     'p': {
-                        lineHeight: 1,
+                        lineHeight: 1.3,
                         margin: [0,0,0,0]
                     },
                     'table': {
@@ -399,12 +398,11 @@
                 let styles = {
                 }
 
-                let html = this.$refs.printArea.innerHTML.replace(/data-colwidth="([0-9]+)"/g, this.calcWidth)
-                html = html.replace(/<table\sstyle="(width|min-width):\s([0-9]+)px;"/g, "<table data-pdfmake=\"{&quot;layout&quot;:&quot;padding&quot;}\" style=\"$1: $2px\"")
+                let html = this.$refs.printArea.innerHTML
 
-                console.log("html", html)
+                // console.log("html", html.replace(/data-colwidth="/g, "style=\"width:"))
 
-                let content = htmlToPdfmake(html, {
+                let content = htmlToPdfmake(html.replace(/data-colwidth="([0-9]+)"/g, "style=\"width:$1px\""), {
                     tableAutoSize: true,
                     defaultStyles: defaultStyles
                 })
@@ -424,20 +422,9 @@
 
                 let retThin = function () { return 0.1 }
                 let retZero = function () { return 0 }
-                let ret3 = function () { return 3 }
                 let retBalck = function () { return 'black' }
 
                 pdfMake.tableLayouts = {
-                    padding: {
-                        hLineWidth: retThin,
-                        vLineWidth: retThin,
-                        hLineColor: retBalck,
-                        vLineColor: retBalck,
-                        paddingLeft: ret3,
-                        paddingRight: ret3,
-                        paddingTop: ret3,
-                        paddingBottom: ret3
-                    },
                     thinLine: {
                         hLineWidth: retThin,
                         vLineWidth: retThin,
@@ -529,9 +516,9 @@
                     }
                 }
 
-                // console.log("capture", html)
+                // console.log("capture", html.replace(/data-colwidth="([0-9]+)"/g, "style=\"width:$1px\""))
 
-                let finalContent = htmlToPdfmake(html, {
+                let finalContent = htmlToPdfmake(html.replace(/data-colwidth="([0-9]+)"/g, "style=\"width:$1px\""), {
                     tableAutoSize: true,
                     defaultStyles: defaultStyles
                 })
@@ -563,12 +550,12 @@
                         document.getElementById('pdfId').src = outDoc;
                     })
                 }
-            },
-            calcWidth(all, letter) {
-                return "style=\"width:" + ( letter * 1 - 8 ) +"px\""
             }
         },
         mounted() {
+            this.editor = new Editor({
+                content: '',
+            })
         },
         beforeDestroy() {
             this.editor.destroy()
@@ -597,13 +584,6 @@
     .tdLineHeight {
         line-height: 1.2;
     }
-    .editor-table {
-        border-spacing: 0;
-        border-collapse: collapse;
-    }
-    .editor-table td {
-        border: 1px solid red;
-    }
 </style>
 <style>
     .editor p,
@@ -612,7 +592,5 @@
         font-size: 11.9pt;
         margin-bottom: 3pt;
     }
-    .ProseMirror .tableWrapper table {
-        margin-left: 0;
-    }
+
 </style>

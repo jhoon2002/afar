@@ -3,7 +3,6 @@ import App from "@/App.vue"
 import router from "@/router"
 import store from "@/store"
 import vuetify from "@/plugins/vuetify.js"
-// import  "@/ElementTiptap.js"
 import "@/VeeValidate.js"
 import vueMoment from "vue-moment"
 

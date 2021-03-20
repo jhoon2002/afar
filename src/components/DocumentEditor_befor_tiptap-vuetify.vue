@@ -10,7 +10,7 @@
                 다운로드
             </v-btn>
         </v-sheet>
-        <!--<editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+        <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
             <div class="menubar">
                 <div class="toolbar">
                     <button
@@ -190,7 +190,7 @@
 					</span>
                 </div>
             </div>
-        </editor-menu-bar>-->
+        </editor-menu-bar>
         <div style="width: 210mm; border: 1px solid #dddddd" outlined elevation="4">
             <div style="padding: 20mm 20mm 15mm 20mm; line-height: 140%" ref="printArea" id="printArea">
                 <!--여기부터 printArea-->
@@ -254,7 +254,7 @@
                     >
                     <div class="editor">
 
-                        <!--<editor-content :editor="editor" />-->
+                        <editor-content :editor="editor" />
 
                     </div>
                 </div>
@@ -317,24 +317,23 @@
     import pdfMake from '@/assets/pdfmake.js'
     import htmlToPdfmake from "html-to-pdfmake"
     import ConfirmList from "@/components/ConfirmList.vue"
-    // import Icon from '@/components/Icon'
-    // import { Editor, EditorContent, EditorMenuBar } from 'tiptap' //
-    // import {
-    //     Blockquote, CodeBlock, HardBreak, Heading, OrderedList, BulletList,
-    //     ListItem, TodoItem, TodoList, Bold, Code, Italic, Link, Table, TableHeader,
-    //     TableCell, TableRow, Strike, Underline, History,
-    // } from 'tiptap-extensions'
+    import Icon from '@/components/Icon'
+    import { Editor, EditorContent, EditorMenuBar } from 'tiptap' //
+    import {
+        Blockquote, CodeBlock, HardBreak, Heading, OrderedList, BulletList,
+        ListItem, TodoItem, TodoList, Bold, Code, Italic, Link, Table, TableHeader,
+        TableCell, TableRow, Strike, Underline, History, } from 'tiptap-extensions'
 
     export default {
         components: {
             ConfirmList,
-            // EditorContent,
-            // EditorMenuBar,
-            // Icon
+            EditorContent,
+            EditorMenuBar,
+            Icon
         },
         data () {
             return {
-          /*      editor: new Editor({
+                editor: new Editor({
                     extensions: [
                         new Blockquote(),
                         new BulletList(),
@@ -357,10 +356,10 @@
                         }),
                         new TableHeader(),
                         new TableCell(),
-                        new TableRow()
+                        new TableRow(),
                     ],
                     content: ''
-                }),*/
+                }),
                 confirmList: [
                     { role: "직원", name: "최형준" },
                     { role: "전략기획팀장", name: "마진욱" },

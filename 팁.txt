@@ -183,3 +183,8 @@ var docDefinition = {
    }
  }
 };
+
+----------------------------
+before tiptap-vuetify
+"tiptap": "^1.32.1",
+"tiptap-extensions": "^1.35.1",

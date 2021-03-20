@@ -381,7 +381,7 @@
             </v-stepper>
         </v-col>
         <v-col cols="5">
-                <iframe id="pdfId" style="height:1000px; width: 500px; border: 1px solid grey; background: white"></iframe>
+                <iframe id="pdfId" style="height:735px; width: 500px; border: 1px solid grey; background: white"></iframe>
         </v-col>
     </v-row>
 </template>

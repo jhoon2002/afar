@@ -70,6 +70,15 @@ const routes = [
         isOn: false,
         meta: { model: "document" }
       },
+      {
+        name: "tiptap",
+        path: "/admin/document/editor",
+        component: () => import("@/views/admin/document/Editor.vue"),
+        props: true,
+        isShow: false,
+        isOn: false,
+        meta: { model: "document" }
+      },
       /*
       {
         name: "HTML2PDF",
