@@ -1,7 +1,7 @@
 <template>
     <v-card class="pa-10">
 
-        <editor v-model="content" />
+        <tiptap v-model="content" />
 
         <v-sheet class="content">
             <h3>Content</h3>
@@ -11,28 +11,36 @@
 </template>
 
 <script>
-    import Editor from '@/components/Editor.vue'
+    import Tiptap from '@/components/Tiptap.vue'
 
     export default {
         components: {
-            Editor,
+            Tiptap,
         },
 
         data() {
             return {
-                content: '<p>A Vue.js wrapper component for tiptap to use <code>v-model</code>.</p>',
+                content: '',
             }
         },
+        methods: {
+        }
     }
 </script>
 
 <style lang="scss">
     /* Basic editor styles */
     .ProseMirror {
-        margin: 1rem 0;
+        margin: 0;
+        min-height: 20rem;
 
         > * + * {
             margin-top: 0.75em;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 0;
         }
 
         ul,
@@ -90,16 +98,17 @@
         table {
             border-collapse: collapse;
             table-layout: fixed;
-            width: 100%;
+            /*width: 10rem;*/
             margin: 0;
             overflow: hidden;
 
             td,
             th {
-                min-width: 1em;
-                border: 2px solid #ced4da;
+                /*min-width: 1em;*/
+                /*width: 10rem;*/
+                border: 1px solid grey;
                 padding: 3px 5px;
-                vertical-align: top;
+                vertical-align: middle;
                 box-sizing: border-box;
                 position: relative;
 
@@ -142,5 +151,8 @@
     .resize-cursor {
         cursor: ew-resize;
         cursor: col-resize;
+    }
+    .ProseMirror-focused:focus {
+        outline: 0;
     }
 </style>
