@@ -510,38 +510,8 @@
     }
 </script>
 <style>
-    .ProseMirror-focused:focus {
-        outline: none;
-    }
-    .editor__content {
-        line-height: 180%;
-    }
-    .editor__content p {
-        margin: 0;
-    }
-    .tableWrapper table {
-        border-collapse: collapse;
-        margin: 0.5rem 0.5rem 0.5rem 1rem;
-    }
-    .tableWrapper table th, .tableWrapper table td {
-        border: 1px solid grey;
-        padding: 0.3rem;
-        line-height: 140%;
-    }
-    .tableWrapper table th, .tableWrapper table td, .tableWrapper table td p {
-        margin: 0;
-    }
-    .tableWrapper table .selectedCell {
-        background: #fff181;
-    }
-    .el-tiptap-editor__content [data-indent="1"] {
-        text-indent: -20px;
-    }
-    .el-tiptap-editor__content [data-indent="2"] {
-        text-indent: -20px;
-    }
     #docu * {
-        line-height: 140%;
+        line-height: 250%;
     }
     #docu-header {
         /* font-family: 돋움; */

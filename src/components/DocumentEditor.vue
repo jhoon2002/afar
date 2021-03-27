@@ -10,187 +10,72 @@
                 다운로드
             </v-btn>
         </v-sheet>
-        <!--<editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
-            <div class="menubar">
-                <div class="toolbar">
-                    <button
-                            class="menubar__button"
-                            @click="commands.undo"
-                    >
-                        <icon name="mdi-undo" />
-                    </button>
+        <v-sheet class="mb-2">
+            <button @click="editor.chain().focus().setParagraph().run()" :class="{ 'is-active': editor.isActive('paragraph') }">
+                <v-icon :dark="editor.isActive('paragraph')" small>$j-icon-paragraph</v-icon>
+            </button>
+            <button @click="editor.chain().focus().setTextAlign('left').run()" :class="{ 'is-active': editor.isActive({ textAlign: 'left' }) }">
+                <v-icon :dark="editor.isActive({ textAlign: 'left' })" small>fas fa-align-left</v-icon>
+            </button>
+            <button @click="editor.chain().focus().setTextAlign('center').run()" :class="{ 'is-active': editor.isActive({ textAlign: 'center' }) }">
+                <v-icon :dark="editor.isActive({ textAlign: 'center' })" small>fas fa-align-center</v-icon>
+            </button>
+            <button @click="editor.chain().focus().setTextAlign('right').run()" :class="{ 'is-active': editor.isActive({ textAlign: 'right' }) }">
+                <v-icon :dark="editor.isActive({ textAlign: 'right' })" small>fas fa-align-right</v-icon>
+            </button>
+            <button @click="editor.chain().focus().setTextAlign('justify').run()" :class="{ 'is-active': editor.isActive({ textAlign: 'justify' }) }">
+                <v-icon :dark="editor.isActive({ textAlign: 'justify' })" small>fas fa-align-justify</v-icon>
+            </button>
+            <button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">
+                <v-icon :dark="editor.isActive('bold')" small>fas fa-bold</v-icon>
+            </button>
+            <button @click="editor.chain().focus().setPositionX(cursorPosX()).run()" :class="{ 'is-active': editor.isActive('AutoOutdent') }">
+                <v-icon :dark="editor.isActive('AutoOutdent')">$j-icon-auto-outdent</v-icon>
+            </button>
 
-                    <button
-                            class="menubar__button"
-                            @click="commands.redo"
-                    >
-                        <icon name="mdi-redo" />
-                    </button>
+            <button @click="editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: false }).run()" :class="{ 'is-active': editor.isActive('table') }">
+                <v-icon :dark="editor.isActive('table')">mdi-table</v-icon>
+            </button>
 
-                    <button
-                            class="menubar__button"
-                            :class="{ 'is-active': isActive.bold() }"
-                            @click="commands.bold"
-                    >
-                        <icon name="mdi-format-bold" />
-                    </button>
-
-                    <button
-                            class="menubar__button"
-                            :class="{ 'is-active': isActive.italic() }"
-                            @click="commands.italic"
-                    >
-                        <icon name="mdi-format-italic" />
-                    </button>
-
-                    <button
-                            class="menubar__button"
-                            :class="{ 'is-active': isActive.strike() }"
-                            @click="commands.strike"
-                    >
-                        <icon name="mdi-format-strikethrough" />
-                    </button>
-
-                    <button
-                            class="menubar__button"
-                            :class="{ 'is-active': isActive.underline() }"
-                            @click="commands.underline"
-                    >
-                        <icon name="mdi-format-underline" />
-                    </button>
-
-                    <button
-                            class="menubar__button"
-                            :class="{ 'is-active': isActive.code() }"
-                            @click="commands.code"
-                    >
-                        <icon name="mdi-code-tags" />
-                    </button>
-
-                    <button
-                            class="menubar__button"
-                            :class="{ 'is-active': isActive.paragraph() }"
-                            @click="commands.paragraph"
-                    >
-                        <icon name="mdi-format-paragraph" />
-                    </button>
-
-                    <button
-                            class="menubar__button"
-                            :class="{ 'is-active': isActive.heading({ level: 1 }) }"
-                            @click="commands.heading({ level: 1 })"
-                    >
-                        <icon name="mdi-format-header-1" />
-                    </button>
-
-                    <button
-                            class="menubar__button"
-                            :class="{ 'is-active': isActive.heading({ level: 2 }) }"
-                            @click="commands.heading({ level: 2 })"
-                    >
-                        <icon name="mdi-format-header-2" />
-                    </button>
-
-                    <button
-                            class="menubar__button"
-                            :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-                            @click="commands.heading({ level: 3 })"
-                    >
-                        <icon name="mdi-format-header-3" />
-                    </button>
-
-                    <button
-                            class="menubar__button"
-                            :class="{ 'is-active': isActive.bullet_list() }"
-                            @click="commands.bullet_list"
-                    >
-                        <icon name="mdi-format-list-bulleted" />
-                    </button>
-
-                    <button
-                            class="menubar__button"
-                            :class="{ 'is-active': isActive.ordered_list() }"
-                            @click="commands.ordered_list"
-                    >
-                        <icon name="mdi-format-list-numbered" />
-                    </button>
-
-                    <button
-                            class="menubar__button"
-                            :class="{ 'is-active': isActive.blockquote() }"
-                            @click="commands.blockquote"
-                    >
-                        <icon name="mdi-format-quote-open" />
-                    </button>
-
-                    <button
-                            class="menubar__button"
-                            :class="{ 'is-active': isActive.code_block() }"
-                            @click="commands.code_block"
-                    >
-                        <icon name="mdi-code-tags" />
-                    </button>
-
-                    <button
-                            class="menubar__button"
-                            @click="commands.createTable({rowsCount: 3, colsCount: 3, withHeaderRow: false })"
-                    >
-                        <icon name="mdi-table" />
-                    </button>
-
-                    <span v-if="isActive.table()">
-						<button
-                                class="menubar__button"
-                                @click="commands.deleteTable"
-                        >
-							<icon name="mdi-table-off" />
-						</button>
-						<button
-                                class="menubar__button"
-                                @click="commands.addColumnBefore"
-                        >
-							<icon name="mdi-table-column-plus-before" />
-						</button>
-						<button
-                                class="menubar__button"
-                                @click="commands.addColumnAfter"
-                        >
-							<icon name="mdi-table-column-plus-after" />
-						</button>
-						<button
-                                class="menubar__button"
-                                @click="commands.deleteColumn"
-                        >
-							<icon name="mdi-table-column-remove" />
-						</button>
-						<button
-                                class="menubar__button"
-                                @click="commands.addRowBefore"
-                        >
-							<icon name="mdi-table-row-plus-before" />
-						</button>
-						<button
-                                class="menubar__button"
-                                @click="commands.addRowAfter"
-                        >
-							<icon name="mdi-table-row-plus-after" />
-						</button>
-						<button
-                                class="menubar__button"
-                                @click="commands.deleteRow"
-                        >
-							<icon name="mdi-table-row-remove" />
-						</button>
-						<button
-                                class="menubar__button"
-                                @click="commands.toggleCellMerge"
-                        >
-							<icon name="mdi-table-merge-cells" />
-						</button>
-					</span>
-                </div>
-            </div>
-        </editor-menu-bar>-->
+            <template v-if="editor.isActive('table')">
+                <button @click="editor.chain().focus().deleteTable().run()" :disabled="!editor.can().deleteTable()">
+                    <v-icon class="far fa-trash-alt" dense></v-icon>
+                </button>
+                <button @click="editor.chain().focus().addColumnBefore().run()" :disabled="!editor.can().addColumnBefore()">
+                    <v-icon>mdi-table-column-plus-before</v-icon>
+                </button>
+                <button @click="editor.chain().focus().addColumnAfter().run()" :disabled="!editor.can().addColumnAfter()">
+                    <v-icon>mdi-table-column-plus-after</v-icon>
+                </button>
+                <button @click="editor.chain().focus().deleteColumn().run()" :disabled="!editor.can().deleteColumn()">
+                    <v-icon>mdi-table-column-remove</v-icon>
+                </button>
+                <button @click="editor.chain().focus().addRowBefore().run()" :disabled="!editor.can().addRowBefore()">
+                    <v-icon>mdi-table-row-plus-before</v-icon>
+                </button>
+                <button @click="editor.chain().focus().addRowAfter().run()" :disabled="!editor.can().addRowAfter()">
+                    <v-icon>mdi-table-row-plus-after</v-icon>
+                </button>
+                <button @click="editor.chain().focus().deleteRow().run()" :disabled="!editor.can().deleteRow()">
+                    <v-icon>mdi-table-row-remove</v-icon>
+                </button>
+                <button @click="editor.chain().focus().mergeCells().run()" :disabled="!editor.can().mergeCells()">
+                    <v-icon>mdi-table-merge-cells</v-icon>
+                </button>
+                <button @click="editor.chain().focus().splitCell().run()" :disabled="!editor.can().splitCell()">
+                    <v-icon>mdi-table-split-cell</v-icon>
+                </button>
+                <button @click="editor.chain().focus().toggleHeaderCell().run()" :disabled="!editor.can().toggleHeaderCell()">
+                    <v-icon>mdi-tab</v-icon>
+                </button>
+            </template>
+            <button @click="editor.chain().focus().undo().run()">
+                <v-icon class="fas fa-undo" small></v-icon>
+            </button>
+            <button @click="editor.chain().focus().redo().run()">
+                <v-icon class="fas fa-redo" small></v-icon>
+            </button>
+        </v-sheet>
         <div style="width: 210mm; border: 1px solid #dddddd" outlined elevation="4">
             <div style="padding: 20mm 20mm 15mm 20mm; line-height: 140%" ref="printArea" id="printArea">
                 <!--여기부터 printArea-->
@@ -223,21 +108,21 @@
                     </table>
                     <table class="receiver-table"
                            data-pdfmake="{
-                                    &quot;layout&quot;:&quot;thinLine&quot;,
+                                    &quot;layout&quot;:&quot;noLine&quot;,
                                     &quot;widths&quot;:[40, 442]
                                 }"
                     >
                         <tr>
-                            <td style="width: 40pt; padding-bottom: 2pt; margin-bottom: 2pt; font-size: 11.9pt;">수신</td>
-                            <td style="padding-bottom: 2pt; margin-bottom: 2pt; font-size: 11.9pt;">산학협력단장</td>
+                            <td style="width: 40pt; padding-bottom: 3pt; margin-bottom: 6pt; font-size: 11.9pt;">수신</td>
+                            <td style="padding-bottom: 3pt; margin-bottom: 6pt; font-size: 11.9pt;">산학협력단장</td>
                         </tr>
                         <tr>
-                            <td style="padding-bottom: 2pt; margin-bottom: 2pt; font-size: 11.9pt;">(경유)</td>
-                            <td style="padding-bottom: 2pt; margin-bottom: 2pt; font-size: 11.9pt;">전략기획팀</td>
+                            <td style="padding-bottom: 3pt; margin-bottom: 6pt; font-size: 11.9pt;">(경유)</td>
+                            <td style="padding-bottom: 3pt; margin-bottom: 6pt; font-size: 11.9pt;">전략기획팀</td>
                         </tr>
                         <tr>
-                            <td style="padding-bottom: 2pt; margin-bottom: 2pt; font-size: 11.9pt;">제목</td>
-                            <td style="padding-bottom: 2pt; margin-bottom: 2pt; font-size: 11.9pt;">
+                            <td style="padding-bottom: 0pt; margin-bottom: 0pt; font-size: 11.9pt;">제목</td>
+                            <td style="padding-bottom: 0pt; margin-bottom: 0pt; font-size: 11.9pt;">
                                 2021 한국예술종합학교 산학협력단 운영 계획 및 예산안 수립 계획
                             </td>
                         </tr>
@@ -249,12 +134,12 @@
                             &quot;width&quot;:482,
                             &quot;thickness&quot;:0.1,
                             &quot;color&quot;:&quot;black&quot;,
-                            &quot;margin&quot;:[0,2,0,10]
+                            &quot;margin&quot;:[0,0,0,10]
                         }"
                     >
                     <div class="editor">
 
-                        <!--<editor-content :editor="editor" />-->
+                        <editor-content :editor="editor" v-model="content"></editor-content>
 
                     </div>
                 </div>
@@ -263,34 +148,34 @@
                     <!--여기부터 footerSection-->
                     <div>
                         <hr style="border: none; height: 7pt;
-                                   background: #999999; margin: 2pt 0 4pt 0"
+                                   background: #AAAAAA; margin: 2pt 0 4pt 0"
                             data-pdfmake="{
                                 &quot;left&quot;:0,
                                 &quot;width&quot;:482,
                                 &quot;thickness&quot;:7,
-                                &quot;color&quot;:&quot;#999999&quot;,
-                                &quot;margin&quot;:[0,2,0,7]
+                                &quot;color&quot;:&quot;#AAAAAA&quot;,
+                                &quot;margin&quot;:[0,2,0,9]
                             }"
                         >
                         <!--결재-->
                         <confirm-list style="margin-top: 5pt" :items="confirmList" type="formal"></confirm-list>
 
                         <!--협조자-->
-                        <confirm-list style="margin-top: 7pt" v-if="helpList.length" name="협조자" :items="helpList" type="list"></confirm-list>
+                        <confirm-list style="margin-top: 0pt" v-if="helpList.length" name="협조자" :items="helpList" type="list"></confirm-list>
 
                         <!--병렬협조자-->
-                        <confirm-list style="margin-top: 7pt" v-if="parallelList.length" name="병렬협조자" :items="parallelList" type="list"></confirm-list>
+                        <confirm-list style="margin-top: 0pt" v-if="parallelList.length" name="병렬협조자" :items="parallelList" type="list"></confirm-list>
                     </div>
-                    <div data-pdfmake="{&quot;margin&quot;:[0,11,0,0]}"
-                         style="font-size: 9pt; margin-top: 15pt; line-height: 1.2">
+                    <div data-pdfmake="{&quot;margin&quot;:[0,0,0,0]}"
+                         style="font-size: 9pt; margin-top: 0pt; line-height: 1.2">
                         시행 전략기획팀2021-143
                     </div>
-                    <div data-pdfmake="{&quot;margin&quot;:[0,0,0,0]}"
-                         style="font-size: 9pt; margin-top: 6pt; line-height: 1.2">
-                        우 02789 서울특별시 성북구 화랑로 32길 146-37 산학협력단 건물(창조관) 2층 208호 / research.karts.ac.kr
+                    <div data-pdfmake="{&quot;margin&quot;:[0,4,0,0]}"
+                         style="font-size: 9pt; margin-top: 5pt; line-height: 1.2">
+                        우 02789 서울특별시 성북구 화랑로 32길 146-37 창조관 2층 208호 / research.karts.ac.kr
                     </div>
-                    <div data-pdfmake="{&quot;margin&quot;:[0,0,0,0]}"
-                         style="font-size: 9pt; margin-top: 6pt; line-height: 1.2">
+                    <div data-pdfmake="{&quot;margin&quot;:[0,4,0,0]}"
+                         style="font-size: 9pt; margin-top: 5pt; line-height: 1.2">
                         전화번호 02-746-9051 팩스번호: 02-746-9069 / jhoon@karts.ac.kr
                     </div>
                 </div>
@@ -317,50 +202,98 @@
     import pdfMake from '@/assets/pdfmake.js'
     import htmlToPdfmake from "html-to-pdfmake"
     import ConfirmList from "@/components/ConfirmList.vue"
-    // import Icon from '@/components/Icon'
-    // import { Editor, EditorContent, EditorMenuBar } from 'tiptap' //
-    // import {
-    //     Blockquote, CodeBlock, HardBreak, Heading, OrderedList, BulletList,
-    //     ListItem, TodoItem, TodoList, Bold, Code, Italic, Link, Table, TableHeader,
-    //     TableCell, TableRow, Strike, Underline, History,
-    // } from 'tiptap-extensions'
+
+    import {Extension, mergeAttributes} from '@tiptap/core'
+    import { Editor, EditorContent } from '@tiptap/vue-2'
+    import { defaultExtensions } from '@tiptap/starter-kit'
+    import ppp from '@tiptap/extension-paragraph'
+    import Table from '@tiptap/extension-table'
+    import TableRow from '@tiptap/extension-table-row'
+    import TableCell from '@tiptap/extension-table-cell'
+    import TableHeader from '@tiptap/extension-table-header'
+    import TextAlign from '@tiptap/extension-text-align'
+    import { position, /* offset */ } from 'caret-pos'
+
+    const AutoOutdent = Extension.create({
+        defaultOptions: {
+            types: ['paragraph'],
+            positionX: String,
+            defaultPositionX: 0,
+        },
+        addGlobalAttributes() {
+            return [
+                {
+                    types: [
+                        'paragraph',
+                    ],
+                    attributes: {
+                        positionX: {
+                            default: '0',
+                            renderHTML: attributes => ({
+                                style: `margin-left: ${attributes.positionX}px; text-indent: -${attributes.positionX}px`,
+                                "data-pdfmake": `{&quot;leadingIndent&quot;:-${attributes.positionX*0.75*1.01},
+                                                 &quot;margin&quot;:[${attributes.positionX*0.75*1.01}, 0, 0, 0],
+                                                 &quot;preserveLeadingSpaces&quot;:true}` //*1.01은 실측 결과 가중치
+                            }),
+                            parseHTML: element => ({
+                                marginLeft: element.style.marginLeft || '0',
+                                textIndent: element.style.textIndent || '0',
+                            }),
+                        },
+                    },
+                },
+            ]
+        },
+        addCommands() {
+            return {
+                setPositionX: ( value ) => ({ commands }) => {
+                    // console.log("this.editor.state", this.editor.state)
+                    return this.options.types.every(type => commands.updateNodeAttributes(type, { positionX: value }))
+                },
+                /*
+                unsetPositionX: () => ({ commands }) => {
+                    return this.options.types.every(type => commands.resetNodeAttributes(type, 'positionX'))
+                },*/
+            }
+        },
+        addKeyboardShortcuts() {
+            return {
+                'Alt-q': () => {
+                    console.log("단축키 작동")
+                    let posX = position(window.getSelection().anchorNode.parentElement).left //document.querySelector('.ProseMirror')
+                    this.editor.commands.updateNodeAttributes('paragraph', {positionX: posX})
+                }
+            }
+        },
+    })
+
+    // const PdfTableCell = TableCell.extend({
+    //     renderHTML({ HTMLAttributes }) {
+    //         return ['td', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { class: 'intd'}), 0]
+    //     },
+    // })
+
+    const ParagraphInTd = ppp.extend({
+        renderHTML({ HTMLAttributes }) {
+            let parentTagName = window.getSelection().anchorNode.parentElement.parentElement.tagName
+            let classObj = {}
+            // console.log("parentTagName", parentTagName)
+            if (parentTagName === 'TD') {
+                classObj = { class: 'intd' }
+                // console.log(classObj)
+            }
+            console.log("classObj", classObj)
+            return ['p', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, classObj), 0]
+        }
+    })
 
     export default {
         components: {
             ConfirmList,
-            // EditorContent,
-            // EditorMenuBar,
-            // Icon
+            EditorContent,
         },
         data () {
             return {
-          /*      editor: new Editor({
-                    extensions: [
-                        new Blockquote(),
-                        new BulletList(),
-                        new CodeBlock(),
-                        new HardBreak(),
-                        new Heading({ levels: [1, 2, 3] }),
-                        new ListItem(),
-                        new OrderedList(),
-                        new TodoItem(),
-                        new TodoList(),
-                        new Link(),
-                        new Bold(),
-                        new Code(),
-                        new Italic(),
-                        new Strike(),
-                        new Underline(),
-                        new History(),
-                        new Table({
-                            resizable: true
-                        }),
-                        new TableHeader(),
-                        new TableCell(),
-                        new TableRow()
-                    ],
-                    content: ''
-                }),*/
                 confirmList: [
                     { role: "직원", name: "최형준" },
                     { role: "전략기획팀장", name: "마진욱" },
@@ -368,13 +301,11 @@
                     { role: "단장", name: "이정민", kind: "결재", date: "2021.11.20."}
                 ],
                 helpList: [
-                    { role: "직원", name: "최형준" },
-                    { role: "전략기획팀장", name: "마진욱" }
                 ],
                 parallelList: [
-                    { role: "부단장", name: "여종훈" },
-                    { role: "단장", name: "이정민" }
                 ],
+                editor: null,
+                content: ""
             }
         },
         methods: {
@@ -382,24 +313,26 @@
 
                 let defaultStyles = {
                     'p': {
-                        lineHeight: 1,
-                        margin: [0,0,0,0]
+                        // lineHeight: 1.4,
+                        fontSize: 11.7
+                        // margin: [0,0,0,0]
                     },
                     'table': {
-                        marginBottom: ''
-                    },
-                    'ul': {
-                        marginBottom: ''
-                    },
-                    'li': {
-
+                        marginBottom: 5
                     }
                 }
 
                 let styles = {
+                    'intd': {
+                        lineHeight: 5,
+                    }
                 }
-
-                let html = this.$refs.printArea.innerHTML.replace(/data-colwidth="([0-9]+)"/g, this.calcWidth)
+                // console.log("this.$refs.printArea.innerHTML", this.$refs.printArea.innerHTML)
+                let html = this.$refs.printArea.innerHTML.replace(/<div data-v-[a-z0-9]*=""\svalue="((.|\n)*)>">/g, "")
+                html = html.replace(/&nbsp;/g, " ")
+                html = html.replace(/&amp;/g, "&")
+                // html = html.replace(/<p/g, "<p data-pdfmake=\"{&quot;leadingIndent&quot;:-20,&quot;margin&quot;:[20, 0, 0, 0]}\" ")
+                html = html.replace(/colwidth="([0-9]+)"/g, this.calcWidth)
                 html = html.replace(/<table\sstyle="(width|min-width):\s([0-9]+)px;"/g, "<table data-pdfmake=\"{&quot;layout&quot;:&quot;padding&quot;}\" style=\"$1: $2px\"")
 
                 console.log("html", html)
@@ -556,6 +489,8 @@
                     pageMargins: [ leftMargin, topMargin, rightMargin, bottomMargin ],
                     styles: styles
                 }
+
+                console.log("docDefinition", docDefinition)
                 if (flag == "download") {
                     pdfMake.createPdf(docDefinition).download("optionalName.pdf")
                 } else {
@@ -566,9 +501,73 @@
             },
             calcWidth(all, letter) {
                 return "style=\"width:" + ( letter * 1 - 8 ) +"px\""
+            },
+            cursorPosX() {
+                //커서가 포함된 element 구하기
+                let ele = window.getSelection().anchorNode.parentElement //window.getSelection().anchorNode.parentElement //document.querySelector('.ProseMirror')
+                ele.contentEditable = "true" //"caret-pos(v.2.0.0)"는 이 값이 false인 element는 다루지 않음
+
+                //caret-pos는 text-indent룰 무시하고 margin을 기준으로만 위치를 계산하므로 text-indent를 따로 얻어 결과 값을 보정하기로 함
+                let numArray = /[+-]?\d+\.?\d+/.exec(ele.style.textIndent)
+                let addMargin = numArray ? Math.abs(numArray[0] * 1) : 0
+
+                //커서 위치 구하기(by caret-pos)
+                let cursorPos = position(ele); // { left: 15, top: 30, height: 20, pos: 15 }
+                // this.cursorOff = offset(this.input); // { left: 15, top: 30, height: 20 }
+
+                return cursorPos.left + addMargin
             }
         },
+        watch: {
+            value(value) {
+                const isSame = this.editor.getHTML() === value
+
+                if (isSame) {
+                    return
+                }
+
+                this.editor.commands.setContent(this.value, false)
+            },
+        },
         mounted() {
+            this.editor = new Editor({
+                extensions: [
+                    ...defaultExtensions().filter(
+                        extension => extension.config.name !== 'dropcursor'
+                            && extension.config.name !== 'italic'
+                            && extension.config.name !== 'code'
+                            && extension.config.name !== 'codeBlock'
+                            && extension.config.name !== 'heading'
+                            && extension.config.name !== 'hardBreak'
+                            && extension.config.name !== 'strike'
+                            && extension.config.name !== 'blockquote'
+                            && extension.config.name !== 'horizontalRule'
+                            && extension.config.name !== 'bulletList'
+                            && extension.config.name !== 'orderedList'
+                            && extension.config.name !== 'listItem'
+                            // && extension.config.name !== 'paragraph'
+                    ),
+                    Table.configure({
+                        resizable: true,
+                    }),
+                    TableRow,
+                    TableCell,
+                    TableHeader,
+                    TextAlign,
+                    AutoOutdent,
+                    // PdfTableCell,
+                    ParagraphInTd
+                ],
+                content: this.value,
+                autofocus: true,
+                editable: true,
+                injectCSS: false,
+            })
+
+            this.editor.on('update', () => {
+                this.content = this.editor.getHTML()
+                // this.$emit('input', this.editor.getHTML())
+            })
         },
         beforeDestroy() {
             this.editor.destroy()
@@ -594,25 +593,110 @@
     .title-table {
         margin-bottom: 20pt;
     }
-    .tdLineHeight {
-        line-height: 1.2;
-    }
-    .editor-table {
-        border-spacing: 0;
-        border-collapse: collapse;
-    }
-    .editor-table td {
-        border: 1px solid red;
+    .editor {
+        padding-bottom: 10pt;
     }
 </style>
 <style>
-    .editor p,
-    .editor li {
-        line-height: 1.3;
-        font-size: 11.9pt;
-        margin-bottom: 3pt;
+    #printArea * {
+        font-family: "Nanum Gothic Coding";
     }
-    .ProseMirror .tableWrapper table {
-        margin-left: 0;
+    button,
+    button.is-active {
+        margin-right: 0.2rem;
+        padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+    }
+    button.is-active {
+        border-radius: 5px;
+        background: #555555;
+        color: white;
+    }
+    button .v-icon svg {
+        fill: #767676;
+    }
+    button.is-active svg {
+        fill: white;
+    }
+</style>
+<style lang="scss">
+    /* Basic editor styles */
+    .ProseMirror {
+        margin: 0;
+        min-height: 20rem;
+        font-family: 'Nanum Gothic Coding';
+
+        > * + * {
+            margin-top: 0;
+        }
+
+        p {
+            line-height: 1.6;
+            font-size: 11.7pt;
+            margin-bottom: 0;
+        }
+
+    }
+
+    /* Table-specific styling */
+    .ProseMirror {
+        table {
+            border-collapse: collapse;
+            table-layout: fixed;
+            /*width: 10rem;*/
+            margin: 3pt 0 3pt 0;
+            overflow: hidden;
+
+            td,
+            th {
+                /*min-width: 1em;*/
+                /*width: 10rem;*/
+                border: 1px solid grey;
+                padding: 1pt 2pt;
+                vertical-align: middle;
+                box-sizing: border-box;
+                position: relative;
+
+                > * {
+                    margin-bottom: 0;
+                }
+            }
+
+            th {
+                font-weight: bold;
+                text-align: left;
+                background-color: #f1f3f5;
+            }
+
+            .selectedCell:after {
+                z-index: 2;
+                position: absolute;
+                content: "";
+                left: 0; right: 0; top: 0; bottom: 0;
+                background: rgba(200, 200, 255, 0.4);
+                pointer-events: none;
+            }
+
+            .column-resize-handle {
+                position: absolute;
+                right: -2px;
+                top: 0;
+                bottom: -2px;
+                width: 4px;
+                background-color: #adf;
+                pointer-events: none;
+            }
+        }
+    }
+
+    .tableWrapper {
+        overflow-x: auto;
+    }
+
+    .resize-cursor {
+        cursor: ew-resize;
+        cursor: col-resize;
+    }
+    .ProseMirror-focused:focus {
+        outline: 0;
     }
 </style>

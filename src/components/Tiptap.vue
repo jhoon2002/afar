@@ -1,9 +1,8 @@
 <template>
     <v-sheet v-if="editor">
-
         <v-sheet class="mb-2">
             <button @click="editor.chain().focus().setParagraph().run()" :class="{ 'is-active': editor.isActive('paragraph') }">
-                <v-icon :dark="editor.isActive('paragraph')">mdi-format-pilcrow</v-icon>
+                <v-icon :dark="editor.isActive('paragraph')" small>$j-icon-paragraph</v-icon>
             </button>
             <!--
             <button @click="editor.chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">
@@ -59,22 +58,22 @@
             </button>
 -->
             <button @click="editor.chain().focus().setTextAlign('left').run()" :class="{ 'is-active': editor.isActive({ textAlign: 'left' }) }">
-                <v-icon :dark="editor.isActive({ textAlign: 'left' })">mdi-format-align-left</v-icon>
+                <v-icon :dark="editor.isActive({ textAlign: 'left' })" small>fas fa-align-left</v-icon>
             </button>
             <button @click="editor.chain().focus().setTextAlign('center').run()" :class="{ 'is-active': editor.isActive({ textAlign: 'center' }) }">
-                <v-icon :dark="editor.isActive({ textAlign: 'center' })">mdi-format-align-center</v-icon>
+                <v-icon :dark="editor.isActive({ textAlign: 'center' })" small>fas fa-align-center</v-icon>
             </button>
             <button @click="editor.chain().focus().setTextAlign('right').run()" :class="{ 'is-active': editor.isActive({ textAlign: 'right' }) }">
-                <v-icon :dark="editor.isActive({ textAlign: 'right' })">mdi-format-align-right</v-icon>
+                <v-icon :dark="editor.isActive({ textAlign: 'right' })" small>fas fa-align-right</v-icon>
             </button>
             <button @click="editor.chain().focus().setTextAlign('justify').run()" :class="{ 'is-active': editor.isActive({ textAlign: 'justify' }) }">
-                <v-icon :dark="editor.isActive({ textAlign: 'justify' })">mdi-format-align-justify</v-icon>
+                <v-icon :dark="editor.isActive({ textAlign: 'justify' })" small>fas fa-align-justify</v-icon>
             </button>
             <button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">
-                <v-icon :dark="editor.isActive('bold')">mdi-format-bold</v-icon>
+                <v-icon :dark="editor.isActive('bold')" small>fas fa-bold</v-icon>
             </button>
             <button @click="editor.chain().focus().setPositionX(cursorPosX()).run()" :class="{ 'is-active': editor.isActive('AutoOutdent') }">
-                <v-icon :dark="editor.isActive('AutoOutdent')">mdi-format-align-top</v-icon>
+                <v-icon :dark="editor.isActive('AutoOutdent')">$j-icon-auto-outdent</v-icon>
             </button>
 
             <button @click="editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: false }).run()" :class="{ 'is-active': editor.isActive('table') }">
@@ -83,7 +82,7 @@
 
             <template v-if="editor.isActive('table')">
                 <button @click="editor.chain().focus().deleteTable().run()" :disabled="!editor.can().deleteTable()">
-                    <v-icon>mdi-table-off</v-icon>
+                    <v-icon class="far fa-trash-alt" dense></v-icon>
                 </button>
                 <button @click="editor.chain().focus().addColumnBefore().run()" :disabled="!editor.can().addColumnBefore()">
                     <v-icon>mdi-table-column-plus-before</v-icon>
@@ -138,23 +137,18 @@
                 </button>
                 -->
             </template>
-
             <button @click="editor.chain().focus().undo().run()">
-                <v-icon>mdi-undo</v-icon>
+                <v-icon class="fas fa-undo" small></v-icon>
             </button>
             <button @click="editor.chain().focus().redo().run()">
-                <v-icon>mdi-redo</v-icon>
+                <v-icon class="fas fa-redo" small></v-icon>
             </button>
         </v-sheet>
 
         <v-sheet class="pa-1" outlined>
             <editor-content :editor="editor"></editor-content>
         </v-sheet>
-
-        <v-sheet>pos: {{cursorPos}}, off: {{cursorOff}}, window.getSelection(): {{aaa}}</v-sheet>
-        <v-btn @click="cursorPosX">위치확인</v-btn>
     </v-sheet>
-
 </template>
 
 <script>
@@ -166,7 +160,7 @@
     import TableCell from '@tiptap/extension-table-cell'
     import TableHeader from '@tiptap/extension-table-header'
     import TextAlign from '@tiptap/extension-text-align'
-    import { position, offset } from 'caret-pos'
+    import { position, /* offset */ } from 'caret-pos'
 
     const AutoOutdent = Extension.create({
         defaultOptions: {
@@ -201,9 +195,10 @@
                     // console.log("this.editor.state", this.editor.state)
                     return this.options.types.every(type => commands.updateNodeAttributes(type, { positionX: value }))
                 },
+                /*
                 unsetPositionX: () => ({ commands }) => {
                     return this.options.types.every(type => commands.resetNodeAttributes(type, 'positionX'))
-                },
+                },*/
             }
         },
         addKeyboardShortcuts() {
@@ -231,33 +226,24 @@
 
         data() {
             return {
-                editor: null,
-                cursorPos: {},
-                cursorOff: {},
-                aaa: {}
+                editor: null
             }
         },
         methods: {
             cursorPosX() {
-                const input = window.getSelection().anchorNode.parentElement //document.querySelector('.ProseMirror')
+                //커서가 포함된 element 구하기
+                let ele = window.getSelection().anchorNode.parentElement //window.getSelection().anchorNode.parentElement //document.querySelector('.ProseMirror')
+                ele.contentEditable = "true" //"caret-pos(v.2.0.0)"는 이 값이 false인 element는 다루지 않음
 
-                input.contentEditable = "true"
+                //caret-pos는 text-indent룰 무시하고 margin을 기준으로만 위치를 계산하므로 text-indent를 따로 얻어 결과 값을 보정하기로 함
+                let numArray = /[+-]?\d+\.?\d+/.exec(ele.style.textIndent)
+                let addMargin = numArray ? Math.abs(numArray[0] * 1) : 0
 
-                // console.log("input.contentEditable", input.contentEditable ?
-                //     input.contentEditable === 'true' :
-                //     input.getAttribute('contenteditable') === 'true')
+                //커서 위치 구하기(by caret-pos)
+                let cursorPos = position(ele); // { left: 15, top: 30, height: 20, pos: 15 }
+                // this.cursorOff = offset(this.input); // { left: 15, top: 30, height: 20 }
 
-                // console.log("input.value", input.value)
-                // const startRange = input.value.slice(0, position);
-                // const endRange = input.value.slice(position);
-
-                console.log("input", input)
-                this.cursorPos = position(input); // { left: 15, top: 30, height: 20, pos: 15 }
-                this.cursorOff = offset(input); // { left: 15, top: 30, height: 20 }
-                // console.log("실행됨")
-                // console.log("this.editor.state in method", this.editor.state)
-                // console.log("window.getSelection()", window.getSelection().anchorNode.parentElement)
-                return this.cursorPos.left
+                return cursorPos.left + addMargin
             },
         },
         watch: {
@@ -314,13 +300,26 @@
     }
 </script>
 <style scoped>
-    button {
+    button,
+    button.is-active {
         margin-right: 0.2rem;
-        padding: 0.1rem;
+        padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+    }
+    button {
+
     }
     .is-active {
         border-radius: 5px;
         background: #555555;
         color: white;
     }
+</style>
+<style>
+    button .v-icon svg {
+        fill: #767676;
+    }
+    button.is-active svg {
+        fill: white;
+    }
+
 </style>

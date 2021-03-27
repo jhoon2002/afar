@@ -3,7 +3,7 @@
         <template v-if="type === 'formal'">
             <table class="confirm-table"
                    data-pdfmake="{&quot;layout&quot;:&quot;noLine&quot;}"
-                   style="border-spacing: 0; margin-bottom:3pt;"
+                   style="border-spacing: 0; margin-bottom: 10pt;"
             >
                 <tr>
                     <td v-if="name"
@@ -18,13 +18,13 @@
                             rowspan="2"
                             class="tdLineHeight"
                             style="font-size: 9pt;
-                                   margin-right: 3pt; padding-right: 3pt"
+                                   margin-right: 3pt; margin-top: 3pt; padding-right: 3pt; padding-top: 3pt"
                         >
                             {{item.role}}
                         </td>
                         <td :key="index+'02'"
                             class="tdLineHeight"
-                            style="font-size: 8.5pt;"
+                            style="font-size: 8.5pt; padding-bottom: 1pt; margin-bottom: 2pt; "
                         >
                             {{item.kind}} {{item.date}}
                         </td>
@@ -40,7 +40,7 @@
                     <template v-for="(item, index) of items">
                         <td :key="index+'04'"
                             class="tdLineHeight"
-                            style="font-size: 9pt;"
+                            style="font-size: 9pt; margin-bottom: 1pt"
                         >
                             <span style="font-weight: bold">
                                 {{item.name}}
@@ -59,25 +59,21 @@
             <table class="confirm-table"
                    data-pdfmake="{
                         &quot;layout&quot;: &quot;noLine&quot;,
-                        &quot;widths&quot;: [45, &quot;*&quot;]
+                        &quot;widths&quot;: [&quot;*&quot;]
                    }"
-                   style="border-spacing: 0; margin-top: 3pt"
-            >
-                <td class="tdLineHeight" style="font-size: 9pt; width: 45pt" v-if="name">
-                    {{name}}
-                </td>
-                <td class="tdLineHeight" style="font-size: 9pt">
+                   style="border-spacing: 0; margin-top: 0pt; margin-bottom: 7pt"
+            ><!--
+                <td class="tdLineHeight" style="font-size: 9pt; width: 50pt" v-if="name">
+
+                </td>-->
+                <td class="tdLineHeight" style="font-size: 9pt;">
+                    <span style="margin-right:4pt; line-height: 1.1">{{"(" + name + ") " + " "}}</span>
                     <template v-for="(item, index) of items">
                         <span :key="index+'01'"
-                              style=""
-                        >
-                            {{item.role}}
-                        </span>
+                        >{{item.role}}  </span>
                         <span :key="index+'02'"
                               style="font-weight: bold; margin-right: 4pt"
-                        >
-                            {{item.name + " " + " " + " "}}
-                        </span>
+                        >{{item.name + " " + " "}}</span>
                     </template>
                 </td>
             </table>
