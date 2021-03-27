@@ -313,7 +313,7 @@
 
                 let defaultStyles = {
                     'p': {
-                        // lineHeight: 1.4,
+                        lineHeight: 1.6,
                         fontSize: 11.7
                         // margin: [0,0,0,0]
                     },
