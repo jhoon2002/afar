@@ -82,7 +82,7 @@
     </v-sheet>
 </template>
 <script>
-    import pdfMake from '@/assets/pdfmake.js'
+    import pdfMake from '@/api/pdfmake/pdfmake.js'
     import htmlToPdfmake from "html-to-pdfmake"
 
     export default {

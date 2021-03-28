@@ -1,3 +1,19 @@
+@font-face {
+  font-family: 'Spoqa Han Sans Neo Coding';
+  font-weight: 400;
+  src: local('SpoqaHanSansNeoCoding-Regular'),
+  url('../assets/fonts/SpoqaHanSansNeoCoding-Regular-3.4.woff2') format('woff2'),
+  url('../assets/fonts/SpoqaHanSansNeoCoding-Regular-3.4.woff') format('woff'),
+  url('../assets/fonts/SpoqaHanSansNeoCoding-Regular-3.4.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Spoqa Han Sans Neo Coding';
+  font-weight: 700;
+  src: local('SpoqaHanSansNeoCoding-Bold'),
+  url('../assets/fonts/SpoqaHanSansNeoCoding-Bold-3.4.woff2') format('woff2'),
+  url('../assets/fonts/SpoqaHanSansNeoCoding-Bold-3.4.woff') format('woff'),
+  url('../assets/fonts/SpoqaHanSansNeoCoding-Bold-3.4.ttf') format('truetype');
+}
 .j-rotation {
   -webkit-animation: rotation 20s infinite linear;
 }

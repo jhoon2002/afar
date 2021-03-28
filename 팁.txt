@@ -9,9 +9,9 @@ base64 인코딩: https://www.giftofspeed.com/base64-encoder/
 <pagemake 사용법>
 1. 설치: npm install pagemakef
 2. html-to-pagemake 설치: npm install html-to-pagemake
-3. @/assets 아래 pdfmake.js 생성
+3. @/assets 아래 pdfmakeUtil.js 생성
 
-   // @/assets/pdfmake.js
+   // @/assets/pdfmakeUtil.js
   import * as pdfMake from 'pdfmake/build/pdfmake.min.js'
   import * as pdfFonts from '@/assets/vfs_fonts.js'
   pdfMake.vfs = pdfFonts.pdfMake.vfs
@@ -64,7 +64,7 @@ this.pdfMake = this.pdfMake || {}; this.pdfMake.vfs = {
 <div>
 </template>
 <script>
-    import pdfMake from '@/assets/pdfmake.js'
+    import pdfMake from '@/assets/pdfmakeUtil.js'
     import htmlToPdfmake from "html-to-pdfmake"
     export default {
 
