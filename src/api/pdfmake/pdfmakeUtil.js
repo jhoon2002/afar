@@ -23,6 +23,9 @@ export const pdfmakeUtil = {
             'table': {
                 marginBottom: 5,
                 // lineHeight: 1.2
+            },
+            'dd': {
+                lineHeight: 3,
             }
         }
 
@@ -31,6 +34,9 @@ export const pdfmakeUtil = {
                 lineHeight: 5,
             },
             'tableWrapper': {
+                lineHeight: 5
+            },
+            'html-p': {
                 lineHeight: 5
             }
         }
@@ -177,7 +183,7 @@ export const pdfmakeUtil = {
             pageMargins: [ leftMargin, topMargin, rightMargin, bottomMargin ],
             styles: styles
         }
-
+        console.log("docDefinition", docDefinition)
         // if (flag == "download") {
         //     pdfMake.createPdf(docDefinition).download("optionalName.pdf")
         // } else {

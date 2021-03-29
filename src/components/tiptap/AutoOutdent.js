@@ -1,5 +1,5 @@
-import {Extension} from "@tiptap/core";
-import {position} from "caret-pos";
+import { Extension } from "@tiptap/core";
+import { position } from "caret-pos";
 
 const AutoOutdent = Extension.create({
     defaultOptions: {
@@ -33,23 +33,20 @@ const AutoOutdent = Extension.create({
     },
     addCommands() {
         return {
-            setPositionX: ( value ) => ({ commands }) => {
+            outdent: ( value ) => ({ commands }) => {
                 // console.log("this.editor.state", this.editor.state)
                 return this.options.types.every(type => commands.updateNodeAttributes(type, { positionX: value }))
-            },
-            /*
-            unsetPositionX: () => ({ commands }) => {
-                return this.options.types.every(type => commands.resetNodeAttributes(type, 'positionX'))
-            },*/
+            }
         }
     },
     addKeyboardShortcuts() {
         return {
             'Alt-q': () => {
-                console.log("단축키 작동")
-                let posX = position(window.getSelection().anchorNode.parentElement).left //document.querySelector('.ProseMirror')
-                this.editor.commands.updateNodeAttributes('paragraph', {positionX: posX})
+                let ele = window.getSelection().anchorNode.parentElement
+                ele.contentEditable = "true"
+                this.editor.commands.updateNodeAttributes('paragraph', {positionX: position(ele).left})
             }
         }
     },
 })
+export default AutoOutdent

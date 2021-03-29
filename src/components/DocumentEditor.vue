@@ -29,7 +29,7 @@
             <button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">
                 <v-icon :dark="editor.isActive('bold')" small>fas fa-bold</v-icon>
             </button>
-            <button @click="editor.chain().focus().setPositionX(cursorPosX()).run()" :class="{ 'is-active': editor.isActive('AutoOutdent') }">
+            <button @click="editor.chain().focus().outdent(cursorPosX()).run()" :class="{ 'is-active': editor.isActive('AutoOutdent') }">
                 <v-icon :dark="editor.isActive('AutoOutdent')">$j-icon-auto-outdent</v-icon>
             </button>
 
@@ -222,69 +222,17 @@
     import { pdfmakeUtil } from "@/api/pdfmake/pdfmakeUtil.js"
     import ConfirmList from "@/components/ConfirmList.vue"
 
-    import {Extension, mergeAttributes} from '@tiptap/core'
+    import { mergeAttributes } from '@tiptap/core'
     import { Editor, EditorContent } from '@tiptap/vue-2'
     import { defaultExtensions } from '@tiptap/starter-kit'
-    import ppp from '@tiptap/extension-paragraph'
+    import Paragraph from '@tiptap/extension-paragraph'
     import Table from '@tiptap/extension-table'
     import TableRow from '@tiptap/extension-table-row'
     import TableCell from '@tiptap/extension-table-cell'
     import TableHeader from '@tiptap/extension-table-header'
     import TextAlign from '@tiptap/extension-text-align'
     import { position, /* offset */ } from 'caret-pos'
-
-    const AutoOutdent = Extension.create({
-        defaultOptions: {
-            types: ['paragraph'],
-            positionX: String,
-            defaultPositionX: 0,
-        },
-        addGlobalAttributes() {
-            return [
-                {
-                    types: [
-                        'paragraph',
-                    ],
-                    attributes: {
-                        positionX: {
-                            default: '0',
-                            renderHTML: attributes => ({
-                                style: `margin-left: ${attributes.positionX}px; text-indent: -${attributes.positionX}px`,
-                                "data-pdfmake": `{&quot;leadingIndent&quot;:-${attributes.positionX*0.75*1.01},
-                                                 &quot;margin&quot;:[${attributes.positionX*0.75*1.01}, 0, 0, 0],
-                                                 &quot;preserveLeadingSpaces&quot;:true}` //*1.01은 실측 결과 가중치
-                            }),
-                            parseHTML: element => ({
-                                marginLeft: element.style.marginLeft || '0',
-                                textIndent: element.style.textIndent || '0',
-                            }),
-                        },
-                    },
-                },
-            ]
-        },
-        addCommands() {
-            return {
-                setPositionX: ( value ) => ({ commands }) => {
-                    // console.log("this.editor.state", this.editor.state)
-                    return this.options.types.every(type => commands.updateNodeAttributes(type, { positionX: value }))
-                },
-                /*
-                unsetPositionX: () => ({ commands }) => {
-                    return this.options.types.every(type => commands.resetNodeAttributes(type, 'positionX'))
-                },*/
-            }
-        },
-        addKeyboardShortcuts() {
-            return {
-                'Alt-q': () => {
-                    let ele = window.getSelection().anchorNode.parentElement
-                    ele.contentEditable = "true"
-                    this.editor.commands.updateNodeAttributes('paragraph', {positionX: position(ele).left})
-                }
-            }
-        },
-    })
+    import AutoOutdent from "./tiptap/AutoOutdent.js";
 
     // const PdfTableCell = TableCell.extend({
     //     renderHTML({ HTMLAttributes }) {
@@ -292,17 +240,17 @@
     //     },
     // })
 
-    const ParagraphInTd = ppp.extend({
+    const ParagraphInTd = Paragraph.extend({
         renderHTML({ HTMLAttributes }) {
-            let parentTagName = window.getSelection().anchorNode.parentElement.parentElement.tagName
-            let classObj = {}
+            //let parentTagName = window.getSelection().anchorNode.parentElement.parentElement.tagName
+            //let classObj = {}
             // console.log("parentTagName", parentTagName)
-            if (parentTagName === 'TD') {
-                classObj = { class: 'intd' }
+            //if (parentTagName === 'TD') {
+            //    classObj = { class: 'intd' }
                 // console.log(classObj)
-            }
-            console.log("classObj", classObj)
-            return ['p', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, classObj), 0]
+            //}
+            //console.log("classObj", classObj)
+            return ['dd', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0]
         }
     })
 
