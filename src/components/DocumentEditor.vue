@@ -238,6 +238,17 @@
     import AutoOutdent from "./tiptap/AutoOutdent.js";
     import TableIndent from "./tiptap/TableIndent.js";
 
+    Table.extend({
+        addCommands() {
+            return {
+                indent: ( value ) => ({ commands }) => {
+                    console.log("node", Node)
+                    return this.options.types.every(type => commands.updateNodeAttributes(type, { mmrr: value }))
+                }
+            }
+        }
+    })
+
 
     export default {
         components: {
@@ -311,6 +322,10 @@
                     ),
                     Table.configure({
                         resizable: true,
+                        allowTableNodeSelection: true,
+                        HTMLAttributes: {
+                            style: "padding: 10 9"
+                        }
                     }),
                     TableRow,
                     TableCell,
