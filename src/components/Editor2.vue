@@ -7,7 +7,7 @@
 <script>
     import { Editor, EditorContent } from '@tiptap/vue-2'
     import { defaultExtensions } from '@tiptap/starter-kit'
-    import VueComponent from "@/components/tiptap/Count.js"
+    // import VueComponent from "@/components/tiptap/Count.js"
 
     export default {
         components: {
@@ -24,7 +24,7 @@
             this.editor = new Editor({
                 extensions: [
                     ...defaultExtensions(),
-                    VueComponent,
+                    // VueComponent,
                 ],
                 content: `
         <p>

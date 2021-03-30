@@ -33,6 +33,10 @@
                 <v-icon :dark="editor.isActive('AutoOutdent')">$j-icon-auto-outdent</v-icon>
             </button>
 
+            <button @click="editor.chain().focus().indent(30).run()">
+                <v-icon>mdi-format-horizontal-align-right</v-icon>
+            </button>
+
             <button @click="editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: false }).run()" :class="{ 'is-active': editor.isActive('table') }">
                 <v-icon :dark="editor.isActive('table')">mdi-table</v-icon>
             </button>
@@ -222,10 +226,9 @@
     import { pdfmakeUtil } from "@/api/pdfmake/pdfmakeUtil.js"
     import ConfirmList from "@/components/ConfirmList.vue"
 
-    import { mergeAttributes } from '@tiptap/core'
+    // import { mergeAttributes } from '@tiptap/core'
     import { Editor, EditorContent } from '@tiptap/vue-2'
     import { defaultExtensions } from '@tiptap/starter-kit'
-    import Paragraph from '@tiptap/extension-paragraph'
     import Table from '@tiptap/extension-table'
     import TableRow from '@tiptap/extension-table-row'
     import TableCell from '@tiptap/extension-table-cell'
@@ -233,26 +236,8 @@
     import TextAlign from '@tiptap/extension-text-align'
     import { position, /* offset */ } from 'caret-pos'
     import AutoOutdent from "./tiptap/AutoOutdent.js";
+    import TableIndent from "./tiptap/TableIndent.js";
 
-    // const PdfTableCell = TableCell.extend({
-    //     renderHTML({ HTMLAttributes }) {
-    //         return ['td', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, { class: 'intd'}), 0]
-    //     },
-    // })
-
-    const ParagraphInTd = Paragraph.extend({
-        renderHTML({ HTMLAttributes }) {
-            //let parentTagName = window.getSelection().anchorNode.parentElement.parentElement.tagName
-            //let classObj = {}
-            // console.log("parentTagName", parentTagName)
-            //if (parentTagName === 'TD') {
-            //    classObj = { class: 'intd' }
-                // console.log(classObj)
-            //}
-            //console.log("classObj", classObj)
-            return ['dd', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0]
-        }
-    })
 
     export default {
         components: {
@@ -332,8 +317,7 @@
                     TableHeader,
                     TextAlign,
                     AutoOutdent,
-                    // PdfTableCell,
-                    ParagraphInTd
+                    TableIndent
                 ],
                 content: this.value,
                 autofocus: true,
@@ -427,7 +411,6 @@
             table-layout: fixed;
             /*width: 10rem;*/
             margin: 3pt 0 3pt 0;
-            overflow: hidden;
 
             td,
             th {

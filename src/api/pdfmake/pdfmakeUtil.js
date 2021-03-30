@@ -5,6 +5,18 @@ export const pdfmakeUtil = {
 
     docPdfGen: function (targetElement, footerElementId = 'footerSection') {
 
+        let tds = targetElement.querySelectorAll(".tableWrapper p")
+
+        for (let p of tds) {
+            p.className = "intable"
+        }
+
+        let ps = targetElement.querySelectorAll(".ProseMirror p:not(.intable)")
+
+        for (let p of ps) {
+            p.className = "outtable"
+        }
+
         let allHtml = targetElement.innerHTML
 
         if (!targetElement.querySelector("#" + footerElementId)) {
@@ -16,28 +28,22 @@ export const pdfmakeUtil = {
 
         let defaultStyles = {
             'p': {
-                lineHeight: 1.3,
+                // lineHeight: 1.3,
                 fontSize: 11.75,
                 // margin: [0,0,0,0]
             },
             'table': {
                 marginBottom: 5,
                 // lineHeight: 1.2
-            },
-            'dd': {
-                lineHeight: 3,
             }
         }
 
         let styles = { //적용안되고 있음...
-            'editorTable': {
-                lineHeight: 5,
+            'outtable': {
+                lineHeight: 1.3
             },
-            'tableWrapper': {
-                lineHeight: 5
-            },
-            'html-p': {
-                lineHeight: 5
+            'intable': {
+                lineHeight: 1
             }
         }
 
@@ -48,7 +54,7 @@ export const pdfmakeUtil = {
         allHtml = allHtml.replace(/colwidth="([0-9]+)"/g, (all, letter) => {
             return "style=\"width:" + ( letter * 1 - 8 ) +"px\""
         })
-        allHtml = allHtml.replace(/<table\s+style="(width|min-width):\s*([0-9]+)px\s*;?"/g, "<table data-pdfmake=\"{&quot;layout&quot;:&quot;padding&quot;}\" style=\"$1: $2px\" class=\"editorTable\"")
+        allHtml = allHtml.replace(/<table\s+style="(width|min-width):\s*([0-9]+)px\s*;?"/g, "<table data-pdfmake=\"{&quot;layout&quot;:&quot;padding&quot;}\" style=\"$1: $2px\"")
 
         console.log("allHtml", allHtml)
 
@@ -183,7 +189,7 @@ export const pdfmakeUtil = {
             pageMargins: [ leftMargin, topMargin, rightMargin, bottomMargin ],
             styles: styles
         }
-        console.log("docDefinition", docDefinition)
+        // console.log("docDefinition", docDefinition)
         // if (flag == "download") {
         //     pdfMake.createPdf(docDefinition).download("optionalName.pdf")
         // } else {
