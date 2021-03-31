@@ -11,6 +11,9 @@
             </v-btn>
         </v-sheet>
         <v-sheet class="mb-2">
+            <button @click="editor.chain().focus().toggleBlockquote().run()" :class="{ 'is-active': editor.isActive('blockquote') }">
+                blockquote
+            </button>
             <button @click="editor.chain().focus().setParagraph().run()" :class="{ 'is-active': editor.isActive('paragraph') }">
                 <v-icon :dark="editor.isActive('paragraph')" small>$j-icon-paragraph</v-icon>
             </button>
@@ -229,6 +232,7 @@
     // import { mergeAttributes } from '@tiptap/core'
     import { Editor, EditorContent } from '@tiptap/vue-2'
     import { defaultExtensions } from '@tiptap/starter-kit'
+    import Blockquote from "@tiptap/extension-blockquote"
     import Table from '@tiptap/extension-table'
     import TableRow from '@tiptap/extension-table-row'
     import TableCell from '@tiptap/extension-table-cell'
@@ -237,15 +241,22 @@
     import { position, /* offset */ } from 'caret-pos'
     import AutoOutdent from "./tiptap/AutoOutdent.js";
     import TableIndent from "./tiptap/TableIndent.js";
+    import {mergeAttributes} from "@tiptap/core";
 
     Table.extend({
         addCommands() {
             return {
-                indent: ( value ) => ({ commands }) => {
-                    console.log("node", Node)
-                    return this.options.types.every(type => commands.updateNodeAttributes(type, { mmrr: value }))
+                indent: () => ({ commands }) => {
+                    console.log("in indent...")
+                    return commands.wrapIn('dd')
                 }
             }
+        },
+    })
+    const aaa = Blockquote.extend({
+        renderHTML({ HTMLAttributes }) {
+            console.log("HTMLAttributes", HTMLAttributes)
+            return ['blockquote', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0]
         }
     })
 
@@ -327,6 +338,7 @@
                             style: "padding: 10 9"
                         }
                     }),
+                    aaa,
                     TableRow,
                     TableCell,
                     TableHeader,
