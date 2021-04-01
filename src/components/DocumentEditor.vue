@@ -232,7 +232,8 @@
     // import { mergeAttributes } from '@tiptap/core'
     import { Editor, EditorContent } from '@tiptap/vue-2'
     import { defaultExtensions } from '@tiptap/starter-kit'
-    import Blockquote from "@tiptap/extension-blockquote"
+    // import Paragraph from "@tiptap/extension-paragraph"
+    // import Blockquote from "@tiptap/extension-blockquote"
     import Table from '@tiptap/extension-table'
     import TableRow from '@tiptap/extension-table-row'
     import TableCell from '@tiptap/extension-table-cell'
@@ -240,26 +241,29 @@
     import TextAlign from '@tiptap/extension-text-align'
     import { position, /* offset */ } from 'caret-pos'
     import AutoOutdent from "./tiptap/AutoOutdent.js";
-    import TableIndent from "./tiptap/TableIndent.js";
-    import {mergeAttributes} from "@tiptap/core";
+    // import TableIndent from "./tiptap/TableIndent.js";
+    // import {mergeAttributes} from "@tiptap/core";
 
-    Table.extend({
-        addCommands() {
-            return {
-                indent: () => ({ commands }) => {
-                    console.log("in indent...")
-                    return commands.wrapIn('dd')
-                }
-            }
-        },
-    })
-    const aaa = Blockquote.extend({
-        renderHTML({ HTMLAttributes }) {
-            console.log("HTMLAttributes", HTMLAttributes)
-            return ['blockquote', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0]
-        }
-    })
+    // let CustomTableIndent = Table.extend({
+    //     content: 'table',
+    //
+    // })
 
+    // let CustomTable = Table.extend({
+    //     content: 'tableRow+'
+    // })
+    // const aaa = Blockquote.extend({
+    //     renderHTML({ HTMLAttributes }) {
+    //         console.log("HTMLAttributes", HTMLAttributes)
+    //         return ['blockquote', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0]
+    //     }
+    // })
+    import Blockquote from '@tiptap/extension-blockquote'
+
+    const CustomBlockquote = Blockquote.extend({
+        content: 'table',
+
+    })
 
     export default {
         components: {
@@ -338,13 +342,16 @@
                             style: "padding: 10 9"
                         }
                     }),
-                    aaa,
+                    // aaa,
                     TableRow,
                     TableCell,
                     TableHeader,
                     TextAlign,
                     AutoOutdent,
-                    TableIndent
+                    // TableIndent,
+                    // CustomTableIndent
+                    CustomBlockquote
+                    // Blockquote
                 ],
                 content: this.value,
                 autofocus: true,
@@ -427,6 +434,11 @@
             line-height: 1.6;
             font-size: 11.7pt;
             margin-bottom: 0;
+        }
+
+        blockquote {
+            padding-left: 1rem;
+            border-left: 2px solid rgba(#0D0D0D, 0.1);
         }
 
     }

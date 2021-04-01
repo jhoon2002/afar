@@ -23,10 +23,10 @@ const TableIndent = Extension.create({
     },
     addCommands() {
         return {
-            indent: ( value ) => ({ commands }) => {
-                console.log("node", Node)
-                return this.options.types.every(type => commands.updateNodeAttributes(type, { mmrr: value }))
-            }
+            // indent: ( value ) => ({ commands }) => {
+            //     console.log("node", Node)
+            //     return this.options.types.every(type => commands.updateNodeAttributes(type, { mmrr: value }))
+            // }
         }
     }
 })
