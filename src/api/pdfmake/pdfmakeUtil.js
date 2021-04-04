@@ -56,14 +56,14 @@ export const pdfmakeUtil = {
         })
         allHtml = allHtml.replace(/<table\s+style="(width|min-width):\s*([0-9]+)px\s*;?"/g, "<table data-pdfmake=\"{&quot;layout&quot;:&quot;padding&quot;}\" style=\"$1: $2px\"")
 
-        console.log("allHtml", allHtml)
+        // console.log("allHtml", allHtml)
 
         let content = htmlToPdfmake(allHtml, {
             tableAutoSize: true,
             defaultStyles: defaultStyles
         })
 
-        console.log("content", content)
+        // console.log("content", content)
 
         let footer = htmlToPdfmake(footerHtml, {
             tableAutoSize: true,
@@ -197,6 +197,7 @@ export const pdfmakeUtil = {
                 document.getElementById('pdfId').src = outDoc;
             })
         // }
+        // pdfMake.createPdf(docDefinition).open({}, window);
     }
 
 }

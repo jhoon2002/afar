@@ -334,121 +334,132 @@ export default Object.freeze(
         ],
         organs: [
             {
-                _id: "1001",
+                id: "1001",
                 rank: 1,
                 name: "산학협력단",
                 blank: false,
                 chief: "장",
                 staffs: [
                     {
-                        _id: "1002",
+                        id: "1002",
                         rank: 1,
                         role: "단장",
                         employeeId: "100002",
+                        name: "이정민"
                     },
                     {
-                        _id: "1003",
+                        id: "1003",
                         rank: 2,
                         role: "부단장",
-                        employeeId: "100001"
+                        employeeId: "100001",
+                        name: "여종훈"
                     }
                 ],
                 children: [
                     {
-                        _id: "1004",
+                        id: "1004",
                         rank: 2,
                         name: "본부",
                         locked: true,
                         children: [
                             {
-                                _id: "1005",
+                                id: "1005",
                                 rank: 1,
                                 name: "전략기획팀",
                                 chief: "장",
                                 staffs: [
                                     {
-                                        _id: "1006",
+                                        id: "1006",
                                         rank: 1,
                                         role: "팀장",
                                         employeeId: "100003",
+                                        name: "마진욱"
                                     },
                                     {
-                                        _id: "1007",
+                                        id: "1007",
                                         rank: 2,
                                         role: "사원",
-                                        employeeId: "100008"
+                                        employeeId: "100008",
+                                        name: "최형준"
                                     },
                                 ]
                             },
                             {
-                                _id: "1008",
+                                id: "1008",
                                 rank: 2,
                                 name: "사업운영팀",
                                 chief: "장",
                                 staffs: [
                                     {
-                                        _id: "1009",
+                                        id: "1009",
                                         rank: 1,
                                         role: "팀장",
-                                        employeeId: "100003"
+                                        employeeId: "100003",
+                                        name: "마진욱"
                                     },
                                     {
-                                        _id: "1010",
+                                        id: "1010",
                                         rank: 2,
                                         role: "사원",
-                                        employeeId: "100005"
+                                        employeeId: "100005",
+                                        name: "이지혜"
                                     },
                                     {
-                                        _id: "1011",
+                                        id: "1011",
                                         rank: 3,
                                         role: "사원",
-                                        employeeId: "100006"
+                                        employeeId: "100006",
+                                        name: "이희경"
                                     },
                                     {
-                                        _id: "1012",
+                                        id: "1012",
                                         rank: 4,
                                         role: "사원",
-                                        employeeId: "100008"
+                                        employeeId: "100008",
+                                        name: "유창근"
                                     }
                                 ]
                             },
                             {
-                                _id: "1013",
+                                id: "1013",
                                 rank: 3,
                                 name: "총무관리팀",
                                 blank: false,
                                 chief: "장",
                                 staffs: [
                                     {
-                                        _id: "1014",
+                                        id: "1014",
                                         rank: 1,
                                         role: "팀장",
-                                        employeeId: "100004"
+                                        employeeId: "100004",
+                                        name: "김소희"
                                     },
                                     {
-                                        _id: "1015",
+                                        id: "1015",
                                         rank: 2,
                                         role: "사원",
-                                        employeeId: "100007"
+                                        employeeId: "100007",
+                                        name: "김예희"
                                     },
                                     {
-                                        _id: "1016",
+                                        id: "1016",
                                         rank: 3,
                                         role: "사원",
-                                        employeeId: "100006"
+                                        employeeId: "100006",
+                                        name: "이희경"
                                     },
                                 ],
                             }
                         ]
                     },
                     {
-                        _id: "1017",
+                        id: "1017",
                         rank: 2,
                         name: "사업단",
                         locked: true,
                         children: [
                             {
-                                _id: "1018",
+                                id: "1018",
                                 rank: 1,
                                 fullName: "협력종합예술활동 운영 위탁용역",
                                 name: "2021 협력종합예술활동",
@@ -456,7 +467,7 @@ export default Object.freeze(
                                 chief: "연구책임자",
                             },
                             {
-                                _id: "1019",
+                                id: "1019",
                                 rank: 2,
                                 fullName: "2021 예술세상마을",
                                 name: "2021 예술세상마을",
@@ -464,7 +475,7 @@ export default Object.freeze(
                                 chief: "연구책임자"
                             },
                             {
-                                _id: "1020",
+                                id: "1020",
                                 rank: 3,
                                 fullName: "틱톡 영상콘텐츠 제작 및 홍보",
                                 name: "틱톡 영상콘텐츠",
@@ -472,7 +483,7 @@ export default Object.freeze(
                                 chief: "연구책임자",
                             },
                             {
-                                _id: "1021",
+                                id: "1021",
                                 rank: 4,
                                 fullName: "2025 국립중앙박물관 공간개편 기본구상 연구",
                                 name: "국립중앙박물관 공간개편",
@@ -480,7 +491,7 @@ export default Object.freeze(
                                 chief: "연구책임자"
                             },
                             {
-                                _id: "1022",
+                                id: "1022",
                                 rank: 5,
                                 fullName: "학교 융복합 문화예술교육 시범사업 운영 <융복합 문화예술교육 프로그램 연구 및 교과과정 연계 시범운영 실행> : 1년차",
                                 name: "학교 융복합 문화예술교육 시범사업",

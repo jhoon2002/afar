@@ -107,7 +107,11 @@
                                                                 </v-btn>
                                                             </v-sheet>
                                                         </template>
-                                                        <organ-tree @send="setReceivers" @close="dialog = false"></organ-tree>
+                                                        <select-receiver
+                                                                @send="setReceivers"
+                                                                @close="dialog = false"
+                                                        >
+                                                        </select-receiver>
                                                     </v-dialog>
                                                 </template>
                                                 <template v-else>
@@ -249,11 +253,13 @@
                                         <v-text-field
                                                 v-model="date"
                                                 readonly
+                                                hide-details
                                                 label="제한 종료일"
                                                 clearable
+                                                clear-icon="mdi-close"
                                                 v-bind="attrs"
                                                 v-on="on"
-                                                style="max-width:10rem; margin-top: -1.3rem"
+                                                style="max-width:10rem; margin-top: -2.2rem"
                                         ></v-text-field>
                                     </template>
                                     <v-date-picker
@@ -293,7 +299,7 @@
                             <organization-chart
                                     :search="true"
                                     :folderonly="false"
-                                    :leaf="false"
+                                    leaf="no"
                                     :selectable="false"
                                     @touched="addApprover"
                             ></organization-chart>
@@ -375,23 +381,61 @@
                         </v-card>
                     </v-stepper-content>
                     <v-stepper-content step="4">
-                        <document-editor></document-editor>
+                        <document-editor ref="docEditor"></document-editor>
                     </v-stepper-content>
                 </v-stepper-items>
             </v-stepper>
         </v-col>
-        <v-col cols="5">
-                <iframe id="pdfId" style="height:735px; width: 500px; border: 1px solid grey; background: white"></iframe>
+        <v-col>
+            <v-card class="pa-3 text-center">
+                <v-btn
+                        elevation="0"
+                        class="pink"
+                        dark
+                        style="width: 100%"
+                        @click="$refs.docEditor.pdfgen()"
+                >
+                    <v-icon left dark>far fa-file-pdf</v-icon>
+                    미리보기
+                </v-btn>
+                <v-btn
+                        elevation="0"
+                        class="blue mt-2"
+                        dark
+                        style="width: 100%"
+                >
+                    <v-icon left dark>mdi-briefcase-clock-outline</v-icon>
+                    임시저장
+                </v-btn>
+                <v-btn
+                        elevation="0"
+                        class="green mt-2"
+                        dark
+                        style="width: 100%"
+                >
+                    <v-icon left dark>mdi-upload-multiple</v-icon>
+                    상신하기
+                </v-btn>
+            </v-card>
+        </v-col>
+        <v-col cols="4">
+            <v-card flat style="background: #757575">
+                <iframe id="pdfId" style="height:740px; width: 500px; border: 0px solid #808080; background: #757575"></iframe>
+            </v-card>
         </v-col>
     </v-row>
 </template>
 
 <script>
     import DocumentEditor from "@/components/DocumentEditor.vue"
+    import OrganizationChart from "@/components/OrganizationChart"
+    import SelectReceiver from "@/components/SelectReceiver"
 
     export default {
         components: {
-            DocumentEditor
+            DocumentEditor,
+            OrganizationChart,
+            SelectReceiver
         },
         data () {
             return {

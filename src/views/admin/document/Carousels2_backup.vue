@@ -552,7 +552,7 @@
     // import PdfButton from "@/components/PdfButton.vue"
     import Alignment from '@/Alignment'
     import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
-    import OrganTree from "@/components/OrganTree";
+    import OrganTree from "@/components/SelectReceiver";
     import {
         Blockquote,
         CodeBlock,

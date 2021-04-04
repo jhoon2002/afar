@@ -11,9 +11,11 @@
             </v-btn>
         </v-sheet>
         <v-sheet class="mb-2">
+            <!--
             <button @click="editor.chain().focus().toggleBlockquote().run()" :class="{ 'is-active': editor.isActive('blockquote') }">
                 blockquote
             </button>
+            -->
             <button @click="editor.chain().focus().setParagraph().run()" :class="{ 'is-active': editor.isActive('paragraph') }">
                 <v-icon :dark="editor.isActive('paragraph')" small>$j-icon-paragraph</v-icon>
             </button>
@@ -35,8 +37,12 @@
             <button @click="editor.chain().focus().outdent(cursorPosX()).run()" :class="{ 'is-active': editor.isActive('AutoOutdent') }">
                 <v-icon :dark="editor.isActive('AutoOutdent')">$j-icon-auto-outdent</v-icon>
             </button>
-
+            <!--
             <button @click="editor.chain().focus().indent(30).run()">
+                <v-icon>mdi-format-horizontal-align-right</v-icon>
+            </button>
+            -->
+            <button @click="tableIndent()">
                 <v-icon>mdi-format-horizontal-align-right</v-icon>
             </button>
 
@@ -258,11 +264,63 @@
     //         return ['blockquote', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0]
     //     }
     // })
-    import Blockquote from '@tiptap/extension-blockquote'
+    // import Blockquote from '@tiptap/extension-blockquote'
+    import {callOrReturn, mergeAttributes} from "@tiptap/core"
+    import {columnResizing, tableEditing} from "prosemirror-tables";
+    // import {TableView} from "@tiptap/extension-table/src/TableView";
+    // import {createTable} from "@tiptap/extension-table"
+    // import {TextSelection} from "prosemirror-state";
+    // import {callOrReturn} from "@tiptap/core";
+    // import {columnResizing, tableEditing} from "prosemirror-tables";
+    // import { createTable } from '@tiptap/extension-table/src/utilities/createTable'
 
-    const CustomBlockquote = Blockquote.extend({
-        content: 'table',
+    // const CustomBlockquote = Blockquote.extend({
+    //     renderHTML({ HTMLAttributes }) {
+    //         // HTMLAttributes.style = "text-indent: 1"
+    //         console.log("HTMLAttributes", HTMLAttributes)
+    //         return ['table', { style: 'margin-left: 10'}, ['tbody', 0]]
+    //     },
+    // })
 
+    const CustomTable = Table.extend({
+
+        parseHTML() {
+            console.log("파싱..")
+            return [
+                { tag: 'table' },
+            ]
+        },
+        renderHTML({ HTMLAttributes }) {
+            // HTMLAttributes.style = "text-indent: 1"
+            console.log("렌더..")
+            console.log("HTMLAttributes", HTMLAttributes)
+            this.options.HTMLAttributes.style = "margin-left: 10pt"
+            return ['table', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), ['tbody', 0]]
+        },
+        addProseMirrorPlugins() {
+            console.log("zzzzzzzzzzzzzzzzd")
+            return [
+                ...(this.options.resizable ? [columnResizing({
+                    handleWidth: this.options.handleWidth,
+                    cellMinWidth: this.options.cellMinWidth,
+                    View: this.options.View,
+                    // TODO: PR for @types/prosemirror-tables
+                    // @ts-ignore (incorrect type)
+                    lastColumnResizable: this.options.lastColumnResizable
+                })] : []),
+                tableEditing({
+                    allowTableNodeSelection: this.options.allowTableNodeSelection
+                }),
+            ]
+        },
+        extendNodeSchema(extension) {
+            console.log("9999999999999")
+            const context = { options: extension.options }
+
+            return {
+                tableRole: callOrReturn(extension.config.tableRole, context),
+            }
+        },
     })
 
     export default {
@@ -304,6 +362,20 @@
                 // this.cursorOff = offset(this.input); // { left: 15, top: 30, height: 20 }
 
                 return cursorPos.left + addMargin
+            },
+            tableIndent() {
+                let ele = window.getSelection().anchorNode.parentElement.parentElement.parentElement.parentElement
+                if (ele && ele.tagName !== "TABLE") {
+                    return
+                }
+                let now = ele.style.marginLeft.trim()
+                if (now) {
+                    let numArray = /[0-9]+/g.exec(now)
+                    let unit = now.replace(/[0-9]+/g, "")
+                    ele.style.marginLeft = numArray[0] * 1 + 10 + unit
+                } else {
+                    ele.style.marginLeft = "10pt"
+                }
             }
         },
         watch: {
@@ -335,12 +407,12 @@
                             && extension.config.name !== 'listItem'
                             // && extension.config.name !== 'paragraph'
                     ),
-                    Table.configure({
+                    CustomTable.configure({
                         resizable: true,
                         allowTableNodeSelection: true,
-                        HTMLAttributes: {
-                            style: "padding: 10 9"
-                        }
+                        // HTMLAttributes: {
+                        //     style: "padding: 10 9"
+                        // }
                     }),
                     // aaa,
                     TableRow,
@@ -350,7 +422,7 @@
                     AutoOutdent,
                     // TableIndent,
                     // CustomTableIndent
-                    CustomBlockquote
+                    // CustomBlockquote
                     // Blockquote
                 ],
                 content: this.value,

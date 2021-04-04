@@ -10,7 +10,7 @@
                         prepend-inner-icon="mdi-magnify"
                 ></v-text-field>
                 <v-switch
-                        v-if="leaf == 'option'"
+                        v-if="leaf === 'option'"
                         dense
                         v-model="leafVal"
                         label="하위 전체 선택"
@@ -23,16 +23,15 @@
                             v-model="selection"
                             :items="$_DATA.organs"
                             :search="word"
-                            :filter="filter"
-                            :selection-type="isleaf == true ? 'leaf' : 'independent'"
-                            :item-disabled="isleaf == true ? false : 'locked'"
+                            :selection-type="leaf === 'option' && leafVal === true ? 'leaf' : 'independent'"
+                            :item-disabled="leaf === 'option' && leafVal === true ? 'false' : 'locked'"
                             :selectable="selectable"
                             return-object
                             open-all
                             dense
                             activatable
                             :active.sync="active"
-                    ></v-treeview>
+                    ></v-treeview><!--:filter="true"-->
                 </v-card>
             </v-sheet>
         </v-col>
@@ -47,7 +46,7 @@
                     </v-card-text>
                 </template>
                 <template v-else>
-                    <v-simple-table>
+                    <v-simple-table v-if="active.length">
                         <template v-slot:default>
                             <thead>
                             <tr>
@@ -112,12 +111,12 @@
             }
         },
         computed: {
-            isLeaf() {
-                if (this.leaf == "option") {
-                    return this.leafVal
-                }
-                return this.leaf
-            }
+            // isLeaf() {
+            //     // if (this.leaf === "option") {
+            //     //     return this.leafVal
+            //     // }
+            //     return this.leaf
+            // }
         }
     }
 </script>

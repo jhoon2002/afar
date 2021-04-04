@@ -38,8 +38,8 @@
                                     :items="$_DATA.organs"
                                     :search="search"
                                     :filter="filter"
-                                    :selection-type="leaf == true ? 'leaf' : 'independent'"
-                                    :item-disabled="leaf == true ? false : 'locked'"
+                                    :selection-type="leaf === true ? 'leaf' : 'independent'"
+                                    :item-disabled="leaf === true ? 'false' : 'locked'"
                                     selectable
                                     return-object
                                     open-all
@@ -53,7 +53,7 @@
                             <p class="text-h6">
                                 선택 목록
                             </p>
-                            <p class="error--text" v-if="!selection.length">
+                            <p class="error&#45;&#45;text" v-if="!selection.length">
                                 수신자를 선택하십시오.
                             </p>
                             <template v-else>
@@ -131,7 +131,12 @@
     </v-card>
 </template>
 <script>
+    // import OrganizationChart from "@/components/OrganizationChart";
     export default {
+        name: "SelectReceiver",
+        components: {
+            // OrganizationChart
+        },
         data () {
             return {
                 search: null,
