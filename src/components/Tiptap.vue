@@ -1,6 +1,9 @@
 <template>
     <v-sheet v-if="editor">
         <v-sheet class="mb-2">
+            <button @click="editorExe">
+                노드
+            </button>
             <button @click="editor.chain().focus().setParagraph().run()" :class="{ 'is-active': editor.isActive('paragraph') }">
                 <v-icon :dark="editor.isActive('paragraph')" small>$j-icon-paragraph</v-icon>
             </button>
@@ -245,6 +248,15 @@
 
                 return cursorPos.left + addMargin
             },
+            editorExe() {
+                this.editor.chain().focus().command(({ tr }) => {
+                    // manipulate the transaction
+                    tr.insertContent('hey, that’s cool!')
+
+                    return true
+                }).run()
+                console.log("111")
+            }
         },
         watch: {
             value(value) {
