@@ -9,6 +9,9 @@ import AlignJustify from '@/components/icons/AlignJustify.vue'
 import Bold from '@/components/icons/Bold.vue'
 import AutoOutdent from '@/components/icons/AutoOutdent.vue'
 import Table from '@/components/icons/Table.vue'
+import TableIndent from '@/components/icons/TableIndent.vue'
+import TableOutdent from '@/components/icons/TableOutdent.vue'
+
 
 Vue.use(Vuetify)
 
@@ -45,6 +48,12 @@ export default new Vuetify({
             },
             "j-icon-table":{
                 component: Table
+            },
+            "j-icon-table-indent":{
+                component: TableIndent
+            },
+            "j-icon-table-outdent":{
+                component: TableOutdent
             }
         },
     },

@@ -1,7 +1,7 @@
 <template>
     <v-sheet v-if="editor">
         <v-sheet class="mb-2">
-            <button @click="editorExe">
+            <button @click="editor.commands.doit()">
                 노드
             </button>
             <button @click="editor.chain().focus().setParagraph().run()" :class="{ 'is-active': editor.isActive('paragraph') }">
@@ -162,8 +162,13 @@
     import TableRow from '@tiptap/extension-table-row'
     import TableCell from '@tiptap/extension-table-cell'
     import TableHeader from '@tiptap/extension-table-header'
-    import TextAlign from '@tiptap/extension-text-align'
+    // import TextAlign from '@tiptap/extension-text-align'
     import { position, /* offset */ } from 'caret-pos'
+    // import CustomTableView from "@/components/tiptap/CustomTableView.js"
+    // import { CustomTableView } from '@/components/tiptap/CustomTableView'
+    // import { Node as ProseMirrorNode } from 'prosemirror-model'
+
+    // console.log("CustomTableView", CustomTableView)
 
     const AutoOutdent = Extension.create({
         defaultOptions: {
@@ -213,6 +218,53 @@
                 }
             }
         },
+    })
+
+    const TestCom = Extension.create({
+
+        defaultOptions: {
+            types: ['paragraph', 'table'],
+            defaultMarginLeft: '0',
+        },
+
+        addGlobalAttributes() {
+            return [
+                {
+                    types: this.options.types,
+                    attributes: {
+                        marginLeft: {
+                            default: this.options.defaultMarginLeft,
+                            renderHTML: attributes => ({
+                                style: `margin-left: ${attributes.marginLeft}`,
+                            }),
+                            parseHTML: element => ({
+                                marginLeft: element.style.marginLeft || this.options.defaultMarginLeft,
+                            }),
+                        },
+                    },
+                },
+            ]
+        },
+
+        addCommands() {
+            return {
+                doit: ( ) => ({ commands }) => {
+                    // Doesn’t work:
+                    // return editor.chain() …
+
+                    // Does work:
+
+                    // console.log("tr", tr)
+                    let ele = window.getSelection().anchorNode.parentElement.parentElement.parentElement.parentElement
+                    console.log("dom ele", ele)
+
+                    ele.style.marginLeft = '30px'
+
+                    return commands.updateAttributes('table', { marginLeft: '30px'})
+                },
+            }
+        }
+
     })
 
     export default {
@@ -292,8 +344,9 @@
                     TableRow,
                     TableCell,
                     TableHeader,
-                    TextAlign,
-                    AutoOutdent
+                    // TextAlign,
+                    AutoOutdent,
+                    TestCom
                 ],
                 content: this.value,
                 autofocus: true,

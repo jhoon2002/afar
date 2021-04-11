@@ -1,8 +1,7 @@
 <template>
     <v-sheet>
-        <!--
         <v-sheet class="mb-3">
-            <v-btn @click="editor.chain().focus().printPdf().run()" dark color="primary" elevation="0" class="mr-2">
+            <v-btn @click="pdfgen()" dark color="primary" elevation="0" class="mr-2">
                 <v-icon small left>mdi-monitor</v-icon>
                 미리보기
             </v-btn>
@@ -11,44 +10,55 @@
                 다운로드
             </v-btn>
         </v-sheet>
-        -->
         <v-sheet class="mb-2">
-
+            <!--
+            <button @click="editor.chain().focus().toggleBlockquote().run()" :class="{ 'is-active': editor.isActive('blockquote') }">
+                blockquote
+            </button>
+            -->
+            <button @click="editor.commands.doIndent(5)">
+                Indent
+            </button>
+            <button @click="editor.commands.doOutdent(5)">
+                Outdent
+            </button>
             <button @click="editor.chain().focus().setParagraph().run()" :class="{ 'is-active': editor.isActive('paragraph') }">
-                <v-icon :dark="editor.isActive('paragraph')">ri-paragraph</v-icon>
+                <v-icon :dark="editor.isActive('paragraph')" small>$j-icon-paragraph</v-icon>
             </button>
             <button @click="editor.chain().focus().setTextAlign('left').run()" :class="{ 'is-active': editor.isActive({ textAlign: 'left' }) }">
-                <v-icon :dark="editor.isActive({ textAlign: 'left' })">ri-align-left</v-icon>
+                <v-icon :dark="editor.isActive({ textAlign: 'left' })" small>fas fa-align-left</v-icon>
             </button>
             <button @click="editor.chain().focus().setTextAlign('center').run()" :class="{ 'is-active': editor.isActive({ textAlign: 'center' }) }">
-                <v-icon :dark="editor.isActive({ textAlign: 'center' })">ri-align-center</v-icon>
+                <v-icon :dark="editor.isActive({ textAlign: 'center' })" small>fas fa-align-center</v-icon>
             </button>
             <button @click="editor.chain().focus().setTextAlign('right').run()" :class="{ 'is-active': editor.isActive({ textAlign: 'right' }) }">
-                <v-icon :dark="editor.isActive({ textAlign: 'right' })">ri-align-right</v-icon>
+                <v-icon :dark="editor.isActive({ textAlign: 'right' })" small>fas fa-align-right</v-icon>
             </button>
             <button @click="editor.chain().focus().setTextAlign('justify').run()" :class="{ 'is-active': editor.isActive({ textAlign: 'justify' }) }">
-                <v-icon :dark="editor.isActive({ textAlign: 'justify' })">ri-align-justify</v-icon>
+                <v-icon :dark="editor.isActive({ textAlign: 'justify' })" small>fas fa-align-justify</v-icon>
             </button>
             <button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">
-                <v-icon :dark="editor.isActive('bold')">ri-bold</v-icon>
+                <v-icon :dark="editor.isActive('bold')" small>fas fa-bold</v-icon>
             </button>
             <button @click="editor.chain().focus().outdent(cursorPosX()).run()" :class="{ 'is-active': editor.isActive('AutoOutdent') }">
                 <v-icon :dark="editor.isActive('AutoOutdent')">$j-icon-auto-outdent</v-icon>
             </button>
+            <!--
+            <button @click="editor.chain().focus().indent(30).run()">
+                <v-icon>mdi-format-horizontal-align-right</v-icon>
+            </button>
+            -->
+            <button @click="tableIndent()">
+                <v-icon>mdi-format-horizontal-align-right</v-icon>
+            </button>
 
             <button @click="editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: false }).run()" :class="{ 'is-active': editor.isActive('table') }">
-                <v-icon :dark="editor.isActive('table')">ri-table-line</v-icon>
+                <v-icon :dark="editor.isActive('table')">mdi-table</v-icon>
             </button>
 
             <template v-if="editor.isActive('table')">
                 <button @click="editor.chain().focus().deleteTable().run()" :disabled="!editor.can().deleteTable()">
-                    <v-icon>ri-delete-bin-6-line</v-icon>
-                </button>
-                <button @click="editor.chain().focus().doIndent(5).run()">
-                    <v-icon>$j-icon-table-indent</v-icon>
-                </button>
-                <button @click="editor.chain().focus().doOutdent(5).run()">
-                    <v-icon>$j-icon-table-outdent</v-icon>
+                    <v-icon class="far fa-trash-alt" dense></v-icon>
                 </button>
                 <button @click="editor.chain().focus().addColumnBefore().run()" :disabled="!editor.can().addColumnBefore()">
                     <v-icon>mdi-table-column-plus-before</v-icon>
@@ -161,12 +171,12 @@
                             &quot;width&quot;:482,
                             &quot;thickness&quot;:0.1,
                             &quot;color&quot;:&quot;black&quot;,
-                            &quot;margin&quot;:[0,5,0,10]
+                            &quot;margin&quot;:[0,0,0,10]
                         }"
                     >
                     <div class="editor">
 
-                        <editor-content :editor="editor"></editor-content>
+                        <editor-content :editor="editor" v-model="content"></editor-content>
 
                     </div>
                 </div>
@@ -208,7 +218,6 @@
                 </div>
             </div>
         </div>
-        <!--
         <v-sheet class="mt-3">
             <v-btn @click="pdfgen()" dark color="primary" elevation="0" class="mr-2">
                 <v-icon small left>mdi-monitor</v-icon>
@@ -219,7 +228,6 @@
                 다운로드
             </v-btn>
         </v-sheet>
-        -->
         <!--
         <v-btn color="primary" @click="nextStep(2)">
             <v-icon left>mdi-card-bulleted-outline</v-icon>문서관리카드
@@ -228,20 +236,142 @@
     </v-sheet>
 </template>
 <script>
+    // import pdfMake from '@/assets/pdfmake.js'
+    // import htmlToPdfmake from "html-to-pdfmake"
     import { pdfmakeUtil } from "@/api/pdfmake/pdfmakeUtil.js"
     import ConfirmList from "@/components/ConfirmList.vue"
+
+    // import { mergeAttributes } from '@tiptap/core'
     import { Editor, EditorContent } from '@tiptap/vue-2'
     import { defaultExtensions } from '@tiptap/starter-kit'
+    // import Paragraph from "@tiptap/extension-paragraph"
+    // import Blockquote from "@tiptap/extension-blockquote"
     import Table from '@tiptap/extension-table'
     import TableRow from '@tiptap/extension-table-row'
     import TableCell from '@tiptap/extension-table-cell'
     import TableHeader from '@tiptap/extension-table-header'
     import TextAlign from '@tiptap/extension-text-align'
     import { position, /* offset */ } from 'caret-pos'
-    import AutoOutdent from "@/components/tiptap/AutoOutdent.js"
-    import TableInOutdent from "@/components/tiptap/TableInOutdent.js"
-    import PdfPrint from "@/components/tiptap/PdfPrint.js"
-    import Paragraph from '@tiptap/extension-paragraph'
+    import AutoOutdent from "./tiptap/AutoOutdent.js";
+    // import TableIndent from "./tiptap/TableIndent.js";
+    // import {mergeAttributes} from "@tiptap/core";
+
+    // let CustomTableIndent = Table.extend({
+    //     content: 'table',
+    //
+    // })
+
+    // let CustomTable = Table.extend({
+    //     content: 'tableRow+'
+    // })
+    // const aaa = Blockquote.extend({
+    //     renderHTML({ HTMLAttributes }) {
+    //         console.log("HTMLAttributes", HTMLAttributes)
+    //         return ['blockquote', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0]
+    //     }
+    // })
+    // import Blockquote from '@tiptap/extension-blockquote'
+    // import {callOrReturn, mergeAttributes} from "@tiptap/core"
+    // import {columnResizing, tableEditing} from "prosemirror-tables";
+    // import {TableView} from "@tiptap/extension-table/src/TableView";
+    // import {createTable} from "@tiptap/extension-table"
+    // import {TextSelection} from "prosemirror-state";
+    // import {callOrReturn} from "@tiptap/core";
+    // import {columnResizing, tableEditing} from "prosemirror-tables";
+    // import { createTable } from '@tiptap/extension-table/src/utilities/createTable'
+
+    // const CustomBlockquote = Blockquote.extend({
+    //     renderHTML({ HTMLAttributes }) {
+    //         // HTMLAttributes.style = "text-indent: 1"
+    //         console.log("HTMLAttributes", HTMLAttributes)
+    //         return ['table', { style: 'margin-left: 10'}, ['tbody', 0]]
+    //     },
+    // })
+
+    import { Extension } from '@tiptap/core'
+/*
+
+    const CustomTable = Table.extend({
+
+        parseHTML() {
+            console.log("파싱..")
+            return [
+                { tag: 'table' },
+            ]
+        },
+        renderHTML({ HTMLAttributes }) {
+            // HTMLAttributes.style = "text-indent: 1"
+            console.log("렌더..")
+            console.log("HTMLAttributes", HTMLAttributes)
+            // this.options.HTMLAttributes.style = "margin-left: 10pt"
+            return ['table', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), ['tbody', 0]]
+        }
+    })
+*/
+
+    const TableInOutDent = Extension.create({
+
+        defaultOptions: {
+            types: ['table'],
+            defaultMarginLeft: '0',
+        },
+
+        addGlobalAttributes() {
+            return [
+                {
+                    types: this.options.types,
+                    attributes: {
+                        marginLeft: {
+                            default: this.options.defaultMarginLeft,
+                            renderHTML: attributes => ({
+                                style: `margin-left: ${attributes.marginLeft}`,
+                            }),
+                            parseHTML: element => ({
+                                marginLeft: element.style.marginLeft || this.options.defaultMarginLeft,
+                            }),
+                        },
+                    },
+                },
+            ]
+        },
+
+        addCommands() {
+            return {
+                doIndent: ( value ) => ({ chain }) => {
+
+                    let ele = window.getSelection().anchorNode.parentElement.parentElement.parentElement.parentElement
+
+                    if (ele && ele.tagName !== "TABLE") {
+                        return
+                    }
+
+                    let str = ele.style.marginLeft.trim()
+                    if (str) {
+                        let numArray = /[0-9]+/g.exec(str)
+                        let unit = str.replace(/[0-9]+/g, "")
+                        ele.style.marginLeft = numArray[0] * 1 + value + unit
+                    } else {
+                        ele.style.marginLeft = value + "pt"
+                    }
+
+                    return chain().focus().updateAttributes('table', { marginLeft: ele.style.marginLeft }).run()
+                },
+                doOutdent: ( value ) => ({ chain }) => {
+
+                    console.log("value", value)
+
+                    let ele = window.getSelection().anchorNode.parentElement.parentElement.parentElement.parentElement
+
+                    if (ele.tagName === "TABLE") {
+                        ele.style.marginLeft = '30px'
+                    }
+
+                    return chain().focus().updateAttributes('table', { marginLeft: '30px'}).run()
+                },
+            }
+        }
+
+    })
 
     export default {
         components: {
@@ -282,6 +412,20 @@
                 // this.cursorOff = offset(this.input); // { left: 15, top: 30, height: 20 }
 
                 return cursorPos.left + addMargin
+            },
+            tableIndent() {
+                let ele = window.getSelection().anchorNode.parentElement.parentElement.parentElement.parentElement
+                if (ele && ele.tagName !== "TABLE") {
+                    return
+                }
+                let now = ele.style.marginLeft.trim()
+                if (now) {
+                    let numArray = /[0-9]+/g.exec(now)
+                    let unit = now.replace(/[0-9]+/g, "")
+                    ele.style.marginLeft = numArray[0] * 1 + 10 + unit
+                } else {
+                    ele.style.marginLeft = "10pt"
+                }
             }
         },
         watch: {
@@ -303,7 +447,7 @@
                             && extension.config.name !== 'italic'
                             && extension.config.name !== 'code'
                             && extension.config.name !== 'codeBlock'
-                            // && extension.config.name !== 'heading' //헤딩을 포함시키지 않으면 textAlign이 작동 안함
+                            && extension.config.name !== 'heading'
                             && extension.config.name !== 'hardBreak'
                             && extension.config.name !== 'strike'
                             && extension.config.name !== 'blockquote'
@@ -311,25 +455,26 @@
                             && extension.config.name !== 'bulletList'
                             && extension.config.name !== 'orderedList'
                             && extension.config.name !== 'listItem'
-                            && extension.config.name !== 'paragraph'
+                            // && extension.config.name !== 'paragraph'
                     ),
-                    Paragraph.configure({
-                        HTMLAttributes: {
-                            class: "p-in-editor"
-                        }
-                    }),
-                    Table.configure({ //table은 HTMLAttributes 옵션 동작 안함(TableView가 렌더링 하면서 동작을 방해하는 듯함)
+                    Table.configure({
                         resizable: true,
                         allowTableNodeSelection: true,
-                        handleWidth: 8
+                        // HTMLAttributes: {
+                        //     style: "padding: 10 9"
+                        // }
                     }),
-                    TableCell,
+                    // aaa,
                     TableRow,
+                    TableCell,
                     TableHeader,
                     TextAlign,
                     AutoOutdent,
-                    TableInOutdent,
-                    PdfPrint
+                    TableInOutDent
+                    // TableIndent,
+                    // CustomTableIndent
+                    // CustomBlockquote
+                    // Blockquote
                 ],
                 content: this.value,
                 autofocus: true,
@@ -337,10 +482,10 @@
                 injectCSS: false,
             })
 
-            // this.editor.on('update', () => {
-            //     this.content = this.editor.getHTML()
-            //     this.$emit('input', this.editor.getHTML())
-            // })
+            this.editor.on('update', () => {
+                this.content = this.editor.getHTML()
+                // this.$emit('input', this.editor.getHTML())
+            })
         },
         beforeDestroy() {
             this.editor.destroy()
@@ -382,8 +527,8 @@
     }
     button,
     button.is-active {
-        margin-right: 3px;
-        padding: 2px 2px;
+        margin-right: 0.2rem;
+        padding: 0.2rem 0.4rem 0.2rem 0.4rem;
     }
     button.is-active {
         border-radius: 5px;
@@ -427,12 +572,12 @@
             border-collapse: collapse;
             table-layout: fixed;
             /*width: 10rem;*/
-            margin: 2pt 2pt 2pt 2pt;
+            margin: 3pt 0 3pt 0;
 
             td,
             th {
                 /*min-width: 1em;*/
-                /*width: 100px;*/
+                /*width: 10rem;*/
                 border: 1px solid grey;
                 padding: 1pt 3pt;
                 vertical-align: middle;
@@ -448,10 +593,6 @@
                 font-weight: bold;
                 text-align: left;
                 background-color: #f1f3f5;
-            }
-
-            p {
-                line-height: 1.3;
             }
 
             .selectedCell:after {

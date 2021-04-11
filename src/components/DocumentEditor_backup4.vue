@@ -15,34 +15,34 @@
         <v-sheet class="mb-2">
 
             <button @click="editor.chain().focus().setParagraph().run()" :class="{ 'is-active': editor.isActive('paragraph') }">
-                <v-icon :dark="editor.isActive('paragraph')">ri-paragraph</v-icon>
+                <v-icon :dark="editor.isActive('paragraph')" small>$j-icon-paragraph</v-icon>
             </button>
             <button @click="editor.chain().focus().setTextAlign('left').run()" :class="{ 'is-active': editor.isActive({ textAlign: 'left' }) }">
-                <v-icon :dark="editor.isActive({ textAlign: 'left' })">ri-align-left</v-icon>
+                <v-icon :dark="editor.isActive({ textAlign: 'left' })" small>fas fa-align-left</v-icon>
             </button>
             <button @click="editor.chain().focus().setTextAlign('center').run()" :class="{ 'is-active': editor.isActive({ textAlign: 'center' }) }">
-                <v-icon :dark="editor.isActive({ textAlign: 'center' })">ri-align-center</v-icon>
+                <v-icon :dark="editor.isActive({ textAlign: 'center' })" small>fas fa-align-center</v-icon>
             </button>
             <button @click="editor.chain().focus().setTextAlign('right').run()" :class="{ 'is-active': editor.isActive({ textAlign: 'right' }) }">
-                <v-icon :dark="editor.isActive({ textAlign: 'right' })">ri-align-right</v-icon>
+                <v-icon :dark="editor.isActive({ textAlign: 'right' })" small>fas fa-align-right</v-icon>
             </button>
             <button @click="editor.chain().focus().setTextAlign('justify').run()" :class="{ 'is-active': editor.isActive({ textAlign: 'justify' }) }">
-                <v-icon :dark="editor.isActive({ textAlign: 'justify' })">ri-align-justify</v-icon>
+                <v-icon :dark="editor.isActive({ textAlign: 'justify' })" small>fas fa-align-justify</v-icon>
             </button>
             <button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">
-                <v-icon :dark="editor.isActive('bold')">ri-bold</v-icon>
+                <v-icon :dark="editor.isActive('bold')" small>fas fa-bold</v-icon>
             </button>
             <button @click="editor.chain().focus().outdent(cursorPosX()).run()" :class="{ 'is-active': editor.isActive('AutoOutdent') }">
                 <v-icon :dark="editor.isActive('AutoOutdent')">$j-icon-auto-outdent</v-icon>
             </button>
 
-            <button @click="editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: false }).run()" :class="{ 'is-active': editor.isActive('table') }">
-                <v-icon :dark="editor.isActive('table')">ri-table-line</v-icon>
+            <button @click="editor.commands.makeColwidth()" :class="{ 'is-active': editor.isActive('table') }">
+                <v-icon :dark="editor.isActive('table')">mdi-table</v-icon>
             </button>
 
             <template v-if="editor.isActive('table')">
                 <button @click="editor.chain().focus().deleteTable().run()" :disabled="!editor.can().deleteTable()">
-                    <v-icon>ri-delete-bin-6-line</v-icon>
+                    <v-icon class="far fa-trash-alt" dense></v-icon>
                 </button>
                 <button @click="editor.chain().focus().doIndent(5).run()">
                     <v-icon>$j-icon-table-indent</v-icon>
@@ -161,7 +161,7 @@
                             &quot;width&quot;:482,
                             &quot;thickness&quot;:0.1,
                             &quot;color&quot;:&quot;black&quot;,
-                            &quot;margin&quot;:[0,5,0,10]
+                            &quot;margin&quot;:[0,0,0,10]
                         }"
                     >
                     <div class="editor">
@@ -238,10 +238,9 @@
     import TableHeader from '@tiptap/extension-table-header'
     import TextAlign from '@tiptap/extension-text-align'
     import { position, /* offset */ } from 'caret-pos'
-    import AutoOutdent from "@/components/tiptap/AutoOutdent.js"
-    import TableInOutdent from "@/components/tiptap/TableInOutdent.js"
-    import PdfPrint from "@/components/tiptap/PdfPrint.js"
-    import Paragraph from '@tiptap/extension-paragraph'
+    import AutoOutdent from "@/components/tiptap/AutoOutdent.js";
+    import TableInOutdent from "@/components/tiptap/TableInOutdent.js";
+    import PdfPrint from "@/components/tiptap/PdfPrint.js";
 
     export default {
         components: {
@@ -303,7 +302,7 @@
                             && extension.config.name !== 'italic'
                             && extension.config.name !== 'code'
                             && extension.config.name !== 'codeBlock'
-                            // && extension.config.name !== 'heading' //헤딩을 포함시키지 않으면 textAlign이 작동 안함
+                            && extension.config.name !== 'heading'
                             && extension.config.name !== 'hardBreak'
                             && extension.config.name !== 'strike'
                             && extension.config.name !== 'blockquote'
@@ -311,17 +310,11 @@
                             && extension.config.name !== 'bulletList'
                             && extension.config.name !== 'orderedList'
                             && extension.config.name !== 'listItem'
-                            && extension.config.name !== 'paragraph'
+                            // && extension.config.name !== 'paragraph'
                     ),
-                    Paragraph.configure({
-                        HTMLAttributes: {
-                            class: "p-in-editor"
-                        }
-                    }),
-                    Table.configure({ //table은 HTMLAttributes 옵션 동작 안함(TableView가 렌더링 하면서 동작을 방해하는 듯함)
+                    Table.configure({
                         resizable: true,
-                        allowTableNodeSelection: true,
-                        handleWidth: 8
+                        allowTableNodeSelection: true
                     }),
                     TableCell,
                     TableRow,
@@ -339,7 +332,7 @@
 
             // this.editor.on('update', () => {
             //     this.content = this.editor.getHTML()
-            //     this.$emit('input', this.editor.getHTML())
+            //     // this.$emit('input', this.editor.getHTML())
             // })
         },
         beforeDestroy() {
@@ -383,7 +376,7 @@
     button,
     button.is-active {
         margin-right: 3px;
-        padding: 2px 2px;
+        padding: 2px 4px 2px 4px;
     }
     button.is-active {
         border-radius: 5px;
@@ -427,7 +420,7 @@
             border-collapse: collapse;
             table-layout: fixed;
             /*width: 10rem;*/
-            margin: 2pt 2pt 2pt 2pt;
+            margin: 3pt 0 3pt 0;
 
             td,
             th {
@@ -448,10 +441,6 @@
                 font-weight: bold;
                 text-align: left;
                 background-color: #f1f3f5;
-            }
-
-            p {
-                line-height: 1.3;
             }
 
             .selectedCell:after {

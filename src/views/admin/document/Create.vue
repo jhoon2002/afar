@@ -393,7 +393,7 @@
                         class="pink"
                         dark
                         style="width: 100%"
-                        @click="$refs.docEditor.pdfgen()"
+                        @click="$refs.docEditor.editor.chain().focus().printPdf().run()"
                 >
                     <v-icon left dark>far fa-file-pdf</v-icon>
                     미리보기

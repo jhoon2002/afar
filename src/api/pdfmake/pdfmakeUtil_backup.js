@@ -5,65 +5,56 @@ export const pdfmakeUtil = {
 
     docPdfGen: function (targetElement, footerElementId = 'footerSection') {
 
+        let tds = targetElement.querySelectorAll(".tableWrapper p")
+
+        for (let p of tds) {
+            p.className = "intable"
+        }
+
+        let ps = targetElement.querySelectorAll(".ProseMirror p:not(.intable)")
+
+        for (let p of ps) {
+            p.className = "outtable"
+        }
+
         let allHtml = targetElement.innerHTML
 
-        let footerElement = targetElement.querySelector("#" + footerElementId)
-
-        if (!footerElement) {
+        if (!targetElement.querySelector("#" + footerElementId)) {
             alert("올바른 Footer Element ID를 입력하십시오.")
             return
         }
 
-        let footerHtml = footerElement.innerHTML
+        let footerHtml = targetElement.querySelector("#" + footerElementId).innerHTML
 
-        /*
-         * <html-to-pdfmake 스타일 적용 순서> => 모두 잘 작동하고 있음
-         * 1. data-pdfmake="&quot;lineHeight&quot;:1.3"
-         * 2. defaultStyles = { lineHeight: 1.5 }
-         * 3. html내에 class="some" 설정 후, 아래 styles = { 'some': { lineHeight: 1 } }
-         *
-         */
-
-        //html-to-pdfmake의 defaultStyles를 재정의(여기선 reset만 하기로)
         let defaultStyles = {
             'p': {
-                margin: [0, 0, 0, 0] // reset
+                // lineHeight: 1.3,
+                fontSize: 11.75,
+                // margin: [0,0,0,0]
             },
             'table': {
-                marginBottom: '' // reset
+                marginBottom: 5,
+                // lineHeight: 1.2
             }
         }
 
-        //html 내 class에 대응하는 style
-        let styles = {
-            'table-in-editor': {
-                margin: [2, 2, 2, 2]
-            },
-            'p-in-editor': {
-                fontSize: 11.75,
+        let styles = { //적용안되고 있음...
+            'outtable': {
                 lineHeight: 1.3
             },
-            'p-in-table-in-editor': {
-                fontSize: 11.75,
+            'intable': {
                 lineHeight: 1
             }
         }
 
-        // allHtml = allHtml.replace(/<div data-v-[a-z0-9]*=""\svalue="((.|\n)*)>">/g, "")
-        allHtml = allHtml.replace(/&amp;/g, "&")
+        allHtml = allHtml.replace(/<div data-v-[a-z0-9]*=""\svalue="((.|\n)*)>">/g, "")
         allHtml = allHtml.replace(/&nbsp;/g, " ")
+        allHtml = allHtml.replace(/&amp;/g, "&")
         allHtml = allHtml.replace(/text-indent:\s*-?[0-9]+.?[0-9]+(pt|px|em|rem|mm|cm)?\s*;?/g, "") //이 부분을 삭제하지 않으면 paragraph(p tag) 안에 볼드 처리된(strong tag) 부분이 있을 경우 Outdent가 적용되지 않음
-
-        //td 안에 colwidth는 인식 불가 width로 변경하면서 pdfmake에 맞게 width 크기 조절(자체 패딩 감안)
         allHtml = allHtml.replace(/colwidth="([0-9]+)"/g, (all, letter) => {
             return "style=\"width:" + ( letter * 1 - 8 ) +"px\""
         })
-
-        //document > table 에게 class(table-in-editor) 부여, data-pdfmake로 layout(padding) 부여
-        allHtml = allHtml.replace(/<table\s+style="([^"]*)"/g, "<table style=\"$1\" class='table-in-editor' data-pdfmake=\"{&quot;layout&quot;:&quot;padding&quot;}\"")
-
-        //document > table > td > p는 기본 class(p-in-editor)를 대신하여 p-in-table-in-editor로 대체
-        allHtml = allHtml.replace(/<td([^>]*)><p class="p-in-editor"/g, "<td$1><p class=\"p-in-table-in-editor\"")
+        allHtml = allHtml.replace(/<table\s+style="(width|min-width):\s*([0-9]+)px\s*;?"/g, "<table data-pdfmake=\"{&quot;layout&quot;:&quot;padding&quot;}\" style=\"$1: $2px\"")
 
         // console.log("allHtml", allHtml)
 
@@ -202,9 +193,9 @@ export const pdfmakeUtil = {
         // if (flag == "download") {
         //     pdfMake.createPdf(docDefinition).download("optionalName.pdf")
         // } else {
-        pdfMake.createPdf(docDefinition).getDataUrl(function(outDoc) {
-            document.getElementById('pdfId').src = outDoc;
-        })
+            pdfMake.createPdf(docDefinition).getDataUrl(function(outDoc) {
+                document.getElementById('pdfId').src = outDoc;
+            })
         // }
         // pdfMake.createPdf(docDefinition).open({}, window);
     }
