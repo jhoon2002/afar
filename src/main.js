@@ -5,6 +5,7 @@ import store from "@/store"
 import vuetify from "@/plugins/vuetify.js"
 import "@/VeeValidate.js"
 import vueMoment from "vue-moment"
+import acl from "@/acl.js"
 
 //util
 import axios from "axios"
@@ -24,5 +25,6 @@ new Vue({
   router,
   store,
   vuetify,
+  acl,
   render: h => h(App)
 }).$mount('#app')

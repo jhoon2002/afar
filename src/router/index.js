@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+//import { AclRule } from 'vue-acl'
 import Blank from "@/views/Blank.vue";
 import Mock from "@/views/Mock.vue";
 
@@ -9,10 +10,46 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    name: "ERROR PAGE",
+    path: "/error",
+    component: Mock,
+    invisible: true
+  },
+  {
+    name: "사용자등록1",
+    path: "/regist1",
+    component: Mock,
+    invisible: true,
+    meta: {
+      rule: ['*']
+    }
+  },
+  {
+    name: "사용자등록2",
+    path: "/regist2",
+    component: Mock,
+    invisible: true,
+    meta: {
+      rule: ['*']
+    }
+  },
+  {
+    name: "로그인",
+    path: "/login",
+    component: Mock,
+    invisible: true,
+    meta: {
+      rule: ['*']
+    }
+  },
+  {
     name: "첫화면",
     path: "/",
     component: Blank,
-    invisible: true
+    invisible: true,
+    meta: {
+      rule: ['*']
+    }
   },
   {
     name: "게시판관리",
@@ -30,7 +67,10 @@ const routes = [
         props: true,
         isShow: false,
         isOn: false,
-        meta: { model: "board" }
+        meta: {
+          model: "board",
+          rule: ["admin"]
+        }
       },
       {
         name: "파일업로드",

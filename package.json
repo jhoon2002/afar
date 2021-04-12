@@ -26,6 +26,7 @@
     "pdfmake": "^0.1.70",
     "vee-validate": "^3.4.5",
     "vue": "^2.6.11",
+    "vue-acl-5": "^5.0.2",
     "vue-filepond": "^6.0.0",
     "vue-moment": "^4.1.0",
     "vue-router": "^3.2.0",
