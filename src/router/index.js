@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 //import { AclRule } from 'vue-acl'
-import Blank from "@/views/Blank.vue";
-import Mock from "@/views/Mock.vue";
+import Blank from "@/views/Blank.vue"
+import Mock from "@/views/Mock.vue"
 
 Vue.use(VueRouter)
 
@@ -10,9 +10,9 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    name: "ERROR PAGE",
+    name: "권한 확인",
     path: "/error",
-    component: Mock,
+    component: () => import("@/views/error/error.vue"),
     invisible: true
   },
   {
