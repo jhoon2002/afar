@@ -14,6 +14,12 @@
   url('../assets/fonts/SpoqaHanSansNeoCoding-Bold-3.5.woff') format('woff'),
   url('../assets/fonts/SpoqaHanSansNeoCoding-Bold-3.5.ttf') format('truetype');
 }
+@font-face {
+  font-family: 'RIDIBatang';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 .j-rotation {
   -webkit-animation: rotation 20s infinite linear;
 }
