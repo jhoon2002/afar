@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import { AclInstaller, AclCreate, AclRule } from 'vue-acl-5'
-import router from '@/router'
+import { AclInstaller, AclCreate, AclRule } from 'vue-acl'
+import router from './router'
 
 Vue.use(AclInstaller)
 
@@ -14,11 +14,11 @@ export default new AclCreate({
     acceptLocalRules: true,
     globalRules: {
         isAdmin: new AclRule('admin').generate(),
-        isPublic: new AclRule('public').or('admin').generate(),
-        isLogged: new AclRule('user').and('inside').generate()
+        isLogged: new AclRule('user').or('admin').generate(),
     },
     middleware: async () => {
-        //await setTimeout(2000) // call your api
-        //acl.change('admin')
+        // await timeout(2000) // call your api
+        // acl.change('admin')
+        // console.log(acl.change.length)
     }
 })

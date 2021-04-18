@@ -70,7 +70,7 @@ const routes = [
         isOn: false,
         meta: {
           model: "board",
-          rule: ["*"]
+          rule: ["isLogged"]
         }
       },
       {
@@ -82,7 +82,7 @@ const routes = [
         isOn: false,
         meta: {
           model: "board",
-          rule: ["*"]
+          rule: ["isLogged"]
         }
       },
       {
@@ -94,7 +94,7 @@ const routes = [
         isOn: false,
         meta: {
           model: "board",
-          rule: ["*"]
+          rule: ["isLogged"]
         }
       }
     ]
@@ -117,7 +117,7 @@ const routes = [
         isOn: false,
         meta: {
           model: "document",
-          rule: ["*"]
+          rule: ["isLogged"]
         }
       },
       {
@@ -129,7 +129,7 @@ const routes = [
         isOn: false,
         meta: {
           model: "document",
-          rule: ["*"]
+          rule: ["isLogged"]
         }
       },
       {
@@ -141,7 +141,7 @@ const routes = [
         isOn: false,
         meta: {
           model: "document",
-          rule: ["*"]
+          rule: ["isLogged"]
         }
       },
       /*
@@ -229,7 +229,7 @@ const routes = [
         isOn: false,
         meta: {
           model: "employee",
-          rule: ["*"]
+          rule: ["isLogged"]
         }
       },
       {
@@ -239,7 +239,7 @@ const routes = [
         isShow: false,
         isOn: false,
         meta: {
-          rule: ["*"]
+          rule: ["isLogged"]
         }
       },
       {
@@ -249,7 +249,7 @@ const routes = [
         isShow: false,
         isOn: false,
         meta: {
-          rule: ["*"]
+          rule: ["isLogged"]
         }
       }
     ]
@@ -272,7 +272,7 @@ const routes = [
         isShow: false,
         isOn: false,
         meta: {
-          rule: ["*"]
+          rule: ["isLogged"]
         }
       },
       {
@@ -292,7 +292,7 @@ const routes = [
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["*"]
+              rule: ["isLogged"]
             }
           },
           {
@@ -302,7 +302,7 @@ const routes = [
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["*"]
+              rule: ["isLogged"]
             }
           }
         ]
@@ -324,7 +324,7 @@ const routes = [
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["*"]
+              rule: ["isLogged"]
             }
           },
           {
@@ -334,7 +334,7 @@ const routes = [
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["*"]
+              rule: ["isLogged"]
             }
           }
         ]
@@ -369,7 +369,7 @@ const routes = [
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["*"]
+              rule: ["isLogged"]
             }
           },
           {
@@ -379,7 +379,7 @@ const routes = [
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["*"]
+              rule: ["isLogged"]
             }
           }
         ]
@@ -401,7 +401,7 @@ const routes = [
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["*"]
+              rule: ["isLogged"]
             }
           },
           {
@@ -411,7 +411,7 @@ const routes = [
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["*"]
+              rule: ["isLogged"]
             }
           }
         ]
@@ -433,7 +433,7 @@ const routes = [
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["*"]
+              rule: ["isLogged"]
             }
           }
         ]
@@ -458,7 +458,7 @@ const routes = [
         isShow: false,
         isOn: false,
         meta: {
-          rule: ["*"]
+          rule: ["isLogged"]
         }
       },
       {
@@ -468,7 +468,7 @@ const routes = [
         isShow: false,
         isOn: false,
         meta: {
-          rule: ["*"]
+          rule: ["isLogged"]
         }
       }
     ]

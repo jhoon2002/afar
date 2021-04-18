@@ -26,6 +26,14 @@
       </div>
       <v-spacer></v-spacer>
       <v-sheet class="transparent">현재 권한: {{$acl.get}}</v-sheet>
+      <v-btn small
+             dark
+             elevation="0"
+             class="blue ml-2"
+             @click="$router.push( { name: '첫화면' } )"
+      >
+        LOGOUT
+      </v-btn>
     </v-app-bar>
 
     <v-main class="grey darken-1">
