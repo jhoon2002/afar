@@ -4,6 +4,8 @@ import VueRouter from 'vue-router'
 import Blank from "@/views/Blank.vue"
 import Mock from "@/views/Mock.vue"
 import AdminLayout from "@/views/admin/Layout.vue"
+import VueCookies from 'vue-cookies'
+import { checkToken } from "@/api/token.js"
 
 Vue.use(VueRouter)
 
@@ -36,7 +38,7 @@ const routes = [
   },
   {
     name: "로그인",
-    path: "/login",
+    path: "/token",
     component: Mock,
     invisible: true,
     meta: {
@@ -783,7 +785,7 @@ const routes = [
   },
   {
     name: "로그인",
-    path: "/login",
+    path: "/token",
     component: Mock,
     invisible: true
   },
@@ -796,11 +798,11 @@ const router = new VueRouter({
 })
 
 function showAndOn(to, routes, i) {
-  var matchedPath;
+  let matchedPath;
   if (to.matched[i]) matchedPath = to.matched[i].path;
   else matchedPath = "~~~";
 
-  for (var route of routes) {
+  for (let route of routes) {
     if (route.path == matchedPath) { //경로 일치
       //if (to.matched[i+1]) { //하위가 더 있는 경우 즉, 디렉터리
       if (route.children) { //하위가 더 있는 경우 즉, 디렉터리
@@ -811,7 +813,7 @@ function showAndOn(to, routes, i) {
       }
     } else {
       if (route.children) {
-        //   route.isShohw = false;
+        //route.isShohw = false;
         showAndOn(to, route.children, i+1); //재귀함수
       }
       route.isOn = false;
@@ -819,14 +821,29 @@ function showAndOn(to, routes, i) {
   }
 }
 
-router.beforeEach((to, from, next) => {
-      if (to.meta.isDirectory) {
-        next(false);
-      } else {
-        showAndOn(to, routes, 0);
-        next();
-      }
-    }
-);
+router.beforeEach(async (to, from, next) => {
+
+  console.log("VueCookies", VueCookies.get("token"))
+
+  if (to.meta.isDirectory) return next(false)
+
+  //첫화면은 무조건 이동
+  if (to.path === "/") {
+    return next()
+  }
+
+  //토큰 검사(토큰 만료 전이라면, 만료기간 연장)
+  const ret = await checkToken()
+  console.log("check token ret", ret)
+
+  if (VueCookies.get('token')) {
+    showAndOn(to, routes, 0)
+    return next()
+  }
+
+  // alert("로그인 하시기 바랍니다.")
+  // return next("/")
+
+})
 
 export default router

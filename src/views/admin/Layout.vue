@@ -25,7 +25,7 @@
         <section-title></section-title>
       </div>
       <v-spacer></v-spacer>
-      <v-sheet class="transparent">현재 권한: {{$acl.get}}</v-sheet>
+      <v-sheet class="transparent">현재 권한:</v-sheet>
       <v-btn small
              dark
              elevation="0"
