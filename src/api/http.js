@@ -1,6 +1,5 @@
 import axios from "axios"
 import store from "@/store"
-import VueCookies from 'vue-cookies'
 
 const instance = axios.create({ 
     baseURL: process.env.WEB_APP_SERVER 
@@ -9,10 +8,9 @@ const instance = axios.create({
 instance.interceptors.request.use( (config) => {
 
     // Do something before request is sent
-    config.headers.token = VueCookies.get('token')
-    config.headers.refresh_token = VueCookies.get('refresh_token')
-
-    console.log("config", config)
+    config.headers.token = window.sessionStorage.getItem('token')
+    //config.headers.refresh_token = window.sessionStorage.getItem('refresh_token')
+    //console.log("config", config)
 
     return config
 

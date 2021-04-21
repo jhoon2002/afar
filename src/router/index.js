@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 import Blank from "@/views/Blank.vue"
 import Mock from "@/views/Mock.vue"
 import AdminLayout from "@/views/admin/Layout.vue"
-import VueCookies from 'vue-cookies'
+//import VueCookies from 'vue-cookies'
 import { checkToken } from "@/api/token.js"
 
 Vue.use(VueRouter)
@@ -823,23 +823,60 @@ function showAndOn(to, routes, i) {
 
 router.beforeEach(async (to, from, next) => {
 
-  console.log("VueCookies", VueCookies.get("token"))
+  //console.log("VueCookies", VueCookies.get("token"))
 
-  if (to.meta.isDirectory) return next(false)
+  const session = window.sessionStorage
 
-  //첫화면은 무조건 이동
+  const expired = new Date(new Date().setTime(session.getItem("expired")))
+
+  console.log("token:", session.getItem("token"))
+  console.log("expired:", expired)
+  console.log("now:", new Date())
+
+  //첫화면은 OPEN
   if (to.path === "/") {
     return next()
   }
 
-  //토큰 검사(토큰 만료 전이라면, 만료기간 연장)
-  const ret = await checkToken()
-  console.log("check token ret", ret)
-
-  if (VueCookies.get('token')) {
-    showAndOn(to, routes, 0)
-    return next()
+  //토큰이 없으면 첫화면으로
+  if (!session.getItem("token") || session.getItem("token") === "null") {
+    return next("/")
   }
+
+  //토큰이 만료되면 첫화면으로
+  //if (expired < new Date()) {
+  //  alert("다시 로그인 하시기 바랍니다.\n(토큰 만료)")
+  //  return next("/")
+  //}
+
+  //디렉토리는 이동 안함
+  if (to.meta.isDirectory) return next(false)
+
+  //토큰 유효성 검증
+  const ret = await checkToken()
+  console.log(ret)
+  if (ret.status !== 200) {
+      alert("로그인 하시기 바랍니다.")
+      return next("/")
+  }
+
+  showAndOn(to, routes, 0)
+  return next()
+
+
+  //첫화면은 무조건 이동
+  //if (to.path === "/") {
+  //  return next()
+  //}
+
+  //토큰 검사(토큰 만료 전이라면, 만료기간 연장)
+  //const ret = await checkToken()
+  //console.log("check token ret", ret)
+
+  //if (VueCookies.get('token')) {
+  //  showAndOn(to, routes, 0)
+  //  return next()
+  //}
 
   // alert("로그인 하시기 바랍니다.")
   // return next("/")
