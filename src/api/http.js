@@ -1,5 +1,5 @@
 import axios from "axios"
-import store from "@/store"
+// import store from "@/store"
 
 const instance = axios.create({ 
     baseURL: process.env.WEB_APP_SERVER 
@@ -29,11 +29,11 @@ instance.interceptors.request.use( (config) => {
  });
 
 instance.interceptors.response.use( (response) => {
-    store.commit('error/setValidationError', {});
+    // store.commit('error/setValidationError', {});
     return response;
 }, (error) => {
     if (error.response.status === 422) {
-        store.commit('error/setValidationError', error.response.data.data);
+        // store.commit('error/setValidationError', error.response.data.data);
     } else {
         return Promise.reject(error);
     }
