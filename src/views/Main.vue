@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-container fluid class="d-flex justify-space-between" style="margin-right: 10rem">
+        <v-card elevation="0" class="d-flex justify-space-between ma-5" style="max-width: 100rem;">
             <v-card elevation="0" style="width: 23rem">
                 <v-sheet class="logo transparent" style="width: 15rem">
                     <span class="stress">K</span>orea
@@ -31,7 +31,7 @@
                     </div>
                 </v-sheet>
             </v-card>
-            <v-card elevation="0" style="width: 23rem" class="mr-16 pt-16">
+            <v-card elevation="0" style="width: 23rem" class="pt-16">
                 <v-card-title style="min-height: 5rem; line-height: 1.2">
                     {{message}}
                 </v-card-title>
@@ -62,15 +62,129 @@
                         >
                             확인
                         </v-btn>
+
+                        <v-sheet class="mt-10">
+
+                            <v-dialog
+                                    v-model="dialog"
+                                    max-width="40rem"
+                                    width="40rem"
+                            >
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-sheet>
+                                        <v-btn v-bind="attrs"
+                                               v-on="on"
+                                               text
+                                               small
+                                               class="px-1"
+                                        >
+                                            사용자등록
+                                        </v-btn>
+                                    </v-sheet>
+                                </template>
+                                <v-card elevation="0">
+                                    <v-card-title>
+                                        사용자 등록
+                                    </v-card-title>
+                                    <v-divider></v-divider>
+                                    <v-card-text class="pt-8">
+                                        <validation-observer
+                                                ref="observer"
+                                                v-slot="{ invalid, validated, handleSubmit, validate }"
+                                        >
+
+                                            <v-row>
+                                                <v-col cols="6">
+                                                    <validation-provider name="이름" :rules="{ required: true }" v-slot="{ errors, valid }">
+                                                        <v-text-field label="이름" v-model="fname"
+                                                                      :error-messages="errors" :success="valid"
+                                                        ></v-text-field>
+                                                    </validation-provider>
+                                                </v-col>
+                                                <v-col cols="6">
+                                                    <validation-provider name="주민등록번호" :rules="{ required: true }" v-slot="{ errors, valid }">
+                                                        <v-text-field label="주민등록번호" v-model="fjumin"
+                                                                      :error-messages="errors" :success="valid" hint="' -- ' 없이 숫자만 입력"
+                                                        ></v-text-field>
+                                                    </validation-provider>
+                                                </v-col>
+                                            </v-row>
+
+                                            <v-row>
+                                                <v-col cols="6">
+                                                    <validation-provider name="아이디" :rules="{ required: true }" v-slot="{ errors, valid }">
+                                                        <v-text-field label="아이디" v-model="fuserId"
+                                                                      :error-messages="errors" :success="valid"
+                                                        ></v-text-field>
+                                                    </validation-provider>
+                                                </v-col>
+                                                <v-col cols="6">
+                                                    {{isUserIdMessage}}
+                                                </v-col>
+                                            </v-row>
+
+                                            <v-row>
+                                                <v-col cols="6">
+                                                    <validation-provider name="비밀번호" :rules="{ required: true }" vid="confirmation" v-slot="{ errors, valid }">
+                                                        <v-text-field label="비밀번호" v-model="fpassword" :type="show1 ? 'text' : 'password'"
+                                                                      :error-messages="errors" :success="valid"
+                                                                      :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                                                      @click:append="show1 = !show1"
+                                                        ></v-text-field>
+                                                    </validation-provider>
+                                                </v-col>
+                                                <v-col cols="6">
+                                                    <validation-provider name="비밀번호 확인" :rules="{ required: true, confirmed:'confirmation' }" v-slot="{ errors, valid }">
+                                                        <v-text-field label="비밀번호 확인" v-model="fconfirmPassword" :type="show2 ? 'text' : 'password'"
+                                                                      :error-messages="errors" :success="valid" success-messages="일치합니다."
+                                                                      :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+                                                                      @click:append="show2 = !show2"
+                                                        ></v-text-field>
+                                                    </validation-provider>
+                                                </v-col>
+                                            </v-row>
+
+                                            <v-row>
+                                                <v-col cols="6">
+                                                    <validation-provider name="휴대폰" :rules="{ required: true }" v-slot="{ errors, valid }">
+                                                        <v-text-field label="휴대폰" v-model="fphone"
+                                                                      :error-messages="errors" :success="valid"
+                                                        ></v-text-field>
+                                                    </validation-provider>
+                                                </v-col>
+                                                <v-col cols="6">
+                                                    <validation-provider name="이메일" :rules="{ required: true, email: true }" v-slot="{ errors, valid }">
+                                                        <v-text-field label="이메일" v-model="femail" type="email"
+                                                                      :error-messages="errors" :success="valid"
+                                                        ></v-text-field>
+                                                    </validation-provider>
+                                                </v-col>
+                                            </v-row>
+
+                                            <v-card-actions>
+                                                <v-spacer></v-spacer>
+                                                <v-btn class="mr-4" @click="reset">초기화</v-btn>
+                                                <v-btn class="mr-4" @click="validate()">Validate</v-btn>
+                                                <v-btn color="primary" @click="handleSubmit(submit)">확인</v-btn>
+                                            </v-card-actions>
+                                        </validation-observer>
+                                    </v-card-text>
+                                  </v-card>
+                            </v-dialog>
+                            <v-btn text class="px-1 ml-5" small @click="$router.push('/register')">
+                                아이디찾기
+                            </v-btn>
+                        </v-sheet>
                     </validation-observer>
                 </v-card-text>
             </v-card>
-        </v-container>
+        </v-card>
     </v-app>
 </template>
 <script>
     // import VueCookies from "vue-cookies"
     import { login } from "@/api/token.js"
+    import { isUserId } from "@/api/db.js"
 
     export default {
         name: "Main",
@@ -78,43 +192,66 @@
             return {
                 userId: "jhoon",
                 password: "1111",
-                message: ""
+                message: "",
+                show1: false,
+                show2: true,
+                fuserId: "",
+                fname: "",
+                fpassword: "",
+                fconfirmPassword: "",
+                fphone: "",
+                femail: "",
+                fjumin: "",
+                isUserIdMessage: "",
+                dialog: false
             }
         },
         methods: {
             async submit () {
                 this.$refs.observer.validate()
 
-                const ret = await login(this.userId, this.password)
-
-                console.log("ret", ret)
-
-                if (ret.status === 200) {
+                try {
+                    await login(this.userId, this.password)
                     this.message = ""
-                    setTimeout(() => ( this.$router.push({ name: "파일업로드" }) ), 300)
-                } else {
+                    // setTimeout(() => ( this.$router.push({ path: "/main" }) ), 300)
+                    this.$router.push({ path: "/Main" })
+                } catch(e) {
                     this.message = ""
-                    setTimeout(() => ( this.message = "\"아이디 또는 암호가 일치하지 않습니다.\"" ), 100)
+                    if (e.response.status === 403) {
+                        setTimeout(() => ( this.message = "\"아이디 또는 암호가 일치하지 않습니다.\"" ), 100)
+                        return
+                    }
+                    if (e.response.status === 401) {
+                        setTimeout(() => ( this.message = "\"토큰이 정상적으로 생성되지 않았습니다.\"" ), 100)
+                        return
+                    }
+                    setTimeout(() => ( this.message = "\"시스템 문제로 로그인 할 수 없습니다.\"" ), 100)
                 }
-
-                /*
-                this.$axios.post("/api/users/check", {
-                    userId: this.userId,
-                    password: this.password
-                }).then(ret => { //로그인 성공(200)
-                    console.log("ret", ret)
-                    this.message = ""
-                    // this.$acl.change("user")
-                    VueCookies.set("userId", ret.data.user.userId)
-                    VueCookies.set("name", ret.data.user.name)
-                    VueCookies.set("token", ret.data.token)
-                    VueCookies.set("refresh_token", ret.data.token)
-                    setTimeout(() => ( this.$router.push({ name: "파일업로드" }) ), 300)
-                }).catch(() => { //로그인 실패(403)
-                    this.message = ""
-                    setTimeout(() => ( this.message = "\"아이디 또는 암호가 일치하지 않습니다.\"" ), 100)
-                })
-                */
+            },
+            reset() {
+                this.fuserId = ""
+                this.fname = ""
+                this.fjumin = ""
+                this.fphone = ""
+                this.femail = ""
+                this.fpassword = ""
+                this.fconfirmPassword = ""
+                this.$refs.observer.reset()
+            }
+        },
+        watch: {
+            fuserId: async (val) => {
+                if (val.length >= 4) {
+                    const ret = await isUserId(val)
+                    console.log(ret.data.isUserId)
+                    // if (ret.data.isUserId) {
+                    //     console.log("this.isUserIdMessage", this.isUserIdMessage)
+                    this.isUserIdMessage = "사용 가능한 아이디"
+                    console.log("ret.data.isUserId", this.isUserIdMessage)
+                    // }
+                    // console.log("this.isUserIdMessage", this.isUserIdMessage)
+                    // this.isUserIdMessage = "사용할 수 없는 아이디"
+                }
             }
         },
         mounted () {

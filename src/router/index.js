@@ -1,10 +1,11 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from "vue"
+import VueRouter from "vue-router"
 //import { AclRule } from 'vue-acl'
 import Blank from "@/views/Blank.vue"
 import Mock from "@/views/Mock.vue"
-import AdminLayout from "@/views/admin/Layout.vue"
-//import VueCookies from 'vue-cookies'
+// import Layout from "@/views/Layout.vue"
+import Sub from "@/views/Sub.vue"
+import VueCookies from 'vue-cookies'
 import { checkToken } from "@/api/token.js"
 
 Vue.use(VueRouter)
@@ -38,15 +39,6 @@ const routes = [
   },
   {
     name: "로그인",
-    path: "/token",
-    component: Mock,
-    invisible: true,
-    meta: {
-      rule: ['*']
-    }
-  },
-  {
-    name: "첫화면",
     path: "/",
     component: () => import("@/views/Main.vue"),
     invisible: true,
@@ -55,10 +47,31 @@ const routes = [
     }
   },
   {
+    name: "일반",
+    icon: "",
+    path: "/",
+    component: Sub,
+    invisible: true,
+    isShow: false,
+    isOn: false,
+    meta: {isDirectory: true},
+    children: [
+      {
+        name: "첫화면",
+        path: "/main",
+        component: Mock,
+        invisible: true,
+        meta: {
+          rule: ['*']
+        }
+      },
+    ]
+  },
+  {
     name: "게시판관리",
     icon: "mdi-view-headline",
     path: "/admin/board",
-    component: AdminLayout,
+    component: Sub,
     isShow: false,
     isOn: false,
     meta: { isDirectory: true },
@@ -66,7 +79,7 @@ const routes = [
       {
         name: "글쓰기",
         path: "/admin/board/create",
-        component: () => import("@/views/admin/board/Create.vue"),
+        component: () => import("@/views/board/Create.vue"),
         props: true,
         isShow: false,
         isOn: false,
@@ -78,7 +91,7 @@ const routes = [
       {
         name: "파일업로드",
         path: "/admin/board/file",
-        component: () => import("@/views/admin/board/File.vue"),
+        component: () => import("@/views/board/File.vue"),
         props: true,
         isShow: false,
         isOn: false,
@@ -90,7 +103,7 @@ const routes = [
       {
         name: "자유게시판",
         path: "/admin/board/free",
-        component: () => import("@/views/admin/board/Free.vue"),
+        component: () => import("@/views/board/Free.vue"),
         props: true,
         isShow: false,
         isOn: false,
@@ -105,7 +118,7 @@ const routes = [
     name: "문서관리",
     icon: "mdi-file-document-edit-outline",
     path: "/admin/document",
-    component: AdminLayout,
+    component: Sub,
     isShow: false,
     isOn: false,
     meta: { isDirectory: true },
@@ -113,7 +126,7 @@ const routes = [
       {
         name: "문서작성",
         path: "/admin/document/create",
-        component: () => import("@/views/admin/document/Create.vue"),
+        component: () => import("@/views/document/Create.vue"),
         props: true,
         isShow: false,
         isOn: false,
@@ -125,7 +138,7 @@ const routes = [
       {
         name: "tiptap",
         path: "/admin/document/editor",
-        component: () => import("@/views/admin/document/Editor.vue"),
+        component: () => import("@/views/document/Editor.vue"),
         props: true,
         isShow: false,
         isOn: false,
@@ -137,7 +150,7 @@ const routes = [
       {
         name: "tiptapEx",
         path: "/admin/document/editor2",
-        component: () => import("@/views/admin/document/Editor2.vue"),
+        component: () => import("@/views/document/Editor2.vue"),
         props: true,
         isShow: false,
         isOn: false,
@@ -217,7 +230,7 @@ const routes = [
     name: "교직원관리",
     icon: "mdi-card-account-details-outline",
     path: "/admin/user",
-    component: AdminLayout,
+    component: Sub,
     isShow: false,
     isOn: false,
     meta: { isDirectory: true },
@@ -260,7 +273,7 @@ const routes = [
     name: "인사관리",
     icon: "mdi-account-circle",
     path: "/admin/person",
-    component: AdminLayout,
+    component: Sub,
     isShow: false,
     isOn: false,
     meta: {
@@ -347,7 +360,7 @@ const routes = [
     name: "복무관리",
     icon: "mdi-bus-multiple",
     path: "/admin/work",
-    component: AdminLayout,
+    component: Sub,
     isShow: false,
     isOn: false,
     meta: {
@@ -446,7 +459,7 @@ const routes = [
     name: "규정/양식관리",
     icon: "mdi-book-open-variant",
     path: "/admin/law",
-    component: AdminLayout,
+    component: Sub,
     isShow: false,
     isOn: false,
     meta: {
@@ -823,64 +836,32 @@ function showAndOn(to, routes, i) {
 
 router.beforeEach(async (to, from, next) => {
 
-  //console.log("VueCookies", VueCookies.get("token"))
-
-  const session = window.sessionStorage
-
-  const expired = new Date(new Date().setTime(session.getItem("expired")))
-
-  console.log("token:", session.getItem("token"))
-  console.log("expired:", expired)
-  console.log("now:", new Date())
-
-  //첫화면은 OPEN
-  if (to.path === "/") {
-    return next()
+  if (to.meta.isDirectory) {
+    return next(false)
   }
 
-  //토큰이 없으면 첫화면으로
-  if (!session.getItem("token") || session.getItem("token") === "null") {
+  // 토큰이 없으면 첫화면으로
+  if (!VueCookies.get("token")) {
+    if (to.path === "/") {
+      return next()
+    }
     return next("/")
   }
 
-  //토큰이 만료되면 첫화면으로
-  //if (expired < new Date()) {
-  //  alert("다시 로그인 하시기 바랍니다.\n(토큰 만료)")
-  //  return next("/")
-  //}
-
-  //디렉토리는 이동 안함
-  if (to.meta.isDirectory) return next(false)
-
-  //토큰 유효성 검증
-  const ret = await checkToken()
-  console.log(ret)
-  if (ret.status !== 200) {
-      alert("로그인 하시기 바랍니다.")
-      return next("/")
+  //1.토큰 검사
+  try {
+    await checkToken()
+    if (to.path === "/") {
+      return next("/main")
+    }
+    showAndOn(to, routes, 0)
+    return next()
+  } catch(e) {
+    if (to.path === "/") {
+      return next()
+    }
+    return next("/")
   }
-
-  showAndOn(to, routes, 0)
-  return next()
-
-
-  //첫화면은 무조건 이동
-  //if (to.path === "/") {
-  //  return next()
-  //}
-
-  //토큰 검사(토큰 만료 전이라면, 만료기간 연장)
-  //const ret = await checkToken()
-  //console.log("check token ret", ret)
-
-  //if (VueCookies.get('token')) {
-  //  showAndOn(to, routes, 0)
-  //  return next()
-  //}
-
-  // alert("로그인 하시기 바랍니다.")
-  // return next("/")
-
 })
 
 export default router

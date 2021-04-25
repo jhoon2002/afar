@@ -30,7 +30,7 @@
              dark
              elevation="0"
              class="blue ml-2"
-             @click="$router.push( { name: '첫화면' } )"
+             @click="logout"
       >
         LOGOUT
       </v-btn>
@@ -51,6 +51,7 @@
 <script>
   import GlobalMenu from "@/components/GlobalMenu.vue"
   import SectionTitle from "@/components/SectionTitle.vue"
+  import { removeToken } from "@/api/token.js"
   export default {
     components: {
       GlobalMenu,
@@ -60,6 +61,12 @@
       return {
         show: true,
         routes: this.$router.options.routes,
+      }
+    },
+    methods: {
+      logout() {
+        removeToken()
+        this.$router.push("/")
       }
     }
   }

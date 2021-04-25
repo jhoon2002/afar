@@ -1,4 +1,5 @@
 import axios from "axios"
+import VueCookies from "vue-cookies"
 // import store from "@/store"
 
 const instance = axios.create({ 
@@ -8,7 +9,8 @@ const instance = axios.create({
 instance.interceptors.request.use( (config) => {
 
     // Do something before request is sent
-    config.headers.token = window.sessionStorage.getItem('token')
+    config.headers.token = VueCookies.get("token")
+    // config.headers.token = window.sessionStorage.getItem('token')
     //config.headers.refresh_token = window.sessionStorage.getItem('refresh_token')
     //console.log("config", config)
 
@@ -32,11 +34,11 @@ instance.interceptors.response.use( (response) => {
     // store.commit('error/setValidationError', {});
     return response;
 }, (error) => {
-    if (error.response.status === 422) {
+    // if (error.response.status === 422) {
         // store.commit('error/setValidationError', error.response.data.data);
-    } else {
+    // } else {
         return Promise.reject(error);
-    }
+    // }
 });
 
 export default instance;

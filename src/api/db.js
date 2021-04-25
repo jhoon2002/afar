@@ -43,3 +43,7 @@ export function create(model, obj) {
     console.log("create in db.js: " + "/api/" + model + "/new", obj);
     return http.post("/api/" + model + "/new", obj);
 }
+
+export const isUserId = (userId) => {
+    return http.post("/api/users/is-userid", { userId: userId})
+}
