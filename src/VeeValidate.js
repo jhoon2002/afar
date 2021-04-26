@@ -5,6 +5,8 @@ import { required, numeric, length, min, max, email, regex, confirmed } from 've
 
 import ko from 'vee-validate/dist/locale/ko.json';
 
+import { isUserId } from "@/api/db.js"
+
 localize('ko', ko);
 
 Vue.component('ValidationProvider', ValidationProvider);
@@ -44,28 +46,28 @@ extend('name', {
         let pattern = /^([a-zA-Z]+\s?|[가-힣])+[a-zA-Z가-힣]$/;
         return pattern.test(value);
     },
-    message: "특수문자,공백(한글) 불가"
+    message: "특수문자나 공백(한글 경우)은 사용할 수 없습니다."
 });
 extend("jumin", {
     validate(value) {
         let pattern = /^[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])[1-4][0-9]{6}$/;
         return pattern.test(value);
     },
-    message: "형식 불일치(숫자만)"
+    message: "숫자만 사용할 수 있습니다.('-' 없이)"
 });
 extend("cellphone", {
     validate(value) {
         let pattern = /^01[01679][0-9]{7,8}$/;
         return pattern.test(value);
     },
-    message: "번호 형식 불일치('-'없이 숫자만)"
+    message: "번호 형식이 일치하지 않습니다.('-'없이 숫자만)"
 });
 extend('words', {
     validate(value) {
         let pattern = /^([a-zA-Z가-힣0-9]+\s?)+[a-zA-Z가-힣0-9]$/;
         return pattern.test(value);
     },
-    message: "한글, 영문, 숫자만 가능"
+    message: "한글, 영문, 숫자만 가능합니다."
 });
 extend('id', {
     validate(value) {
@@ -83,5 +85,16 @@ extend('password', {
 });
 extend('confirmed', {
     ...confirmed,
-    message: "입력한 비밀번호와 불일치"
+    message: "입력한 비밀번호와 일치하지 않습니다."
+});
+extend('duplicated', {
+    async validate(userId) {
+        try {
+            const response = await isUserId(userId)
+            return !response.data.isUserId //true or false
+        } catch {
+            return false //접속 에러
+        }
+    },
+    message: "사용 중인 아이디입니다."
 });

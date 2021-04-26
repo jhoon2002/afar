@@ -112,9 +112,9 @@
 
                                             <v-row>
                                                 <v-col cols="6">
-                                                    <validation-provider name="아이디" :rules="{ required: true }" v-slot="{ errors, valid }">
+                                                    <validation-provider name="아이디" :rules="{ required: true, id: true, duplicated: true }" v-slot="{ errors, valid}">
                                                         <v-text-field label="아이디" v-model="fuserId"
-                                                                      :error-messages="errors" :success="valid"
+                                                                      :error-messages="errors" :success="valid" :success-messages="valid ? '사용할 수 있는 아이디 입니다.' : ''"
                                                         ></v-text-field>
                                                     </validation-provider>
                                                 </v-col>
@@ -136,7 +136,7 @@
                                                 <v-col cols="6">
                                                     <validation-provider name="비밀번호 확인" :rules="{ required: true, confirmed:'confirmation' }" v-slot="{ errors, valid }">
                                                         <v-text-field label="비밀번호 확인" v-model="fconfirmPassword" :type="show2 ? 'text' : 'password'"
-                                                                      :error-messages="errors" :success="valid" success-messages="일치합니다."
+                                                                      :error-messages="errors" :success="valid" :success-messages="valid ? '일치합니다.' : ''"
                                                                       :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
                                                                       @click:append="show2 = !show2"
                                                         ></v-text-field>
@@ -184,7 +184,7 @@
 <script>
     // import VueCookies from "vue-cookies"
     import { login } from "@/api/token.js"
-    import { isUserId } from "@/api/db.js"
+    //import { isUserId } from "@/api/db.js"
 
     export default {
         name: "Main",
@@ -239,21 +239,24 @@
                 this.$refs.observer.reset()
             }
         },
-        watch: {
-            fuserId: async (val) => {
-                if (val.length >= 4) {
-                    const ret = await isUserId(val)
-                    console.log(ret.data.isUserId)
-                    // if (ret.data.isUserId) {
-                    //     console.log("this.isUserIdMessage", this.isUserIdMessage)
-                    this.isUserIdMessage = "사용 가능한 아이디"
-                    console.log("ret.data.isUserId", this.isUserIdMessage)
-                    // }
-                    // console.log("this.isUserIdMessage", this.isUserIdMessage)
-                    // this.isUserIdMessage = "사용할 수 없는 아이디"
-                }
-            }
-        },
+        //watch: {
+        //    fuserId: async function(val) {
+        //        if (val.length >= 4) {
+        //            try {
+        //                const ret = await isUserId(val)
+        //                if (ret.data.isUserId) {
+        //                    this.isUserIdMessage = "사용중인 아이디"
+        //                    this.$refs.observer.errors
+        //                    return
+        //                }
+        //                this.isUserIdMessage = "사용할 수 없는 아이디"
+        //                return
+        //            } catch {
+        //                //접속 에러
+        //            }
+        //        }
+        //    }
+        //},
         mounted () {
             // this.$acl.onChange = newPermission => {
             //     console.log('Has changed to', newPermission)
