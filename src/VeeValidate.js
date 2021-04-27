@@ -46,35 +46,35 @@ extend('name', {
         let pattern = /^([a-zA-Z]+\s?|[가-힣])+[a-zA-Z가-힣]$/;
         return pattern.test(value);
     },
-    message: "특수문자나 공백(한글 경우)은 사용할 수 없습니다."
+    message: "특수문자나 공백(한글 경우) 사용 불가"
 });
 extend("jumin", {
     validate(value) {
         let pattern = /^[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])[1-4][0-9]{6}$/;
         return pattern.test(value);
     },
-    message: "숫자만 사용할 수 있습니다.('-' 없이)"
+    message: "'―' 없이 숫자만 13자리 입력"
 });
 extend("cellphone", {
     validate(value) {
         let pattern = /^01[01679][0-9]{7,8}$/;
         return pattern.test(value);
     },
-    message: "번호 형식이 일치하지 않습니다.('-'없이 숫자만)"
+    message: "'―' 없이 숫자만 입력"
 });
 extend('words', {
     validate(value) {
         let pattern = /^([a-zA-Z가-힣0-9]+\s?)+[a-zA-Z가-힣0-9]$/;
         return pattern.test(value);
     },
-    message: "한글, 영문, 숫자만 가능합니다."
+    message: "한글, 영문, 숫자만 가능"
 });
 extend('id', {
     validate(value) {
         let pattern = /^[a-z0-9][a-z0-9_-]{2,19}$/;
         return pattern.test(value);
     },
-    message: "영문 소문자, 숫자, 특수기호(_)(-)로 3~20자"
+    message: "영문 소문자, 숫자, '_', '-' (총 3~20자)"
 });
 extend('password', {
     validate(value) {
@@ -85,7 +85,7 @@ extend('password', {
 });
 extend('confirmed', {
     ...confirmed,
-    message: "입력한 비밀번호와 일치하지 않습니다."
+    message: "입력한 비밀번호와 불일치"
 });
 extend('duplicated', {
     async validate(userId) {
@@ -96,5 +96,5 @@ extend('duplicated', {
             return false //접속 에러
         }
     },
-    message: "사용 중인 아이디입니다."
+    message: "사용 중인 아이디로 이용 불가"
 });

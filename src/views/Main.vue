@@ -95,16 +95,16 @@
 
                                             <v-row>
                                                 <v-col cols="6">
-                                                    <validation-provider name="이름" :rules="{ required: true }" v-slot="{ errors, valid }">
+                                                    <validation-provider name="이름" :rules="{ required: true, name: true }" v-slot="{ errors, valid }">
                                                         <v-text-field label="이름" v-model="fname"
                                                                       :error-messages="errors" :success="valid"
                                                         ></v-text-field>
                                                     </validation-provider>
                                                 </v-col>
                                                 <v-col cols="6">
-                                                    <validation-provider name="주민등록번호" :rules="{ required: true }" v-slot="{ errors, valid }">
+                                                    <validation-provider name="주민등록번호" :rules="{ required: true, jumin: true}" v-slot="{ errors, valid }">
                                                         <v-text-field label="주민등록번호" v-model="fjumin"
-                                                                      :error-messages="errors" :success="valid" hint="' -- ' 없이 숫자만 입력"
+                                                                      :error-messages="errors" :success="valid"
                                                         ></v-text-field>
                                                     </validation-provider>
                                                 </v-col>
@@ -114,7 +114,7 @@
                                                 <v-col cols="6">
                                                     <validation-provider name="아이디" :rules="{ required: true, id: true, duplicated: true }" v-slot="{ errors, valid}">
                                                         <v-text-field label="아이디" v-model="fuserId"
-                                                                      :error-messages="errors" :success="valid" :success-messages="valid ? '사용할 수 있는 아이디 입니다.' : ''"
+                                                                      :error-messages="errors" :success="valid" :success-messages="valid ? '사용할 수 있는 아이디' : ''"
                                                         ></v-text-field>
                                                     </validation-provider>
                                                 </v-col>
@@ -125,7 +125,7 @@
 
                                             <v-row>
                                                 <v-col cols="6">
-                                                    <validation-provider name="비밀번호" :rules="{ required: true }" vid="confirmation" v-slot="{ errors, valid }">
+                                                    <validation-provider name="비밀번호" :rules="{ required: true, password: true }" vid="confirmation" v-slot="{ errors, valid }">
                                                         <v-text-field label="비밀번호" v-model="fpassword" :type="show1 ? 'text' : 'password'"
                                                                       :error-messages="errors" :success="valid"
                                                                       :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -135,10 +135,10 @@
                                                 </v-col>
                                                 <v-col cols="6">
                                                     <validation-provider name="비밀번호 확인" :rules="{ required: true, confirmed:'confirmation' }" v-slot="{ errors, valid }">
-                                                        <v-text-field label="비밀번호 확인" v-model="fconfirmPassword" :type="show2 ? 'text' : 'password'"
+                                                        <v-text-field label="비밀번호 확인" v-model="fconfirmPassword" :type="show1 ? 'text' : 'password'"
                                                                       :error-messages="errors" :success="valid" :success-messages="valid ? '일치합니다.' : ''"
-                                                                      :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
-                                                                      @click:append="show2 = !show2"
+                                                                      :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                                                      @click:append="show1 = !show1"
                                                         ></v-text-field>
                                                     </validation-provider>
                                                 </v-col>
@@ -146,8 +146,8 @@
 
                                             <v-row>
                                                 <v-col cols="6">
-                                                    <validation-provider name="휴대폰" :rules="{ required: true }" v-slot="{ errors, valid }">
-                                                        <v-text-field label="휴대폰" v-model="fphone"
+                                                    <validation-provider name="휴대폰" :rules="{ required: true, cellphone: true }" v-slot="{ errors, valid }">
+                                                        <v-text-field label="휴대폰" v-model="fcellphone"
                                                                       :error-messages="errors" :success="valid"
                                                         ></v-text-field>
                                                     </validation-provider>
@@ -194,12 +194,11 @@
                 password: "1111",
                 message: "",
                 show1: false,
-                show2: true,
                 fuserId: "",
                 fname: "",
                 fpassword: "",
                 fconfirmPassword: "",
-                fphone: "",
+                fcellphone: "",
                 femail: "",
                 fjumin: "",
                 isUserIdMessage: "",
@@ -232,7 +231,7 @@
                 this.fuserId = ""
                 this.fname = ""
                 this.fjumin = ""
-                this.fphone = ""
+                this.fcellphone = ""
                 this.femail = ""
                 this.fpassword = ""
                 this.fconfirmPassword = ""
