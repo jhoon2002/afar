@@ -91,7 +91,10 @@ extend('duplicated', {
     async validate(userId) {
         try {
             const response = await isUserId(userId)
-            return !response.data.isUserId //true or false
+            if (response.status === 200) {
+                return false
+            }
+            return true //response.status === 204
         } catch {
             return false //접속 에러
         }
