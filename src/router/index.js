@@ -6,7 +6,7 @@ import Mock from "@/views/Mock.vue"
 // import Layout from "@/views/Layout.vue"
 import Sub from "@/views/Sub.vue"
 import VueCookies from 'vue-cookies'
-import { checkToken } from "@/api/token.js"
+import { checkToken } from "@/apis/token.js"
 
 Vue.use(VueRouter)
 
@@ -159,75 +159,10 @@ const routes = [
           rule: ["isLogged"]
         }
       },
-      /*
-      {
-        name: "HTML2PDF",
-        path: "/admin/document/html2pdf",
-        component: () => import("@/views/admin/document/html2pdf.vue"),
-        props: true,
-        isShow: false,
-        isOn: false,
-        meta: { model: "document" }
-      },
-      {
-        name: "문서작성",
-        path: "/admin/document/create1",
-        component: () => import("@/views/admin/document/Create1.vue"),
-        props: true,
-        isShow: false,
-        isOn: false,
-        meta: { model: "document" }
-      },
-      {
-        name: "문서작성(구)",
-        path: "/admin/document/create0",
-        component: () => import("@/views/admin/document/Create0.vue"),
-        props: true,
-        isShow: false,
-        isOn: false,
-        meta: { model: "document" }
-      },
-      {
-        name: "문서작성2",
-        path: "/admin/document/create2",
-        component: () => import("@/views/admin/document/Create2.vue"),
-        props: true,
-        isShow: false,
-        isOn: false,
-        meta: { model: "document" }
-      },
-      {
-        name: "문서작성3",
-        path: "/admin/document/create3",
-        component: () => import("@/views/admin/document/Create3.vue"),
-        props: true,
-        isShow: false,
-        isOn: false,
-        meta: { model: "document" }
-      },
-      {
-        name: "프린트",
-        path: "/admin/document/print",
-        component: () => import("@/views/admin/document/print.vue"),
-        props: true,
-        isShow: false,
-        isOn: false,
-        meta: { model: "document" }
-      },
-      {
-        name: "프린트2",
-        path: "/admin/document/print2",
-        component: () => import("@/views/admin/document/print2.vue"),
-        props: true,
-        isShow: false,
-        isOn: false,
-        meta: { model: "board" }
-      }
-      */
     ]
   },
   {
-    name: "교직원관리",
+    name: "사용자관리",
     icon: "mdi-card-account-details-outline",
     path: "/admin/user",
     component: Sub,
@@ -236,9 +171,9 @@ const routes = [
     meta: { isDirectory: true },
     children: [
       {
-        name: "교직원내역",
+        name: "사용자내역",
         path: "/admin/user/employee",
-        //component: () => import("@/views/admin/user/Employee.vue"),
+        component: () => import("@/views/user/User.vue"),
         props: true,
         isShow: false,
         isOn: false,

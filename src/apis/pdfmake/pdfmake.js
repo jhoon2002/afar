@@ -1,5 +1,5 @@
 import * as pdfMake from 'pdfmake/build/pdfmake.min.js'
-import * as pdfFonts from '@/api/pdfmake/vfs_fonts.js'
+import * as pdfFonts from '@/apis/pdfmake/vfs_fonts.js'
 pdfMake.vfs = pdfFonts.pdfMake.vfs
 pdfMake.fonts = {
     Roboto: {

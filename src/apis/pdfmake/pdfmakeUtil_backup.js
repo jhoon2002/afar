@@ -1,5 +1,5 @@
 import htmlToPdfmake from "html-to-pdfmake";
-import pdfMake from "@/api/pdfmake/pdfmake";
+import pdfMake from "@/apis/pdfmake/pdfmake";
 
 export const pdfmakeUtil = {
 

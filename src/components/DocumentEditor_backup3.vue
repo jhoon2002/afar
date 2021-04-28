@@ -238,7 +238,7 @@
 <script>
     // import pdfMake from '@/assets/pdfmake.js'
     // import htmlToPdfmake from "html-to-pdfmake"
-    import { pdfmakeUtil } from "@/api/pdfmake/pdfmakeUtil.js"
+    import { pdfmakeUtil } from "@/apis/pdfmake/pdfmakeUtil.js"
     import ConfirmList from "@/components/ConfirmList.vue"
 
     // import { mergeAttributes } from '@tiptap/core'

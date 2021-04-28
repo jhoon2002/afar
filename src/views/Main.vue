@@ -183,7 +183,7 @@
 </template>
 <script>
     // import VueCookies from "vue-cookies"
-    import { login } from "@/api/token.js"
+    import { login } from "@/apis/token.js"
     //import { isUserId } from "@/api/db.js"
 
     export default {

@@ -10,7 +10,7 @@ import VueCookies from "vue-cookies"
 
 //util
 import axios from "axios"
-import { util } from "@/api/util.js"
+import { util } from "@/apis/util.js"
 import data from "@/data.js"
 
 //css

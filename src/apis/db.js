@@ -1,4 +1,4 @@
-import http from "@/api/http";
+import http from "@/apis/http";
 import qs from "qs";
 // const _ = require("lodash");
 

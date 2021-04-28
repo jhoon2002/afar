@@ -1,5 +1,5 @@
 import VueCookies from 'vue-cookies'
-import http from "@/api/http";
+import http from "@/apis/http";
 
 export const login = async (userId, password) => {
     const ret = await http.post('/api/users/login', {

@@ -5,7 +5,7 @@ import { required, numeric, length, min, max, email, regex, confirmed } from 've
 
 import ko from 'vee-validate/dist/locale/ko.json';
 
-import { isUserId } from "@/api/db.js"
+import { isUserId } from "@/apis/db.js"
 
 localize('ko', ko);
 

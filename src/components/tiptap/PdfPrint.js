@@ -1,5 +1,5 @@
 import { Extension } from "@tiptap/core";
-import { pdfmakeUtil } from "@/api/pdfmake/pdfmakeUtil.js"
+import { pdfmakeUtil } from "@/apis/pdfmake/pdfmakeUtil.js"
 
 const PdfPrint = Extension.create({
     addCommands() {

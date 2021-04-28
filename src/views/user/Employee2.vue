@@ -25,7 +25,7 @@
     </div>
 </template>
 <script>
-    import { storeNamespace } from "@/api/util";
+    import { storeNamespace } from "@/apis/util";
     import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
     import { mapFields } from "vuex-map-fields";
 

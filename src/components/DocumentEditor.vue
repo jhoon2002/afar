@@ -228,7 +228,7 @@
     </v-sheet>
 </template>
 <script>
-    import { pdfmakeUtil } from "@/api/pdfmake/pdfmakeUtil.js"
+    import { pdfmakeUtil } from "@/apis/pdfmake/pdfmakeUtil.js"
     import ConfirmList from "@/components/ConfirmList.vue"
     import { Editor, EditorContent } from '@tiptap/vue-2'
     import { defaultExtensions } from '@tiptap/starter-kit'
