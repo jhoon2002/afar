@@ -11,6 +11,7 @@
 
                 </v-col>
             </v-row>
+            <v-divider></v-divider>
             <v-data-table
                     :loader-height="loaderHeight"
                     :headers="headers"
@@ -22,8 +23,11 @@
                     :sort-by="sortBy"
                     :sort-desc="sortDesc"
                     :footer-props="footerProps"
+                    v-model="selected"
+                    :single-select="false"
+                    item-key="userId"
+                    show-select
             >
-
                 <template v-for="header in headers"
                           v-slot:[`item.${header.value}`]="{ expand, index, item, isExpanded, isMobile, isSelected, select, headers }">
                     <slot
@@ -139,7 +143,7 @@
                 </v-col>
             </v-row>
         </v-card>
-        <slot name="view" :postId="postId" :search="search" :dialog="dialog" @close="dialog=false"></slot>
+        <slot name="view" :targetId="targetId" :dialog="dialog" :close="close"></slot>
         <slot name="create"></slot>
     </v-sheet>
 </template>
@@ -185,7 +189,8 @@
                         showCurrentPage: true,
                     }
                 }
-            }
+            },
+            selectItems: {}
         },
         data() {
             return {
@@ -202,21 +207,16 @@
                 doc: {
                     content: ""
                 },
-                selectItems: [
-                    { text: "제목", value: "subject" },
-                    { text: "내용", value: "content" },
-                    { text: "이름", value: "name" },
-                    { text: "아이디", value: "userId" }
-                ],
                 search: {
-                    fields: ["subject"],
+                    fields: [],
                     word: ""
                 },
                 tooltip1: false,
                 tooltip2: false,
-                postId: "",
+                targetId: "",
                 dialog: false,
-                createDialog: false
+                createDialog: false,
+                selected: []
             }
         },
         methods: {
@@ -233,11 +233,8 @@
                 await setTimeout(() => (this.loading = false), 500)
             },
             async view(id) {
-                console.log("id", id)
-                console.log("dialog", this.dialog)
-                this.postId = id
+                this.targetId = id
                 this.dialog = true
-                console.log("dialog", this.dialog)
             },
             async searchSubmit() {
                 if (this.search.fields.length === 0) {
@@ -290,7 +287,6 @@
                 this.optionsUnwatch()
             },
             addParams(params) {
-                // params["search.boardId"] = this.boardId
                 if (this.search.word) {
                     for(let one of this.search.fields) {
                         params["search." + one] = this.search.word
@@ -302,15 +298,29 @@
                 await this.loadPage({page: 1}) //ex) {page: 2, sortBy: ["subject"], itemsPerPage: 3}
             },
             resetSearch() {
-                this.search.fields = ["subject"]
+                this.search.fields = []
+                for (let one of this.selectItems) {
+                    if (one.default) {
+                        this.search.fields.push(one.value)
+                    }
+                }
                 this.search.word = ""
             },
-
+            close() {
+                this.dialog = false
+            }
         },
         created() {
             this.registerWatch()
         },
-        mounted() {},
+        mounted() {
+            //console.log("this.selectItems", this.selectItems)
+            for (let one of this.selectItems) {
+                if (one.default) {
+                    this.search.fields.push(one.value)
+                }
+            }
+        },
         watch: {}
     }
 </script>
