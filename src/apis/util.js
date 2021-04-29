@@ -22,5 +22,20 @@ export const util = {
             return this.markWord(target, word, className)
         }
         return target
+    },
+
+    //문자열 길이 구하기
+    getByteLength: function (str) {
+        let byte = 0
+        const code = str.charCodeAt(0)
+
+        if (code > 127) {
+            byte += 2
+        } else if (code > 64 && code < 91) {
+            byte += 2
+        } else {
+            byte += 1
+            return byte
+        }
     }
 }

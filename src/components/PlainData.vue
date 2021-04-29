@@ -1,15 +1,53 @@
 <template>
     <v-sheet class="pa-5">
         <v-card flat>
-            <v-row>
-                <v-col>
-                    <v-card-title @click="resetTable()">
-                        <span style="cursor:pointer">{{title}}</span>
-                    </v-card-title>
-                </v-col>
-                <v-col class="d-flex align-center justify-end pr-12" style="max-width: 30rem">
+            <v-row no-gutters class="justify-space-between mb-4">
 
-                </v-col>
+                <v-card-title @click="resetTable()">
+                    <span style="cursor:pointer">{{title}}</span>
+                </v-card-title>
+
+                <v-sheet class="transparent d-flex">
+
+                    <v-select
+                            v-model="search.fields"
+                            :items="selectItems"
+                            class="mr-5"
+                            multiple
+                            hide-details
+                            :style="{'max-width': `${search.fields.join(', ').length}rem`}"
+                            @keypress.enter="searchSubmit()"
+                    ></v-select>
+                    <!--:style="{'max-width': `${4+(search.fields.length*2)}rem`}"-->
+                    <v-text-field
+                            v-model="search.word"
+                            label="검색어"
+                            single-line
+                            hide-details
+                            class=""
+                            @keypress.enter="searchSubmit()"
+                    ></v-text-field>
+
+                    <v-tooltip top v-model="tooltip1" color="primary">
+                        <template v-slot:activator="{}">
+                            <v-icon
+                                    color="grey darken-1"
+                                    @click="searchSubmit()"
+                            >
+                                mdi-magnify
+                            </v-icon>
+                        </template>
+                        <span>검색 필드를 선택하십시오</span>
+                    </v-tooltip>
+
+                    <v-icon
+                            color="grey darken-1"
+                            @click="firstPageNoSearch()"
+                    >
+                        mdi-refresh
+                    </v-icon>
+
+                </v-sheet>
             </v-row>
             <v-divider></v-divider>
             <v-data-table
@@ -92,46 +130,7 @@
                 <v-col cols="4">
                 </v-col>
                 <v-col cols="4">
-                    <v-sheet class="d-flex align-center" style="max-width: 25rem">
-                        <v-select
-                                v-model="search.fields"
-                                :items="selectItems"
-                                hide-details
-                                class="mr-5"
-                                :style="{'max-width': `${4+(search.fields.length*2)}rem`}"
-                                multiple
-                                @keypress.enter="searchSubmit()"
-                        >
-                        </v-select>
 
-                        <v-text-field
-                                v-model="search.word"
-                                label="검색어"
-                                single-line
-                                hide-details
-                                class=""
-                                @keypress.enter="searchSubmit()"
-                        ></v-text-field>
-                        <v-tooltip top v-model="tooltip1" color="primary">
-                            <template v-slot:activator="{}">
-                                <v-icon
-                                        color="grey darken-1"
-                                        class="mt-5"
-                                        @click="searchSubmit()"
-                                >
-                                    mdi-magnify
-                                </v-icon>
-                            </template>
-                            <span>검색 필드를 선택하십시오</span>
-                        </v-tooltip>
-                        <v-icon
-                                color="grey darken-1"
-                                class="mt-5"
-                                @click="firstPageNoSearch()"
-                        >
-                            mdi-refresh
-                        </v-icon>
-                    </v-sheet>
                 </v-col>
                 <v-col cols="4" class="text-right">
                     <v-btn
@@ -150,6 +149,7 @@
 <script>
     // import PostView from "@/components/PostView.vue"
     // import PostCreate from "@/components/PostCreate.vue"
+    import util from "@/apis/util.js"
     export default {
         components: {
             // PostView,
@@ -308,6 +308,9 @@
             },
             close() {
                 this.dialog = false
+            },
+            getLength(str) {
+                return util.getByteLength(str)
             }
         },
         created() {
