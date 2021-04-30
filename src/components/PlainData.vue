@@ -4,18 +4,19 @@
             <v-row no-gutters class="justify-space-between mb-4">
 
                 <v-card-title @click="resetTable()">
-                    <span style="cursor:pointer">{{title}}</span>
+                    <span style="cursor:pointer" class="text-h5">{{title}}</span>
                 </v-card-title>
 
-                <v-sheet class="transparent d-flex">
+                <v-sheet class="transparent d-flex pt-3">
 
                     <v-select
                             v-model="search.fields"
                             :items="selectItems"
-                            class="mr-5"
+                            class="mr-5 text-body-2 pa-0"
                             multiple
                             hide-details
-                            :style="{'max-width': `${search.fields.join(', ').length}rem`}"
+                            :style="{ maxWidth: selectWidth + 'rem'}"
+                            :menu-props="{ offsetY: true }"
                             @keypress.enter="searchSubmit()"
                     ></v-select>
                     <!--:style="{'max-width': `${4+(search.fields.length*2)}rem`}"-->
@@ -24,7 +25,7 @@
                             label="검색어"
                             single-line
                             hide-details
-                            class=""
+                            class="text-body-2 pa-0"
                             @keypress.enter="searchSubmit()"
                     ></v-text-field>
 
@@ -33,6 +34,8 @@
                             <v-icon
                                     color="grey darken-1"
                                     @click="searchSubmit()"
+                                    style="width: 1.5rem; height: 1.5rem"
+                                    class="mt-2"
                             >
                                 mdi-magnify
                             </v-icon>
@@ -43,13 +46,14 @@
                     <v-icon
                             color="grey darken-1"
                             @click="firstPageNoSearch()"
+                            style="width: 1.5rem; height: 1.5rem"
+                            class="mt-2"
                     >
                         mdi-refresh
                     </v-icon>
 
                 </v-sheet>
             </v-row>
-            <v-divider></v-divider>
             <v-data-table
                     :loader-height="loaderHeight"
                     :headers="headers"
@@ -66,6 +70,17 @@
                     item-key="userId"
                     show-select
             >
+                <!--
+                <template
+                        v-slot:header.data-table-select="{ on, props }"
+                >
+                    <v-simple-checkbox
+                            color="purple"
+                            v-bind="props"
+                            v-on="on"
+                    ></v-simple-checkbox>
+                </template>
+                -->
                 <template v-for="header in headers"
                           v-slot:[`item.${header.value}`]="{ expand, index, item, isExpanded, isMobile, isSelected, select, headers }">
                     <slot
@@ -217,6 +232,19 @@
                 dialog: false,
                 createDialog: false,
                 selected: []
+            }
+        },
+        computed: {
+            selectWidth() {
+                let a = []
+                for (let one of this.selectItems) {
+                    for (let o of this.search.fields) {
+                        if (o === one.value) {
+                            a.push(one.text)
+                        }
+                    }
+                }
+                return 2.1 + this.$util.getByteLength(a.join(', ')) * 0.4
             }
         },
         methods: {

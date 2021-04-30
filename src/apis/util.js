@@ -25,17 +25,28 @@ export const util = {
     },
 
     //문자열 길이 구하기
-    getByteLength: function (str) {
-        let byte = 0
-        const code = str.charCodeAt(0)
-
-        if (code > 127) {
-            byte += 2
-        } else if (code > 64 && code < 91) {
-            byte += 2
-        } else {
-            byte += 1
-            return byte
+    getByteLength: function(str) {
+        let len = 0
+        for (let i = 0; i < str.length; i++) {
+            if (escape(str.charAt(i)).length === 6) {
+                len++
+            }
+            len++
         }
+        return len
+    },
+
+    //휴대폰 번호 '-' 표시 포함
+    cellphonePhase: function (str) {
+        if (!str) return
+        let l = 0
+        if (str.length === 10) {
+            l = 3
+        } else if (str.length === 11) {
+            l = 4
+        } else {
+            return
+        }
+        return str.substr(0, 3) + "-" + str.substr(3, l) + "-" + str.substr(3+l, 3+4+l)
     }
 }

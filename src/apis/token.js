@@ -6,7 +6,7 @@ export const login = async (userId, password) => {
         userId: userId,
         password: password
     })
-    VueCookies.set('token', ret.data.token, '60s')
+    VueCookies.set('token', ret.data.token, '120m')
 }
 
 /*
@@ -23,7 +23,7 @@ export async function checkToken() {
         console.log("예전", VueCookies.get("token"))
         console.log("갱신", ret.data.newToken)
         VueCookies.remove('token')
-        VueCookies.set('token', ret.data.newToken, '60s')
+        VueCookies.set('token', ret.data.newToken, '120m')
     }
 }
 

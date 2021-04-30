@@ -8,19 +8,55 @@
     >
         <v-card>
             <v-card-title>
-                <v-row no-gutters class="d-flex justify-space-between">
-                    <span class="">{{user.name}}</span>
+                <v-row no-gutters class="d-flex justify-space-between mb-3">
+                    <div>
+                        <span>{{user.name}}</span>
+                        <!--<span class="ml-3 text-caption">{{user.userId}}</span>-->
+                    </div>
                     <span class="text-caption">
                         <v-icon x-small>mdi-key-variant</v-icon>
                         {{user._id}}
                     </span>
                 </v-row>
             </v-card-title>
-            <v-card-subtitle>{{user.userId}}</v-card-subtitle>
             <v-card-text>
-
+                <v-simple-table>
+                    <template v-slot:default>
+                        <thead>
+                        <tr>
+                            <th class="text-left">
+                                구분
+                            </th>
+                            <th class="text-left">
+                                내용
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>아이디</td>
+                            <td>{{ user.userId }}</td>
+                        </tr>
+                        <tr>
+                            <td>이름</td>
+                            <td>{{ user.name }}</td>
+                        </tr>
+                        <tr>
+                            <td>휴대폰</td>
+                            <td>{{ $util.cellphonePhase(user.cellphone) }}</td>
+                        </tr>
+                        <tr>
+                            <td>이메일</td>
+                            <td>{{ user.email }}</td>
+                        </tr>
+                        <tr>
+                            <td>등록일시</td>
+                            <td>{{ $moment(user.created).format("YYYY-MM-DD hh:mm:ss") }}</td>
+                        </tr>
+                        </tbody>
+                    </template>
+                </v-simple-table>
             </v-card-text>
-            <v-divider></v-divider>
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn

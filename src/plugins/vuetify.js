@@ -1,17 +1,16 @@
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import Vue from 'vue'
 import Vuetify from 'vuetify/lib/framework'
-import Paragraph from '@/components/icons/Paragraph.vue'
-import AlignLeft from '@/components/icons/AlignLeft.vue'
-import AlignCenter from '@/components/icons/AlignCenter.vue'
-import AlignRight from '@/components/icons/AlignRight.vue'
-import AlignJustify from '@/components/icons/AlignJustify.vue'
-import Bold from '@/components/icons/Bold.vue'
-import AutoOutdent from '@/components/icons/AutoOutdent.vue'
-import Table from '@/components/icons/Table.vue'
-import TableIndent from '@/components/icons/TableIndent.vue'
-import TableOutdent from '@/components/icons/TableOutdent.vue'
-
+// import Paragraph from '@/components/icons/Paragraph.vue'
+// import AlignLeft from '@/components/icons/AlignLeft.vue'
+// import AlignCenter from '@/components/icons/AlignCenter.vue'
+// import AlignRight from '@/components/icons/AlignRight.vue'
+// import AlignJustify from '@/components/icons/AlignJustify.vue'
+// import Bold from '@/components/icons/Bold.vue'
+// import AutoOutdent from '@/components/icons/AutoOutdent.vue'
+// import Table from '@/components/icons/Table.vue'
+// import TableIndent from '@/components/icons/TableIndent.vue'
+// import TableOutdent from '@/components/icons/TableOutdent.vue'
 
 Vue.use(Vuetify)
 
@@ -22,6 +21,7 @@ export default new Vuetify({
         locales: { ko },
         current: "ko"
     },
+    /*
     icons: {
         iconfont: 'fa',
         values: {
@@ -57,4 +57,5 @@ export default new Vuetify({
             }
         },
     },
+    */
 })
