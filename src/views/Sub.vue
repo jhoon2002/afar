@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-navigation-drawer app dark :value="show" class="blue-grey darken-3">
+        <v-navigation-drawer app dark :value="show" class="blue-grey darken-3" @input="syncShow">
             <v-sheet class="transparent text-center py-4">
 
                 <v-icon size="35" class="d-block red--text j-rotation aaa">
@@ -69,6 +69,9 @@
             logout() {
                 removeToken()
                 this.$router.push("/")
+            },
+            syncShow(e) {
+                this.show = e
             }
         }
     }
