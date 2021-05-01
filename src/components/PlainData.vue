@@ -40,7 +40,7 @@
                                 mdi-magnify
                             </v-icon>
                         </template>
-                        <span>검색 필드를 선택하십시오</span>
+                        <span>{{ tooltip1Content }}</span>
                     </v-tooltip>
 
                     <v-icon
@@ -139,26 +139,10 @@
                 </template>
 
             </v-data-table>
-            <v-row
-                    no-gutters
-            >
-                <v-col cols="4">
-                </v-col>
-                <v-col cols="4">
-
-                </v-col>
-                <v-col cols="4" class="text-right">
-                    <v-btn
-                            class="justify-end" color="primary"
-                            dark elevation="0" @click="createDialog = true"
-                    >
-                        글쓰기
-                    </v-btn>
-                </v-col>
-            </v-row>
+            <slot name="buttons" :openCreate="openCreate"></slot>
         </v-card>
         <slot name="view" :targetId="targetId" :dialog="dialog" :close="close"></slot>
-        <slot name="create"></slot>
+        <slot name="create" :dialog="createDialog" :close="close"></slot>
     </v-sheet>
 </template>
 <script>
@@ -227,6 +211,7 @@
                     word: ""
                 },
                 tooltip1: false,
+                tooltip1Content: "",
                 tooltip2: false,
                 targetId: "",
                 dialog: false,
@@ -260,12 +245,17 @@
                 this.topNumber = this.count-( (this.options.page-1) * this.options.itemsPerPage )
                 await setTimeout(() => (this.loading = false), 500)
             },
-            async view(id) {
+            view(id) {
                 this.targetId = id
                 this.dialog = true
             },
             async searchSubmit() {
                 if (this.search.fields.length === 0) {
+                    this.tooltip1Content = "검색 필드를 선택하십시오."
+                } else if (!this.search.word) {
+                    this.tooltip1Content = "검색어를 입력하십시오."
+                }
+                if (!this.search.word || this.search.fields.length === 0) {
                     this.tooltip1 = true
                     setTimeout(() => (this.tooltip1 = false), 2000)
                     return
@@ -276,7 +266,7 @@
                 this.unregisterWatch()
                 this.resetSearch()
                 this.options.page = 1
-                this.options.itemsPerPage = 5
+                this.options.itemsPerPage = this.itemsPerPage
                 this.options.sortBy = ["created"]
                 this.options.sortDesc = [true]
                 this.options.groupBy = []
@@ -336,9 +326,13 @@
             },
             close() {
                 this.dialog = false
+                this.createDialog = false
             },
             getLength(str) {
                 return util.getByteLength(str)
+            },
+            openCreate() {
+                this.createDialog = true
             }
         },
         created() {

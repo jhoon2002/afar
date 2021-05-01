@@ -7,16 +7,18 @@
             @click:outside="$emit('close')"
     >
         <v-card>
-            <v-card-title>
+            <v-card-title class="grey lighten-2 pt-4 pb-0 pr-4 mb-5">
                 <v-row no-gutters class="d-flex justify-space-between mb-3">
                     <div>
                         <span>{{user.name}}</span>
-                        <!--<span class="ml-3 text-caption">{{user.userId}}</span>-->
+                        <span class="ml-3 text-caption" style="color: #777777">
+                            <v-icon x-small color="grey">mdi-key-variant</v-icon>
+                            {{user._id}}
+                        </span>
                     </div>
-                    <span class="text-caption">
-                        <v-icon x-small>mdi-key-variant</v-icon>
-                        {{user._id}}
-                    </span>
+                    <v-btn icon elevation="0" @click="$emit('close')">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
                 </v-row>
             </v-card-title>
             <v-card-text>
@@ -25,7 +27,7 @@
                         <thead>
                         <tr>
                             <th class="text-left">
-                                구분
+                                항목
                             </th>
                             <th class="text-left">
                                 내용
@@ -63,6 +65,7 @@
                         color="primary"
                         elevation="0"
                         @click="$emit('close')"
+                        style="padding-bottom: 2px;"
                 >
                     닫기
                 </v-btn>
