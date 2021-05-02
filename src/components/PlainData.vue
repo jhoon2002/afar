@@ -12,7 +12,7 @@
                     <v-select
                             v-model="search.fields"
                             :items="selectItems"
-                            class="mr-5 text-body-2 pa-0"
+                            class="mr-5 text-body-2 pa-0 plain-data-select"
                             multiple
                             hide-details
                             :style="{ maxWidth: selectWidth + 'rem'}"
@@ -96,7 +96,7 @@
                             :headers="headers"
                             :view="view"
                     >
-                        {{item[header.value]}}
+                        {{ item[header.value] }}
                     </slot>
                 </template>
 
@@ -114,7 +114,7 @@
                             :topNumber="topNumber"
                             :view="view"
                     >
-                        {{topNumber - index}}
+                        {{ topNumber - index }}
                     </slot>
                 </template>
                 <template v-slot:item.created="{ expand, index, item, isExpanded, isMobile, isSelected, select, headers }">
@@ -148,7 +148,6 @@
 <script>
     // import PostView from "@/components/PostView.vue"
     // import PostCreate from "@/components/PostCreate.vue"
-    import util from "@/apis/util.js"
     export default {
         components: {
             // PostView,
@@ -237,8 +236,8 @@
                 this.loading = true
                 let params = Object.assign({}, this.options)
                 if (addParams) addParams(params)
-                let ret = await this.$axios.get("/api/" + this.dataId + "s", { params: params }).catch(console.log)
-                console.log("return: ", ret)
+                let ret = await this.$http.get("/api/" + this.dataId + "s", { params: params }).catch(console.log)
+                // console.log("return: ", ret)
                 this.items = ret.data.items
                 this.totalPages = ret.data.totalPages
                 this.count = ret.data.count
@@ -294,14 +293,14 @@
                 await this.load(this.addParams) //load without new options
             },
             registerWatch() {
-                console.log("===<watch 등록>===")
+                // console.log("===<watch 등록>===")
                 this.optionsUnwatch = this.$watch("options", () => {
-                    console.log("===<watch 실행>===")
+                    // console.log("===<watch 실행>===")
                     this.load(this.addParams)
                 }, {deep: true})
             },
             unregisterWatch() {
-                console.log("===<watch 해제>===")
+                // console.log("===<watch 해제>===")
                 this.optionsUnwatch()
             },
             addParams(params) {
@@ -324,12 +323,12 @@
                 }
                 this.search.word = ""
             },
-            close() {
+            close(refresh) {
                 this.dialog = false
                 this.createDialog = false
-            },
-            getLength(str) {
-                return util.getByteLength(str)
+                if (refresh) {
+                    this.resetTable()
+                }
             },
             openCreate() {
                 this.createDialog = true
@@ -349,8 +348,3 @@
         watch: {}
     }
 </script>
-<style>
-    .searchWord {
-        background-color: #f1e068;
-    }
-</style>

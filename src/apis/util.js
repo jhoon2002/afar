@@ -48,5 +48,42 @@ export const util = {
             return
         }
         return str.substr(0, 3) + "-" + str.substr(3, l) + "-" + str.substr(3+l, 3+4+l)
+    },
+
+    //주민등록번호 검사
+    juminValidate: (juminNo) => {
+
+        let _ssn1 = juminNo.substr(0, 6)
+        let _ssn2 = juminNo.substr(6, 12)
+
+        let ssn1    = _ssn1,
+            ssn2    = _ssn2,
+            ssn     = juminNo,
+            arr_ssn = [],
+            compare = [2,3,4,5,6,7,8,9,2,3,4,5],
+            sum     = 0
+
+        // 입력여부 체크
+        if (ssn1 === '') return false
+        if (ssn2 === '') return false
+        if (ssn1.match('[^0-9]')) return false
+        if (ssn2.match('[^0-9]')) return false
+        if (ssn.length !== 13) return false
+
+        // 공식: M = (11 - ((2×A + 3×B + 4×C + 5×D + 6×E + 7×F + 8×G + 9×H + 2×I + 3×J + 4×K + 5×L) % 11)) % 11
+        for (let i = 0; i<13; i++) {
+            arr_ssn[i] = ssn.substring(i,i+1);
+        }
+
+        for (let i = 0; i<12; i++) {
+            sum = sum + (arr_ssn[i] * compare[i]);
+        }
+
+        sum = (11 - (sum % 11)) % 10;
+
+        if (sum !== arr_ssn[12]*1) {
+            return false
+        }
+        return true
     }
 }

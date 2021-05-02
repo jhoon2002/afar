@@ -9,7 +9,8 @@ import vueMoment from "vue-moment"
 import VueCookies from "vue-cookies"
 
 //util
-import axios from "axios"
+// import axios from "axios"
+import http from "@/apis/http.js"
 import { util } from "@/apis/util.js"
 import data from "@/data.js"
 
@@ -18,9 +19,8 @@ import "@/assets/basic.css"
 
 Vue.use(vueMoment)
 Vue.use(VueCookies)
-Vue.$cookies.config("7d") // expire 7일 (global 설정)
 Vue.prototype.$_DATA = data
-Vue.prototype.$axios = axios
+Vue.prototype.$http = http
 Vue.prototype.$util = util
 Vue.config.productionTip = false
 

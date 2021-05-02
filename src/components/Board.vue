@@ -190,7 +190,7 @@
                 this.loading = true
                 let params = Object.assign({}, this.options)
                 if (addParams) addParams(params)
-                let ret = await this.$axios.get("/api/posts", { params: params }).catch(console.log)
+                let ret = await this.$http.get("/api/posts", { params: params }).catch(console.log)
                 console.log("return: ", ret)
                 this.items = ret.data.items
                 this.totalPages = ret.data.totalPages
@@ -277,8 +277,3 @@
         watch: {}
     }
 </script>
-<style>
-    .searchWord {
-        background-color: #f1e068;
-    }
-</style>

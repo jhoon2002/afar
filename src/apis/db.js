@@ -47,3 +47,7 @@ export function create(model, obj) {
 export const isUserId = (userId) => {
     return http.post("/api/users/is-userid", { userId: userId})
 }
+
+export const isJumin = (juminNo) => {
+    return http.post("/api/users/is-jumin", { jumin: juminNo})
+}

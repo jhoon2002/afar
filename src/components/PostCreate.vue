@@ -3,14 +3,14 @@
             v-model="dialog"
             width="700"
             scrollable
-            @keydown.esc="clear(), $emit('close')"
-            @click:outside="clear(), $emit('close')"
+            @keydown.esc="reset(), $emit('close')"
+            @click:outside="reset(), $emit('close')"
     >
         <v-card elevation="0">
             <v-card-title class="grey lighten-2">
                 글쓰기
                 <v-spacer></v-spacer>
-                <v-icon @click="clear(), $emit('close')">mdi-close</v-icon>
+                <v-icon @click="reset(), $emit('close')">mdi-close</v-icon>
             </v-card-title>
             <v-card-text class="pt-5">
                 <validation-observer ref="observer">
@@ -66,7 +66,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="warning lighten-1" fab x-small elevation="0" dark class="mr-0"
-                       @click="clear()">
+                       @click="reset()">
                     <v-icon>mdi-refresh</v-icon>
                 </v-btn>
                 <v-btn color="success lighten-1" fab x-small elevation="0" class="mr-0" @click="$refs.observer.validate()">
@@ -145,7 +145,7 @@
 
                 // FilePond instance methods are available on `this.$refs.pond`
             },
-            clear() {
+            reset() {
                 this.userId = ""
                 this.name = ""
                 this.subject = ""

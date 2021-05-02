@@ -123,3 +123,14 @@ button.v-pagination__item--active {
   border: 1px solid rgba(0,0,0,0.70);
   transition: all 0.3s;
 }
+
+/* PlainData 컴포넌트 내 검색 select 의 폰트와 trasition 설정 */
+.plain-data-select div.v-select__selection.v-select__selection--comma {
+  color: rgba(0, 0, 0, 0.7);
+}
+.v-menu__content.theme--light.menuable__content__active {
+  transition: all 0.1s;
+}
+.searchWord {
+  background-color: #f1e068;
+}

@@ -5,7 +5,9 @@ import { required, numeric, length, min, max, email, regex, confirmed } from 've
 
 import ko from 'vee-validate/dist/locale/ko.json';
 
-import { isUserId } from "@/apis/db.js"
+import { isUserId, isJumin } from "@/apis/db.js"
+
+import { util } from "@/apis/util.js"
 
 localize('ko', ko);
 
@@ -48,6 +50,7 @@ extend('name', {
     },
     message: "특수문자나 공백(한글 경우) 사용 불가"
 });
+
 extend("jumin", {
     validate(value) {
         let pattern = /^[0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])[1-4][0-9]{6}$/;
@@ -55,12 +58,20 @@ extend("jumin", {
     },
     message: "'―' 없이 숫자만 13자리 입력"
 });
+
+extend("juminValidate", {
+    validate(value) {
+        return util.juminValidate(value)
+    },
+    message: "올바르지 않은 주민등록번호"
+});
+
 extend("cellphone", {
     validate(value) {
         let pattern = /^01[01679][0-9]{7,8}$/;
         return pattern.test(value);
     },
-    message: "'―' 없이 숫자만 입력"
+    message: "'―' 없이 숫자만 10~11자리"
 });
 extend('words', {
     validate(value) {
@@ -100,4 +111,20 @@ extend('duplicated', {
         }
     },
     message: "사용 중인 아이디로 이용 불가"
+});
+extend('juminDuplicated', {
+    async validate(juminNo) {
+        if (juminNo.length === 13) {
+            try {
+                const response = await isJumin(juminNo)
+                if (response.status === 200) {
+                    return false
+                }
+                return true //response.status === 204
+            } catch {
+                return false //접속 에러
+            }
+        }
+    },
+    message: "이미 등록된 주민등록번호"
 });
