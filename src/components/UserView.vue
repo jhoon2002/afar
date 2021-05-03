@@ -7,7 +7,6 @@
             @click:outside="$emit('close')"
     >
         <v-card>
-            {{new Date()}}
             <v-card-title class="grey lighten-2 mb-5" style="min-height: 4rem">
                 <span>{{user.name}}</span>
                 <v-icon
@@ -152,13 +151,13 @@
                         </tr>
                         <tr>
                             <td>등록일시</td>
-                            <td>{{ $moment(user.created).format("YYYY-MM-DD hh:mm:ss") }}</td>
+                            <td>{{ $moment(user.created).format("YYYY-MM-DD HH:mm:ss") }}</td>
                             <td></td>
                         </tr>
                         <tr>
                             <td>수정일시</td>
                             <!--<td>{{ user.updated.substr(0, 4) === "1970" ? "" : $moment(user.updated).format("YYYY-MM-DD hh:mm:ss") }}</td>-->
-                            <td>{{ $moment(user.updated).format("YYYY-MM-DD hh:mm:ss") }}</td>
+                            <td>{{ $moment(user.updated).format("YYYY-MM-DD HH:mm:ss") }}</td>
                             <td></td>
                         </tr>
                         </tbody>

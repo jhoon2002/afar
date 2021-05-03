@@ -12,8 +12,8 @@
       "type": "CORPORATION",
       "part": ""
     },
-    "created": { "$date":"2021-02-26T15:23:45.001" },
-    "updated": { "$date": "" }
+    "created": { "$date": "2021-02-26T15:23:45.001" },
+    "updated": { "$date": "2021-02-26T15:23:45.001" }
   },
   {
     "userId": "choihyungjoon",
@@ -28,8 +28,8 @@
       "type": "CORPORATION",
       "part": ""
     },
-    "created": { "$date":"2021-02-26T13:23:45.001" },
-    "updated": { "$date": "" }
+    "created": { "$date": "2021-02-26T13:23:45.001" },
+    "updated": { "$date": "2021-02-26T13:23:45.001" }
   },
   {
     "userId": "kimyehee",
@@ -44,8 +44,8 @@
       "type": "CORPORATION",
       "part": ""
     },
-    "created": { "$date":"2021-02-26T09:01:55.109" },
-    "updated": { "$date": "" }
+    "created": { "$date": "2021-02-26T09:01:55.109" },
+    "updated": { "$date": "2021-02-26T09:01:55.109" }
   },
   {
     "userId": "leeheekyung",
@@ -61,7 +61,7 @@
       "part": ""
     },
     "created": { "$date":"2021-02-25T23:01:10.009" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2021-02-25T23:01:10.009" }
   },
   {
     "userId": "leejihye",
@@ -77,7 +77,7 @@
       "part": ""
     },
     "created": { "$date":"2021-02-25T22:12:14.123" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2021-02-25T22:12:14.123" }
   },
   {
     "userId": "kimsohee",
@@ -93,7 +93,7 @@
       "part": ""
     },
     "created": { "$date":"2021-02-24T19:30:22.991" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2021-02-24T19:30:22.991" }
   },
   {
     "userId": "majinwook",
@@ -109,7 +109,7 @@
       "part": ""
     },
     "created": { "$date":"2021-02-23T19:30:22.991" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2021-02-23T19:30:22.991" }
   },
   {
     "userId": "leejungmin",
@@ -125,7 +125,7 @@
       "part": "영상원 애니메이션과"
     },
     "created": { "$date":"2021-02-23T15:00:10.770" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2021-02-23T15:00:10.770" }
   },
   {
     "userId": "jhoon",
@@ -141,7 +141,7 @@
       "part": "총무과"
     },
     "created": { "$date":"2021-02-24T11:09:22.006" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2021-02-24T11:09:22.006" }
   },
   {
     "userId": "honggildong",
@@ -157,7 +157,7 @@
       "part": "현대자동차 개발부"
     },
     "created": { "$date":"2020-08-17T14:55:10.770" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2020-08-17T14:55:10.770" }
   },
   {
     "userId": "imggeokjeong",
@@ -173,7 +173,7 @@
       "part": "연극원 연극학과"
     },
     "created": { "$date":"2020-08-17T15:00:36.145" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2020-08-17T15:00:36.145" }
   },
   {
     "userId": "kimyooshin",
@@ -189,7 +189,7 @@
       "part": "전통예술원 연희과"
     },
     "created": { "$date":"2020-08-17T15:16:45.001" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2020-08-17T15:16:45.001" }
   },
   {
     "userId": "kimchunchu",
@@ -205,7 +205,7 @@
       "part": "미술원"
     },
     "created": { "$date":"2020-08-17T15:19:50.445" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2020-08-17T15:19:50.445" }
   },
   {
     "userId": "wonhyo",
@@ -221,7 +221,7 @@
       "part": "교학처 학생과"
     },
     "created": { "$date":"2020-08-17T15:23:09.106" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2020-08-17T15:23:09.106" }
   },
   {
     "userId": "parkhgs",
@@ -237,7 +237,7 @@
       "part": "사업운영팀"
     },
     "created": { "$date":"2020-08-17T15:25:11.001" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2020-08-17T15:25:11.001" }
   },
   {
     "userId": "shinsaimdang",
@@ -253,7 +253,7 @@
       "part": "전략기획팀"
     },
     "created": { "$date":"2020-08-17T15:30:09.110" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2020-08-17T15:30:09.110" }
   },
   {
     "userId": "yookwansoon",
@@ -269,7 +269,7 @@
       "part": "기획처 대외협력과"
     },
     "created": { "$date":"2020-08-17T17:26:10.665" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2020-08-17T17:26:10.665" }
   },
   {
     "userId": "leesoonshin",
@@ -285,7 +285,7 @@
       "part": "총무관리팀"
     },
     "created": { "$date":"2020-08-17T17:29:09.001" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2020-08-17T17:29:09.001" }
   },
   {
     "userId": "hwanghee",
@@ -301,7 +301,7 @@
       "part": "영상원 영화과"
     },
     "created": { "$date":"2020-08-17T17:31:44.555" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2020-08-17T17:31:44.555" }
   },
   {
     "userId": "kanggamchan",
@@ -317,7 +317,7 @@
       "part": "음악원 작곡과"
     },
     "created": { "$date":"2020-08-17T17:32:46.990" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2020-08-17T17:32:46.990" }
   },
   {
     "userId": "jeongyakyong",
@@ -333,7 +333,7 @@
       "part": "무용원 이론과"
     },
     "created": { "$date":"2020-08-17T17:34:00.001" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2020-08-17T17:34:00.001" }
   },
   {
     "userId": "bangjeonghwan",
@@ -349,6 +349,6 @@
       "part": "예술정책과"
     },
     "created": { "$date":"2020-08-17T17:37:90.675" },
-    "updated": { "$date": "" }
+    "updated": { "$date":"2020-08-17T17:37:90.675" }
   }
 ]
