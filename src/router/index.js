@@ -171,21 +171,20 @@ const routes = [
     meta: { isDirectory: true },
     children: [
       {
-        name: "사용자내역",
-        path: "/admin/user/employee",
+        name: "사용자",
+        path: "/admin/user/user",
         component: () => import("@/views/user/User.vue"),
         props: true,
         isShow: false,
         isOn: false,
         meta: {
-          model: "employee",
           rule: ["isLogged"]
         }
       },
       {
-        name: "권한관리",
-        path: "/admin/user/acl",
-        component: Mock,
+        name: "조직",
+        path: "/admin/user/organ",
+        component: () => import("@/views/user/Organ.vue"),
         isShow: false,
         isOn: false,
         meta: {

@@ -133,7 +133,7 @@
                     >
                         {{
                             $moment().format("YYYY-MM-DD") === $moment(item.created).format("YYYY-MM-DD") ?
-                            $moment(item.created).format("hh:mm:ss") : $moment(item.created).format("YYYY-MM-DD")
+                            $moment(item.created).format("HH:mm:ss") : $moment(item.created).format("YYYY-MM-DD")
                         }}
                     </slot>
                 </template>

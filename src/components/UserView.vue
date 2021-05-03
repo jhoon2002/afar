@@ -82,6 +82,11 @@
                             </td>
                         </tr>
                         <tr>
+                            <td>주민등록번호</td>
+                            <td>{{ user.jumin.substr(0,6) }}-{{ user.jumin.substr(6,1) }}<v-icon v-for="i of 6" :key="i" x-small>mdi-asterisk</v-icon></td>
+                            <td></td>
+                        </tr>
+                        <tr>
                             <td>휴대폰</td>
                             <td>{{ $util.cellphonePhase(user.cellphone) }}</td>
                             <td>
@@ -280,7 +285,7 @@
                 this['f' + field] = this.user[field]
                 this.snack = true
                 this.snackColor = "info"
-                this.snackText = "수정 상태입니다."
+                this.snackText = "수정 모드입니다."
             },
             close() {
                 // console.log('Dialog closed')

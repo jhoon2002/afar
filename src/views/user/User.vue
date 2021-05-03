@@ -56,11 +56,11 @@
             return {
                 headers: [
                     {text: "No", align: "center", value: "No", sortable: false},
-                    {text: "이름", align: "center", value: "name", sortable: true},
+                    {text: "이름", align: "left", value: "name", sortable: true},
                     // {text: "아이디 등록", align: "center", value: "membership", sortable: true},
-                    {text: "아이디", align: "center", value: "userId", sortable: true},
-                    {text: "휴대폰", align: "center", value: "cellphone", sortable: true},
-                    {text: "이메일", align: "center", value: "email", sortable: true},
+                    {text: "아이디", align: "left", value: "userId", sortable: true},
+                    {text: "휴대폰", align: "left", value: "cellphone", sortable: true},
+                    {text: "이메일", align: "left", value: "email", sortable: true},
                     {text: "등록일", align: "center", value: "created", sortable: true}
                 ],
                 selectItems: [
