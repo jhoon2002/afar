@@ -82,8 +82,8 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>주민등록번호</td>
-                            <td>{{ user.jumin.substr(0,6) }}-{{ user.jumin.substr(6,1) }}<v-icon v-for="i of 6" :key="i" x-small>mdi-asterisk</v-icon></td>
+                            <td>생년월일</td>
+                            <td>{{ $util.toBirthday(user.jumin, true) }}</td>
                             <td></td>
                         </tr>
                         <tr>
@@ -233,7 +233,7 @@
                         let pattern = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/
                         return pattern.test(v)
                     }
-                }
+                },
             }
         },
         methods: {
@@ -298,7 +298,7 @@
                         await this.load(this.userId)
                         this.dialogOpen = true
                     } else {
-                        this.user = {}
+                        //this.user = {}
                         this.dialogOpen = false
                     }
                 }

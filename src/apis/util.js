@@ -85,5 +85,36 @@ export const util = {
             return false
         }
         return true
+    },
+    
+    //주민등록번호 표시
+    juminToStr: (juminNo) => {
+        const a = juminNo.substr(0,6)
+        const b = juminNo.substr(6,1)
+        //const c = "&lt;v-icon x-small>mdi-asterisk&lt;/v-icon>"
+        return a + "-" + b // + c+c+c+c+c+c
+    },
+
+    //생년월일 표시
+    toBirthday: (juminNo, sex=false) => {
+        const f = juminNo.substr(6, 1)
+        let y = ""
+        let s = ""
+        switch(f) {
+            case "1":
+            case "2":
+            case "5":
+            case "6":
+                y = "19"
+                break
+            case "3":
+            case "4":
+            case "7":
+            case "8":
+                y = "20"
+                break
+        }
+        s = (f % 2 === 1) ? "남" : "여"
+        return y + juminNo.substr(0,2) + "-" + juminNo.substr(2,2) + "-" + juminNo.substr(4,2) + (sex ? ", " + s : "")
     }
 }
