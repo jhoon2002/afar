@@ -194,7 +194,7 @@ const routes = [
       {
         name: "테스트",
         path: "/admin/user/test",
-        component: Mock,
+        component: () => import("@/views/user/Organ2.vue"),
         isShow: false,
         isOn: false,
         meta: {

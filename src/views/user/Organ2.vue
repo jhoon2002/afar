@@ -6,6 +6,7 @@
         <v-sheet class="transparent px-6">
             <v-row>
                 <v-col cols="4">
+                    <!--<TreeView :value="treeData" draggable droppable></TreeView>-->
                     <v-card elevation="0" class="px-2 pb-10">
                         <v-card-title class="pl-0">
                             조직도 <v-btn icon><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
@@ -17,28 +18,52 @@
                                 placeholder="Search"
                         ></v-text-field>
 
-                        <v-treeview
-                                :items="list"
-                                item-key="text"
-                                item-text="text"
-                                item-children="children"
-                                :open.sync="open"
-                                activatable
-                                color="warning"
-                                dense
-                                transition
-                                return-object
-                                open-all
-                        >
-                            <template v-slot:label="{ item }">
-                                <div id="item.id" >{{item.text}}</div>
-                            </template>
-                        </v-treeview>
+                        <Tree :value="treeData">
+                            <div
+                                    slot-scope="{node, index, path, tree}"
+                                    style="cursor: pointer"
+                                    class="d-flex justify-space-between"
+                                    @click="editNode(node)"
+                            >
+                                <div>
+                                    <v-icon>
+                                        mdi-drag
+                                    </v-icon>
+                                    <v-icon
+                                            small
+                                            v-if="node.$folded && node.children && node.children.length > 0"
+                                            @click="tree.toggleFold(node, path)"
+                                    >
+                                        ri-add-line
+                                    </v-icon>
+                                    <v-icon
+                                            small
+                                            v-if="!node.$folded && node.children && node.children.length > 0"
+                                            @click="tree.toggleFold(node, path)"
+                                    >
+                                        ri-subtract-line
+                                    </v-icon>
 
-                        <json-viewer
-                                :value="list"
-                                :expand-depth=10
-                        ></json-viewer>
+                                    {{ node.text }}
+                                </div>
+                                <div>
+                                    <v-btn
+                                            x-small
+                                            icon
+                                            @click="() => tree.removeNodeByPath(path)"
+                                    >
+                                        <v-icon>ri-delete-bin-line</v-icon>
+                                    </v-btn>
+                                    <v-btn
+                                            x-small
+                                            icon
+                                            @click="() => hideNode(node)"
+                                    >
+                                        <v-icon>ri-loader-line</v-icon>
+                                    </v-btn>
+                                </div>
+                            </div>
+                        </Tree>
                     </v-card>
                 </v-col>
                 <v-col cols="4">
@@ -146,40 +171,30 @@
     </v-card>
 </template>
 <script>
-    // import DragNested from "@/components/DragNested.vue"
+
     // import draggable from "vuedraggable"
-    import JsonViewer from 'vue-json-viewer'
+    // import JsonViewer from 'vue-json-viewer'
+    import "he-tree-vue/dist/he-tree-vue.css"
+    import {Tree, Fold, Check, Draggable} from "he-tree-vue"
     export default {
+        extends: Tree,
+        mixins: [Fold, Check, Draggable],
         components: {
-            // DragNested,
-            // draggable,
-            JsonViewer
+            Tree: Tree.mixPlugins([Fold, Draggable])
         },
         data: function () {
             return {
-                list: this.$_DATA.organs,
+                treeData: this.$_DATA.organs,
                 selectedNode: {},
                 staffAdd: false,
-                searchWord: "",
-                active: [],
-                open: [],
-                users: [],
-                selectedItems: [],
+                searchWord: ""
             }
         },
-        computed: {
-            dragOptions() {
-                return {
-                    animation: 0,
-                    group: "description",
-                    disabled: false,
-                    ghostClass: "ghost"
-                }
-            },
-            selected() {
-                if (!this.active.length) return undefined
-                return this.active[0];
-            },
+        props: {
+            triggerClass: {default: 'drag-trigger'},
+            //prevent drag by default.
+            draggable: {type: [Boolean, Function], default: false},
+            droppable: {type: [Boolean, Function], default: false},
         },
         methods: {
             hideNode(node) {
@@ -195,67 +210,10 @@
                     // // console.log(regex, node.text, regex.test(node.text))
                     // this.$set(node, '$hidden', !regex.test(node.text))
                     console.log(node.text, this.searchWord, node.text.includes(this.searchWord))
+                    console.log(this.getAllNodesByPath())
                     this.$set(node, '$hidden', !node.text.includes(this.searchWord))
                 })
-            },
-            findTreeItem: function (items, id) {
-                if (!items) {
-                    return;
-                }
-                for (var i = 0; i < items.length; i++) {
-                    var item = items[i];
-                    // Test current object
-                    if (item.Id === id) {
-                        return item;
-                    }
-                    // Test children recursively
-                    const child = this.findTreeItem(item.Children, id);
-                    if (child) {
-                        return child;
-                    }
-                }
-            },
-            checkStart: function (evt) {
-                var self = this;
-                self.active = [];
-                self.active.push(self.findTreeItem(self.users, evt.from.id))
-            },
-            checkEnd: function (evt) {
-                var self = this;
-                var itemSelected = self.active[0];
-                var fromParent = itemSelected.ParentId ? self.findTreeItem(self.users, itemSelected.ParentId) : null;
-                var toParent = self.findTreeItem(self.users, evt.to.id);
-                var objFrom = fromParent ? fromParent.Children : self.users;
-                objFrom.splice(objFrom.indexOf(itemSelected), 1);
-
-                if (toParent.Id === itemSelected.Id) {
-                    itemSelected.ParentId = null;
-                    self.users.push(itemSelected);
-                }
-                else {
-                    itemSelected.ParentId = toParent.Id;
-                    toParent.Children.push(itemSelected);
-                }
-                self.saveUser(itemSelected);
-                //   self.active = [];
-                return false;
             }
         }
-
     }
-    /*
-    import TreeView from '@/components/CustomTreeView.vue'
-    import JsonViewer from 'vue-json-viewer'
-    export default {
-        components: {
-            TreeView,
-            JsonViewer
-        },
-        data() {
-            return {
-                treeData: this.$_DATA.organs
-            }
-        },
-    }
-     */
 </script>

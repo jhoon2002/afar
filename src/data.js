@@ -336,7 +336,7 @@ export default Object.freeze(
             {
                 id: "1001",
                 rank: 1,
-                name: "산학협력단",
+                text: "산학협력단",
                 blank: false,
                 chief: "장",
                 staffs: [
@@ -359,13 +359,13 @@ export default Object.freeze(
                     {
                         id: "1004",
                         rank: 2,
-                        name: "본부",
+                        text: "본부",
                         locked: true,
                         children: [
                             {
                                 id: "1005",
                                 rank: 1,
-                                name: "전략기획팀",
+                                text: "전략기획팀",
                                 chief: "장",
                                 staffs: [
                                     {
@@ -387,7 +387,7 @@ export default Object.freeze(
                             {
                                 id: "1008",
                                 rank: 2,
-                                name: "사업운영팀",
+                                text: "사업운영팀",
                                 chief: "장",
                                 staffs: [
                                     {
@@ -423,7 +423,7 @@ export default Object.freeze(
                             {
                                 id: "1013",
                                 rank: 3,
-                                name: "총무관리팀",
+                                text: "총무관리팀",
                                 blank: false,
                                 chief: "장",
                                 staffs: [
@@ -455,46 +455,46 @@ export default Object.freeze(
                     {
                         id: "1017",
                         rank: 2,
-                        name: "사업단",
+                        text: "사업단",
                         locked: true,
                         children: [
                             {
                                 id: "1018",
                                 rank: 1,
-                                fullName: "협력종합예술활동 운영 위탁용역",
-                                name: "2021 협력종합예술활동",
+                                fulltext: "협력종합예술활동 운영 위탁용역",
+                                text: "2021 협력종합예술활동",
                                 blank: true,
                                 chief: "연구책임자",
                             },
                             {
                                 id: "1019",
                                 rank: 2,
-                                fullName: "2021 예술세상마을",
-                                name: "2021 예술세상마을",
+                                fulltext: "2021 예술세상마을",
+                                text: "2021 예술세상마을",
                                 blank: true,
                                 chief: "연구책임자"
                             },
                             {
                                 id: "1020",
                                 rank: 3,
-                                fullName: "틱톡 영상콘텐츠 제작 및 홍보",
-                                name: "틱톡 영상콘텐츠",
+                                fulltext: "틱톡 영상콘텐츠 제작 및 홍보",
+                                text: "틱톡 영상콘텐츠",
                                 blank: true,
                                 chief: "연구책임자",
                             },
                             {
                                 id: "1021",
                                 rank: 4,
-                                fullName: "2025 국립중앙박물관 공간개편 기본구상 연구",
-                                name: "국립중앙박물관 공간개편",
+                                fulltext: "2025 국립중앙박물관 공간개편 기본구상 연구",
+                                text: "국립중앙박물관 공간개편",
                                 blank: true,
                                 chief: "연구책임자"
                             },
                             {
                                 id: "1022",
                                 rank: 5,
-                                fullName: "학교 융복합 문화예술교육 시범사업 운영 <융복합 문화예술교육 프로그램 연구 및 교과과정 연계 시범운영 실행> : 1년차",
-                                name: "학교 융복합 문화예술교육 시범사업",
+                                fulltext: "학교 융복합 문화예술교육 시범사업 운영 <융복합 문화예술교육 프로그램 연구 및 교과과정 연계 시범운영 실행> : 1년차",
+                                text: "학교 융복합 문화예술교육 시범사업",
                                 blank: true,
                                 chief: "연구책임자"
                             }
