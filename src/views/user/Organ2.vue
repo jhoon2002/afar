@@ -11,59 +11,63 @@
                         <v-card-title class="pl-0">
                             조직도 <v-btn icon><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
                         </v-card-title>
+
                         <v-text-field
                                 hide-details
                                 v-model="searchWord"
                                 @keyup="search"
                                 placeholder="Search"
+                                class="mb-3 pt-2"
                         ></v-text-field>
 
-                        <Tree :value="treeData">
-                            <div
-                                    slot-scope="{node, index, path, tree}"
-                                    style="cursor: pointer"
-                                    class="d-flex justify-space-between"
-                                    @click="editNode(node)"
-                            >
-                                <div>
-                                    <v-icon>
-                                        mdi-drag
-                                    </v-icon>
-                                    <v-icon
-                                            small
-                                            v-if="node.$folded && node.children && node.children.length > 0"
-                                            @click="tree.toggleFold(node, path)"
-                                    >
-                                        ri-add-line
-                                    </v-icon>
-                                    <v-icon
-                                            small
-                                            v-if="!node.$folded && node.children && node.children.length > 0"
-                                            @click="tree.toggleFold(node, path)"
-                                    >
-                                        ri-subtract-line
-                                    </v-icon>
+                        <div style="height:500px; overflow: auto;" class="pr-3">
+                            <Tree :value="treeData" edgeScroll>
+                                <div
+                                        slot-scope="{node, index, path, tree}"
+                                        style="cursor: pointer"
+                                        class="d-flex justify-space-between"
+                                        @click="editNode(node)"
+                                >
+                                    <div>
+                                        <v-icon>
+                                            mdi-drag
+                                        </v-icon>
+                                        <v-icon
+                                                small
+                                                v-if="node.$folded && node.children && node.children.length > 0"
+                                                @click="tree.toggleFold(node, path)"
+                                        >
+                                            ri-add-line
+                                        </v-icon>
+                                        <v-icon
+                                                small
+                                                v-if="!node.$folded && node.children && node.children.length > 0"
+                                                @click="tree.toggleFold(node, path)"
+                                        >
+                                            ri-subtract-line
+                                        </v-icon>
 
-                                    {{ node.text }}
+                                        {{ node.text }}
+                                    </div>
+                                    <div>
+                                        <v-btn
+                                                x-small
+                                                icon
+                                                @click="() => tree.removeNodeByPath(path)"
+                                        >
+                                            <v-icon>ri-delete-bin-line</v-icon>
+                                        </v-btn>
+                                        <v-btn
+                                                x-small
+                                                icon
+                                                @click="() => hideNode(node)"
+                                        >
+                                            <v-icon>ri-loader-line</v-icon>
+                                        </v-btn>
+                                    </div>
                                 </div>
-                                <div>
-                                    <v-btn
-                                            x-small
-                                            icon
-                                            @click="() => tree.removeNodeByPath(path)"
-                                    >
-                                        <v-icon>ri-delete-bin-line</v-icon>
-                                    </v-btn>
-                                    <v-btn
-                                            x-small
-                                            icon
-                                            @click="() => hideNode(node)"
-                                    >
-                                        <v-icon>ri-loader-line</v-icon>
-                                    </v-btn>
-                                </div>
-                            </div>
-                        </Tree>
+                            </Tree>
+                        </div>
                     </v-card>
                 </v-col>
                 <v-col cols="4">
@@ -109,12 +113,9 @@
                                         ></v-switch>
                                     </v-col>
                                 </v-row>
-                                <v-row style="margin-top: -3rem;">
-                                    <v-col cols="6"></v-col>
-                                    <v-col cols="6" class="text-center">
-                                        ({{ selectedNode.text }}{{ selectedNode.blank ? " " : "" }}{{ selectedNode.chief }})
-                                    </v-col>
-                                </v-row>
+                                <div style="margin: -2rem 0 0 4rem">
+                                    ({{ selectedNode.text }}{{ selectedNode.blank ? " " : "" }}{{ selectedNode.chief }})
+                                </div>
                             </validation-observer>
                         </v-card>
                     </v-slide-x-transition>
@@ -125,7 +126,7 @@
                             <v-card-title class="pl-0">
                                 구성원 <v-btn icon @click="staffAdd=true"><v-icon>mdi-plus-circle-outline</v-icon></v-btn>
                             </v-card-title>
-                            <v-simple-table>
+                            <v-simple-table style="margin-top: -0.2rem">
                                 <thead>
                                     <tr>
                                         <th>직책</th>
@@ -204,14 +205,23 @@
                 this.selectedNode = node
             },
             search() {
-                // const value = e.target.value || ''
-                this.walkTreeData((node) => {
-                    // const regex = new RegExp(this.searchWord)
-                    // // console.log(regex, node.text, regex.test(node.text))
-                    // this.$set(node, '$hidden', !regex.test(node.text))
-                    console.log(node.text, this.searchWord, node.text.includes(this.searchWord))
-                    console.log(this.getAllNodesByPath())
+                this.walkTreeData((node, index, parent, path) => {
+
                     this.$set(node, '$hidden', !node.text.includes(this.searchWord))
+
+                    if (node.text.includes(this.searchWord)) {
+
+                        for (const { node } of this.iteratePath(path, {reverse: true})) {
+                            this.$set(node, '$hidden', false)
+                        }
+
+                        //let now = this.treeData
+                        //for (let i of path) {
+                        //    this.$set(now[i], '$hidden', false)
+                        //    now = now[i].children
+                        //}
+                    }
+
                 })
             }
         }

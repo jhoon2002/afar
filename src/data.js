@@ -382,6 +382,11 @@ export default Object.freeze(
                                         employeeId: "100008",
                                         name: "최형준"
                                     },
+                                ],
+                                children: [
+                                    {
+                                        text: "연구창업팀"
+                                    }
                                 ]
                             },
                             {
@@ -465,6 +470,14 @@ export default Object.freeze(
                                 text: "2021 협력종합예술활동",
                                 blank: true,
                                 chief: "연구책임자",
+                                children: [
+                                    {
+                                        text: "학교 교육 연구소"
+                                    },
+                                    {
+                                        text: "예술강사 처우개선 위원회"
+                                    }
+                                ]
                             },
                             {
                                 id: "1019",
@@ -472,7 +485,15 @@ export default Object.freeze(
                                 fulltext: "2021 예술세상마을",
                                 text: "2021 예술세상마을",
                                 blank: true,
-                                chief: "연구책임자"
+                                chief: "연구책임자",
+                                children: [
+                                    {
+                                        text: "축제 연구회"
+                                    },
+                                    {
+                                        text: "지역 연구회"
+                                    }
+                                ]
                             },
                             {
                                 id: "1020",
