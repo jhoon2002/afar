@@ -1,4 +1,52 @@
 <!-- Demo6CustomTreeView.vue -->
+<template>
+    <Tree :value="treeData">
+        <div
+                slot-scope="{node, index, path, tree}"
+                style="cursor: pointer"
+                class="d-flex justify-space-between"
+                @click="editNode(node)"
+        >
+            <div>
+                <v-icon>
+                    mdi-drag
+                </v-icon>
+                <v-icon
+                        small
+                        v-if="node.$folded && node.children && node.children.length > 0"
+                        @click="tree.toggleFold(node, path)"
+                >
+                    ri-add-line
+                </v-icon>
+                <v-icon
+                        small
+                        v-if="!node.$folded && node.children && node.children.length > 0"
+                        @click="tree.toggleFold(node, path)"
+                >
+                    ri-subtract-line
+                </v-icon>
+
+                {{ node.text }}
+            </div>
+            <div>
+                <v-btn
+                        x-small
+                        icon
+                        @click="() => tree.removeNodeByPath(path)"
+                >
+                    <v-icon>ri-delete-bin-line</v-icon>
+                </v-btn>
+                <v-btn
+                        x-small
+                        icon
+                        @click="() => hideNode(node)"
+                >
+                    <v-icon>ri-loader-line</v-icon>
+                </v-btn>
+            </div>
+        </div>
+    </Tree>
+</template>
 <script>
     import 'he-tree-vue/dist/he-tree-vue.css'
     import {Tree, Fold, Check, Draggable} from 'he-tree-vue'
@@ -8,10 +56,23 @@
         extends: Tree,
         mixins: [Fold, Check, Draggable],
         props: {
-            triggerClass: {default: 'drag-trigger'},
-            //prevent drag by default.
-            draggable: {type: [Boolean, Function], default: false},
-            droppable: {type: [Boolean, Function], default: false},
+            triggerClass: {
+                default: 'drag-trigger'
+            },
+            draggable: {
+                type: [Boolean, Function],
+                default: false
+            },
+            droppable: {
+                type: [Boolean, Function],
+                default: false
+            },
+            items: {
+                type: Array,
+                default: function() {
+                    return []
+                }
+            }
         },
         data() {
             return {
@@ -26,6 +87,9 @@
                 })
                 return i
             },
+            treeData() {
+                return this.items
+            }
         },
         methods: {
             overrideSlotDefault({node, path, tree}, original) {
@@ -64,12 +128,26 @@
             hideNode(node) {
                 this.$set(node, '$hidden', true)
             },
-            search(e) {
-                const value = e.target.value || ''
-                this.walkTreeData((node) => {
-                    this.$set(node, '$hidden', !node.text.includes(value))
+            search() {
+                this.walkTreeData((node, index, parent, path) => {
+
+                    this.$set(node, '$hidden', !node.text.includes(this.searchWord))
+
+                    if (node.text.includes(this.searchWord)) {
+
+                        for (const { node } of this.iteratePath(path, {reverse: true})) {
+                            this.$set(node, '$hidden', false)
+                        }
+
+                        //let now = this.treeData
+                        //for (let i of path) {
+                        //    this.$set(now[i], '$hidden', false)
+                        //    now = now[i].children
+                        //}
+                    }
+
                 })
-            },
+            }
         },
     }
 </script>
