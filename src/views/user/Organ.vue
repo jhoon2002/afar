@@ -207,7 +207,7 @@
                                                     ref="observer2"
                                                     v-slot="{ }"
                                             >
-                                                <v-row no-gutters class="d-flex">
+                                                <v-row no-gutters class="d-flex" >
                                                     <validation-provider name="직책" :rules="{ required: true }" v-slot="{ errors, valid }">
                                                         <v-select label="직책" v-model="role1"
                                                                   :items="['연구책임자', '팀장', '공동연구자', '보조연구원', '연구원', '행정원', '행정원보조', '직접 입력']"
