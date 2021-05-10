@@ -139,7 +139,7 @@
                                 </v-menu>
                             </v-card-title>
                             <validation-observer
-                                    ref="observer"
+                                    ref="observer1"
                                     v-slot="{ }"
                             >
                                 <validation-provider name="사용 명칭" :rules="{ required: true }" v-slot="{ errors, valid }">
@@ -202,19 +202,38 @@
                                             구성원 추가
                                         </v-card-title>
 
-                                        <v-sheet class="d-flex pa-4 justify-center">
-                                            <validation-provider name="직책" :rules="{ required: true }" v-slot="{ errors, valid }">
-                                                <v-select label="직책" v-model="role"
-                                                          :items="['연구책임자', '팀장', '공동연구자', '보조연구원', '연구원', '행정원', '행정원보조', '직접 입력']"
-                                                          :error-messages="errors" :success="valid" style="max-width: 7rem"
-                                                          @input="checkSelect"
-                                                ></v-select>
-                                            </validation-provider>
-                                            <validation-provider name="이름" :rules="{ required: true }" v-slot="{ errors, valid }">
-                                                <v-text-field label="이름" v-model="name"
-                                                              :error-messages="errors" :success="valid" class="ml-4"
-                                                ></v-text-field>
-                                            </validation-provider>
+                                        <v-sheet class="pa-4">
+                                            <validation-observer
+                                                    ref="observer2"
+                                                    v-slot="{ }"
+                                            >
+                                                <v-row no-gutters class="d-flex">
+                                                    <validation-provider name="직책" :rules="{ required: true }" v-slot="{ errors, valid }">
+                                                        <v-select label="직책" v-model="role1"
+                                                                  :items="['연구책임자', '팀장', '공동연구자', '보조연구원', '연구원', '행정원', '행정원보조', '직접 입력']"
+                                                                  :error-messages="errors" :success="valid"
+                                                                  style="max-width: 7rem"
+                                                                  @input="checkSelect"
+                                                        ></v-select>
+                                                    </validation-provider>
+                                                    <validation-provider name="직책" :rules="{ required: true }" v-slot="{ errors, valid }" v-if="isAddRole">
+                                                        <v-text-field
+                                                                v-if="isAddRole"
+                                                                name="직책"
+                                                                v-model="role2"
+                                                                :error-messages="errors" :success="valid"
+                                                                class="ml-4"
+                                                                style="max-width: 7rem"
+                                                        ></v-text-field>
+                                                    </validation-provider>
+                                                </v-row>
+                                                <validation-provider name="이름" :rules="{ required: true }" v-slot="{ errors, valid }">
+                                                    <v-text-field label="이름" v-model="staffName"
+                                                                  :error-messages="errors" :success="valid"
+                                                                  style="max-width: 15rem"
+                                                    ></v-text-field>
+                                                </validation-provider>
+                                            </validation-observer>
                                         </v-sheet>
 
                                         <v-card-actions class="mt-5 pa-0">
@@ -223,7 +242,7 @@
                                             <v-btn
                                                     text
                                                     class="mr-0"
-                                                    @click="staffAdd = false"
+                                                    @click="cancel"
                                             >
                                                 취소
                                             </v-btn>
@@ -231,7 +250,7 @@
                                                     color="primary"
                                                     text
                                                     class="mx-0"
-                                                    @click="staffAdd = false"
+                                                    @click="addStaff"
                                             >
                                                 추가
                                             </v-btn>
@@ -360,6 +379,11 @@
                 organText: "",
                 organAdd: false,
                 organAddMenu: false,
+                isAddRole:false,
+                staffUserId: "",
+                staffName: "",
+                role1: "",
+                role2: ""
             }
         },
         computed: {
@@ -394,11 +418,28 @@
                 this.organAddMenu = false
             },
             checkSelect(e) {
-                console.log(e)
                 if (e === '직접 입력') {
-                    alert("aa")
+                    this.isAddRole = true
+                    return
                 }
+                this.isAddRole = false
+                return
             },
+            cancel() {
+                this.role1 = ""
+                this.role2 = ""
+                this.staffName = ""
+                this.$refs.observer2.reset()
+                this.staffAdd = false
+            },
+            addStaff() {
+                this.selectedNode.staffs.push({
+                    userId: this.staffUserId,
+                    name: this.staffName,
+                    role: this.role1
+                })
+                this.staffAdd = false
+            }
         },
         mounted() {
             this.selectedNode = this.$_DATA.organs[0]
