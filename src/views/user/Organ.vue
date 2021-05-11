@@ -203,11 +203,19 @@
                                         </v-card-title>
 
                                         <v-sheet class="pa-4">
+                                            <!--
+                                            <v-text-field
+                                                    hide-details
+                                                    prepend-inner-icon="mdi-magnify"
+                                                    v-model="searchWord"
+                                                    @keyup.enter="search"
+                                            ></v-text-field>
+                                            -->
                                             <validation-observer
                                                     ref="observer2"
                                                     v-slot="{ }"
                                             >
-                                                <v-row no-gutters class="d-flex" >
+                                                <v-row no-gutters class="d-flex">
                                                     <validation-provider name="직책" :rules="{ required: true }" v-slot="{ errors, valid }">
                                                         <v-select label="직책" v-model="role1"
                                                                   :items="['연구책임자', '팀장', '공동연구자', '보조연구원', '연구원', '행정원', '행정원보조', '직접 입력']"
@@ -227,12 +235,42 @@
                                                         ></v-text-field>
                                                     </validation-provider>
                                                 </v-row>
-                                                <validation-provider name="이름" :rules="{ required: true }" v-slot="{ errors, valid }">
-                                                    <v-text-field label="이름" v-model="staffName"
+                                                1{{ userIdName }}1
+                                                <v-autocomplete
+                                                        v-model="userIdName"
+                                                        :items="['여종훈', '아무개']"
+                                                        chips
+                                                        small-chips
+                                                        label="이름"
+                                                        @keyup.enter="search"
+                                                        @input="userIdName = $event"
+                                                ></v-autocomplete>
+                                                <!--
+                                                <validation-provider name="이름" :rules="{  }" v-slot="{ errors, valid }">
+
+
+
+
+                                                    <v-text-field label="이름"
                                                                   :error-messages="errors" :success="valid"
                                                                   style="max-width: 15rem"
-                                                    ></v-text-field>
+                                                                  @keyup.enter="search"
+                                                                  v-model="userIdName"
+                                                                  :disabled="isChips"
+                                                    >
+                                                        <v-chip
+                                                                v-if="isChips"
+                                                                class="ma-2"
+                                                                small
+                                                                slot="prepend-inner"
+                                                                close
+                                                                @click:close="isChips = false"
+                                                        >
+                                                            {{ srdUser }}
+                                                        </v-chip>
+                                                    </v-text-field>
                                                 </validation-provider>
+                                                -->
                                             </validation-observer>
                                         </v-sheet>
 
@@ -366,6 +404,7 @@
 <script>
     import DragTreeview from "@/components/DragTreeview.vue"
     // import JsonViewer from 'vue-json-viewer'
+    import { getUsersByUserIdName } from "@/apis/db.js"
     export default {
         components: {
             DragTreeview,
@@ -383,7 +422,11 @@
                 staffUserId: "",
                 staffName: "",
                 role1: "",
-                role2: ""
+                role2: "",
+                userIdName: "",
+                srdUser: "",
+                users: [],
+                isChips: false
             }
         },
         computed: {
@@ -428,7 +471,7 @@
             cancel() {
                 this.role1 = ""
                 this.role2 = ""
-                this.staffName = ""
+                this.srdUser = ""
                 this.$refs.observer2.reset()
                 this.staffAdd = false
             },
@@ -439,6 +482,19 @@
                     role: this.role1
                 })
                 this.staffAdd = false
+            },
+            async search() {
+                try {
+                    const ret = await getUsersByUserIdName(this.userIdName)
+                    this.users = ret.data.users
+                    if (ret.data.users.length === 1) {
+                        this.srdUser = ret.data.users[0].name // + "<.." + ret.data.users[0]._id.substr(20,4) + ">"
+                        this.isChips = true
+                        this.userIdName = ""
+                    }
+                } catch {
+                    //
+                }
             }
         },
         mounted() {

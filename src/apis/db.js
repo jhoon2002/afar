@@ -51,3 +51,8 @@ export const isUserId = (userId) => {
 export const isJumin = (juminNo) => {
     return http.post("/api/users/is-jumin", { jumin: juminNo})
 }
+
+export const getUsersByUserIdName = (keyword) => {
+    if (!keyword) return
+    return http.get("/api/users/is-useridname/" + keyword)
+}
