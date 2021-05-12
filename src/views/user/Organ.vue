@@ -235,7 +235,20 @@
                                                         ></v-text-field>
                                                     </validation-provider>
                                                 </v-row>
-                                                1{{ userIdName }}1
+
+                                                <v-autocomplete
+                                                        v-model="select"
+                                                        :loading="loading"
+                                                        :items="items"
+                                                        :search-input.sync="search"
+                                                        chips
+                                                        small-chips
+                                                        flat
+                                                        hide-no-data
+                                                        hide-details
+                                                        label="이름"
+                                                ></v-autocomplete>
+                                                <!--
                                                 <v-autocomplete
                                                         v-model="userIdName"
                                                         :items="['여종훈', '아무개']"
@@ -245,6 +258,7 @@
                                                         @keyup.enter="search"
                                                         @input="userIdName = $event"
                                                 ></v-autocomplete>
+                                                -->
                                                 <!--
                                                 <validation-provider name="이름" :rules="{  }" v-slot="{ errors, valid }">
 
@@ -426,7 +440,72 @@
                 userIdName: "",
                 srdUser: "",
                 users: [],
-                isChips: false
+                isChips: false,
+                loading: false,
+                items: [],
+                search: null,
+                select: null,
+                states: [
+                    'Alabama',
+                    'Alaska',
+                    'American Samoa',
+                    'Arizona',
+                    'Arkansas',
+                    'California',
+                    'Colorado',
+                    'Connecticut',
+                    'Delaware',
+                    'District of Columbia',
+                    'Federated States of Micronesia',
+                    'Florida',
+                    'Georgia',
+                    'Guam',
+                    'Hawaii',
+                    'Idaho',
+                    'Illinois',
+                    'Indiana',
+                    'Iowa',
+                    'Kansas',
+                    'Kentucky',
+                    'Louisiana',
+                    'Maine',
+                    'Marshall Islands',
+                    'Maryland',
+                    'Massachusetts',
+                    'Michigan',
+                    'Minnesota',
+                    'Mississippi',
+                    'Missouri',
+                    'Montana',
+                    'Nebraska',
+                    'Nevada',
+                    'New Hampshire',
+                    'New Jersey',
+                    'New Mexico',
+                    'New York',
+                    'North Carolina',
+                    'North Dakota',
+                    'Northern Mariana Islands',
+                    'Ohio',
+                    'Oklahoma',
+                    'Oregon',
+                    'Palau',
+                    'Pennsylvania',
+                    'Puerto Rico',
+                    'Rhode Island',
+                    'South Carolina',
+                    'South Dakota',
+                    'Tennessee',
+                    'Texas',
+                    'Utah',
+                    'Vermont',
+                    'Virgin Island',
+                    'Virginia',
+                    'Washington',
+                    'West Virginia',
+                    'Wisconsin',
+                    'Wyoming',
+                ],
             }
         },
         computed: {
@@ -472,8 +551,9 @@
                 this.role1 = ""
                 this.role2 = ""
                 this.srdUser = ""
-                this.$refs.observer2.reset()
                 this.staffAdd = false
+                this.items = []
+                this.$refs.observer2.reset()
             },
             addStaff() {
                 this.selectedNode.staffs.push({
@@ -483,7 +563,7 @@
                 })
                 this.staffAdd = false
             },
-            async search() {
+            async search2() {
                 try {
                     const ret = await getUsersByUserIdName(this.userIdName)
                     this.users = ret.data.users
@@ -495,11 +575,45 @@
                 } catch {
                     //
                 }
-            }
+            },
+            async querySelections (v) {
+                this.loading = true
+                // Simulated ajax query
+                try {
+                    this.items = []
+                    const ret = await getUsersByUserIdName(v)
+                    for (let user of ret.data.users) {
+                        this.items.push(user.name + " " + user.userId)
+                    }
+                    //this.items = ret.data.users
+                    //console.log(this.items)
+                    //if (ret.data.users.length === 1) {
+                    //    this.srdUser = ret.data.users[0].name // + "<.." + ret.data.users[0]._id.substr(20,4) + ">"
+                    //    this.isChips = true
+                    //    this.userIdName = ""
+                    //}
+                } catch {
+                    this.items = []
+                } finally {
+                    this.loading = false
+                }
+                //setTimeout(() => {
+                //    this.items = this.states.filter(e => {
+                //        return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
+                //    })
+                //    this.loading = false
+                //}, 500)
+            },
         },
         mounted() {
             this.selectedNode = this.$_DATA.organs[0]
-        }
+        },
+        watch: {
+            search (val) {
+                val && val !== this.select && this.querySelections(val)
+                console.log(val && val !== this.select && this.querySelections(val))
+            },
+        },
     }
 </script>
 <style>
