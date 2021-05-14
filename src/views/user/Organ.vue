@@ -186,6 +186,7 @@
                                         :close-on-content-click="false"
                                         :nudge-width="300"
                                         offset-x
+                                        :close-on-click="false"
                                 >
                                     <template v-slot:activator="{ on, attrs }">
                                         <v-btn
@@ -242,11 +243,11 @@
                                                         :items="items"
                                                         :search-input.sync="search"
                                                         chips
-                                                        small-chips
                                                         flat
                                                         hide-no-data
                                                         hide-details
                                                         label="이름"
+                                                        style="max-width: 14rem"
                                                 ></v-autocomplete>
                                                 <!--
                                                 <v-autocomplete
@@ -548,12 +549,13 @@
                 return
             },
             cancel() {
+                alert("------")
                 this.role1 = ""
                 this.role2 = ""
                 this.srdUser = ""
-                this.staffAdd = false
                 this.items = []
                 this.$refs.observer2.reset()
+                this.staffAdd = false
             },
             addStaff() {
                 this.selectedNode.staffs.push({
