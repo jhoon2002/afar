@@ -4,7 +4,7 @@ import VueRouter from "vue-router"
 import Blank from "@/views/Blank.vue"
 import Mock from "@/views/Mock.vue"
 // import Layout from "@/views/Layout.vue"
-import Sub from "@/views/Sub.vue"
+import SubLayout from "@/views/SubLayout.vue"
 import VueCookies from 'vue-cookies'
 import { checkToken } from "@/apis/token.js"
 
@@ -40,7 +40,7 @@ const routes = [
   {
     name: "로그인",
     path: "/",
-    component: () => import("@/views/Main.vue"),
+    component: () => import("@/views/Index.vue"),
     invisible: true,
     meta: {
       rule: ['*']
@@ -50,7 +50,7 @@ const routes = [
     name: "일반",
     icon: "",
     path: "/",
-    component: Sub,
+    component: SubLayout,
     invisible: true,
     isShow: false,
     isOn: false,
@@ -59,7 +59,7 @@ const routes = [
       {
         name: "첫화면",
         path: "/main",
-        component: Mock,
+        component: () => import("@/views/Main.vue"),
         invisible: true,
         meta: {
           rule: ['*']
@@ -68,73 +68,82 @@ const routes = [
     ]
   },
   {
-    name: "게시판관리",
-    icon: "mdi-view-headline",
-    path: "/admin/board",
-    component: Sub,
-    isShow: false,
-    isOn: false,
-    meta: { isDirectory: true },
-    children: [
-      {
-        name: "글쓰기",
-        path: "/admin/board/create",
-        component: () => import("@/views/board/Create.vue"),
-        props: true,
-        isShow: false,
-        isOn: false,
-        meta: {
-          model: "board",
-          rule: ["isLogged"]
-        }
-      },
-      {
-        name: "파일업로드",
-        path: "/admin/board/file",
-        component: () => import("@/views/board/File.vue"),
-        props: true,
-        isShow: false,
-        isOn: false,
-        meta: {
-          model: "board",
-          rule: ["isLogged"]
-        }
-      },
-      {
-        name: "자유게시판",
-        path: "/admin/board/free",
-        component: () => import("@/views/board/Free.vue"),
-        props: true,
-        isShow: false,
-        isOn: false,
-        meta: {
-          model: "board",
-          rule: ["isLogged"]
-        }
-      }
-    ]
-  },
-  {
-    name: "문서관리",
+    name: "문서",
     icon: "mdi-file-document-edit-outline",
-    path: "/admin/document",
-    component: Sub,
+    path: "/document",
+    component: SubLayout,
     isShow: false,
     isOn: false,
     meta: { isDirectory: true },
     children: [
       {
-        name: "문서작성",
-        path: "/admin/document/create",
+        name: "문서 작성",
+        path: "/document/create",
         component: () => import("@/views/document/Create.vue"),
         props: true,
         isShow: false,
         isOn: false,
         meta: {
-          model: "document",
           rule: ["isLogged"]
         }
       },
+      {
+        name: "나의 문서",
+        path: "/document/my",
+        component: Blank,
+        isShow: false,
+        isOn: false,
+        meta: {
+          isDirectory: true
+        },
+        children: [
+          {
+            name: "종료 문서",
+            path: "/document/my/complete",
+            component: () => import("@/views/document/Create.vue"),
+            props: true,
+            isShow: false,
+            isOn: false,
+            meta: {
+              rule: ["isLogged"]
+            }
+          },
+          {
+            name: "진행 문서",
+            path: "/document/my/processing",
+            component: () => import("@/views/document/Create.vue"),
+            props: true,
+            isShow: false,
+            isOn: false,
+            meta: {
+              rule: ["isLogged"]
+            }
+          },
+          {
+            name: "공유 문서",
+            path: "/document/my/share",
+            component: () => import("@/views/document/Create.vue"),
+            props: true,
+            isShow: false,
+            isOn: false,
+            meta: {
+              rule: ["isLogged"]
+            }
+          },
+        ]
+      },
+      {
+        name: "문서등록대장",
+        path: "/admin/document/list",
+        component: () => import("@/views/document/Create.vue"),
+        props: true,
+        isShow: false,
+        isOn: false,
+        meta: {
+          rule: ["isLogged"]
+        }
+      },
+        /*
       {
         name: "tiptap",
         path: "/admin/document/editor",
@@ -159,13 +168,61 @@ const routes = [
           rule: ["isLogged"]
         }
       },
+        */
     ]
   },
   {
-    name: "사용자관리",
+    name: "게시판 관리",
+    icon: "mdi-view-headline",
+    path: "/admin/board",
+    component: SubLayout,
+    isShow: false,
+    isOn: false,
+    meta: { isDirectory: true },
+    children: [
+      {
+        name: "글쓰기",
+        path: "/admin/board/create",
+        component: () => import("@/views/board/Create.vue"),
+        props: true,
+        isShow: false,
+        isOn: false,
+        meta: {
+          model: "board",
+          rule: ["isAdmin"]
+        }
+      },
+      {
+        name: "파일 업로드",
+        path: "/admin/board/file",
+        component: () => import("@/views/board/File.vue"),
+        props: true,
+        isShow: false,
+        isOn: false,
+        meta: {
+          model: "board",
+          rule: ["isAdmin"]
+        }
+      },
+      {
+        name: "자유게시판",
+        path: "/admin/board/free",
+        component: () => import("@/views/board/Free.vue"),
+        props: true,
+        isShow: false,
+        isOn: false,
+        meta: {
+          model: "board",
+          rule: ["isAdmin"]
+        }
+      }
+    ]
+  },
+  {
+    name: "사용자 관리",
     icon: "mdi-card-account-details-outline",
     path: "/admin/user",
-    component: Sub,
+    component: SubLayout,
     isShow: false,
     isOn: false,
     meta: { isDirectory: true },
@@ -178,7 +235,7 @@ const routes = [
         isShow: false,
         isOn: false,
         meta: {
-          rule: ["isLogged"]
+          rule: ["isAdmin"]
         }
       },
       {
@@ -188,7 +245,7 @@ const routes = [
         isShow: false,
         isOn: false,
         meta: {
-          rule: ["isLogged"]
+          rule: ["isAdmin"]
         }
       },
       {
@@ -198,16 +255,16 @@ const routes = [
         isShow: false,
         isOn: false,
         meta: {
-          rule: ["isLogged"]
+          rule: ["isAdmin"]
         }
       }
     ]
   },
   {
-    name: "인사관리",
+    name: "인사 관리",
     icon: "mdi-account-circle",
     path: "/admin/person",
-    component: Sub,
+    component: SubLayout,
     isShow: false,
     isOn: false,
     meta: {
@@ -221,7 +278,7 @@ const routes = [
         isShow: false,
         isOn: false,
         meta: {
-          rule: ["isLogged"]
+          rule: ["isAdmin"]
         }
       },
       {
@@ -235,23 +292,23 @@ const routes = [
         },
         children: [
           {
-            name: "증명서현황",
+            name: "증명서 현황",
             path: "/admin/person/certi/list",
             component: Mock,
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["isLogged"]
+              rule: ["isAdmin"]
             }
           },
           {
-            name: "증명서작성",
+            name: "증명서 작성",
             path: "/admin/person/certi/wirte",
             component: Mock,
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["isLogged"]
+              rule: ["isAdmin"]
             }
           }
         ]
@@ -267,23 +324,23 @@ const routes = [
         },
         children: [
           {
-            name: "급여현황",
+            name: "급여 현황",
             path: "/admin/person/pay/list",
             component: Mock,
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["isLogged"]
+              rule: ["isAdmin"]
             }
           },
           {
-            name: "급여입력",
+            name: "급여 입력",
             path: "/admin/person/pay/write",
             component: Mock,
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["isLogged"]
+              rule: ["isAdmin"]
             }
           }
         ]
@@ -291,10 +348,10 @@ const routes = [
     ]
   },
   {
-    name: "복무관리",
+    name: "복무 관리",
     icon: "mdi-bus-multiple",
     path: "/admin/work",
-    component: Sub,
+    component: SubLayout,
     isShow: false,
     isOn: false,
     meta: {
@@ -302,7 +359,7 @@ const routes = [
     },
     children: [
       {
-        name: "휴가",
+        name: "휴가 관리",
         path: "/admin/work/off",
         component: Blank,
         isShow: false,
@@ -312,23 +369,23 @@ const routes = [
         },
         children: [
           {
-            name: "휴가설정",
+            name: "휴가 설정",
             path: "/admin/work/off/set",
             component: Mock,
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["isLogged"]
+              rule: ["isAdmin"]
             }
           },
           {
-            name: "휴가현황",
+            name: "휴가 현황",
             path: "/admin/work/off/book-list",
             component: Mock,
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["isLogged"]
+              rule: ["isAdmin"]
             }
           }
         ]
@@ -344,23 +401,23 @@ const routes = [
         },
         children: [
           {
-            name: "시간외근무설정",
+            name: "시간외근무 설정",
             path: "/admin/work/overtime/set",
             component: Mock,
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["isLogged"]
+              rule: ["isAdmin"]
             }
           },
           {
-            name: "시간외근무현황",
+            name: "시간외근무 현황",
             path: "/admin/work/overtime/pre-list",
             component: Mock,
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["isLogged"]
+              rule: ["isAdmin"]
             }
           }
         ]
@@ -376,13 +433,13 @@ const routes = [
         },
         children: [
           {
-            name: "출장현황",
+            name: "출장 현황",
             path: "/admin/work/trip/list",
             component: Mock,
             isShow: false,
             isOn: false,
             meta: {
-              rule: ["isLogged"]
+              rule: ["isAdmin"]
             }
           }
         ]
@@ -390,10 +447,10 @@ const routes = [
     ]
   },
   {
-    name: "규정/양식관리",
+    name: "규정/양식 관리",
     icon: "mdi-book-open-variant",
     path: "/admin/law",
-    component: Sub,
+    component: SubLayout,
     isShow: false,
     isOn: false,
     meta: {
@@ -407,7 +464,7 @@ const routes = [
         isShow: false,
         isOn: false,
         meta: {
-          rule: ["isLogged"]
+          rule: ["isAdmin"]
         }
       },
       {
@@ -417,7 +474,7 @@ const routes = [
         isShow: false,
         isOn: false,
         meta: {
-          rule: ["isLogged"]
+          rule: ["isAdmin"]
         }
       }
     ]
