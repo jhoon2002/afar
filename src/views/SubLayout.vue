@@ -110,7 +110,7 @@
                 <v-btn
                         icon
                         x-small
-                        @click="selectBg('#416353')"
+                        @click="selectBg('#2F664C')"
                 >
                     <v-icon color="green">mdi-checkbox-blank-circle</v-icon>
                 </v-btn>
