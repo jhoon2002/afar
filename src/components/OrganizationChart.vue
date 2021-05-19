@@ -22,6 +22,7 @@
                     <v-treeview
                             v-model="selection"
                             :items="$_DATA.organs"
+                            item-text="text"
                             :search="word"
                             :selection-type="leaf === 'option' && leafVal === true ? 'leaf' : 'independent'"
                             :item-disabled="leaf === 'option' && leafVal === true ? 'false' : 'locked'"

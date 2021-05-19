@@ -172,6 +172,49 @@ const routes = [
     ]
   },
   {
+    name: "사용자",
+    icon: "mdi-card-account-details-outline",
+    path: "/admin/user",
+    component: SubLayout,
+    isShow: false,
+    isOn: false,
+    meta: { isDirectory: true },
+    children: [
+      {
+        name: "사용자 관리",
+        path: "/admin/user/user",
+        component: () => import("@/views/user/User.vue"),
+        props: true,
+        isShow: false,
+        isOn: false,
+        meta: {
+          rule: ["isAdmin"]
+        }
+      },
+      {
+        name: "조직 관리",
+        path: "/admin/user/organ",
+        component: () => import("@/views/user/Organ.vue"),
+        isShow: false,
+        isOn: false,
+        meta: {
+          rule: ["isAdmin"]
+        }
+      },
+      {
+        name: "이미지",
+        path: "/admin/user/photo",
+        component: () => import("@/views/user/Photo.vue"),
+        isShow: false,
+        isOn: false,
+        meta: {
+          rule: ["isAdmin"]
+        }
+      }
+    ]
+  },
+  /*
+  {
     name: "게시판 관리",
     icon: "mdi-view-headline",
     path: "/admin/board",
@@ -213,48 +256,6 @@ const routes = [
         isOn: false,
         meta: {
           model: "board",
-          rule: ["isAdmin"]
-        }
-      }
-    ]
-  },
-  {
-    name: "사용자 관리",
-    icon: "mdi-card-account-details-outline",
-    path: "/admin/user",
-    component: SubLayout,
-    isShow: false,
-    isOn: false,
-    meta: { isDirectory: true },
-    children: [
-      {
-        name: "사용자",
-        path: "/admin/user/user",
-        component: () => import("@/views/user/User.vue"),
-        props: true,
-        isShow: false,
-        isOn: false,
-        meta: {
-          rule: ["isAdmin"]
-        }
-      },
-      {
-        name: "조직",
-        path: "/admin/user/organ",
-        component: () => import("@/views/user/Organ.vue"),
-        isShow: false,
-        isOn: false,
-        meta: {
-          rule: ["isAdmin"]
-        }
-      },
-      {
-        name: "테스트",
-        path: "/admin/user/test",
-        component: () => import("@/views/user/Organ2.vue"),
-        isShow: false,
-        isOn: false,
-        meta: {
           rule: ["isAdmin"]
         }
       }
@@ -479,6 +480,7 @@ const routes = [
       }
     ]
   }
+  */
 ];
 /*
 const routes = [
