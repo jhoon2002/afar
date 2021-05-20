@@ -63,7 +63,16 @@ const routes = [
         invisible: true,
         meta: {
           rule: ['*']
-        }
+        },
+      },
+      {
+        name: "마이 페이지",
+        path: "/mypage",
+        component: () => import("@/views/Mypage.vue"),
+        invisible: true,
+        meta: {
+          rule: ['*']
+        },
       },
     ]
   },

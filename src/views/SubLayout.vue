@@ -50,7 +50,9 @@
                 <v-sheet
                         class="transparent ml-5"
                 >
-                    <div class="text-h6">여종훈</div>
+                    <div class="text-h6">
+                        여종훈
+                    </div>
                     <div>
                         처리할 결재
                         <v-badge
@@ -160,14 +162,24 @@
                 <section-title></section-title>
             </div>
             <v-spacer></v-spacer>
-            <v-sheet class="transparent">현재 권한:</v-sheet>
+            <!--<v-sheet class="transparent">현재 권한:</v-sheet>-->
+
+            <v-btn
+                    elevation="0"
+                    color="primary"
+                    small
+                    @click="$router.push('/mypage')"
+            >
+                My page
+            </v-btn>
+
             <v-btn small
-                   dark
+                   color="blue"
                    elevation="0"
-                   class="blue ml-2"
+                   class="ml-2"
                    @click="logout"
             >
-                LOGOUT
+                Logout
             </v-btn>
         </v-app-bar>
 

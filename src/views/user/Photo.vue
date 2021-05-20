@@ -1,3 +1,56 @@
+<template>
+    <v-card>
+        <div>
+            <cropper
+                    ref="cropper"
+                    check-orientation
+                    :src="image.src"
+                    style="border: 1px solid grey; width: 30rem; height: 30rem;"
+            />
+            <v-btn
+                    icon
+                    @click="reset()"
+            >
+                <v-icon>mdi-refresh</v-icon>
+            </v-btn>
+
+            <v-chip
+                    v-if="image.type"
+                    color="black"
+                    dark
+                    small
+                    style="position: absolute; top: 20px; left: 20px"
+            >
+                {{ image.type }}
+            </v-chip>
+        </div>
+        <div>
+            <v-btn
+                    outlined
+                    @click="$refs.file.click()"
+            >
+                <input
+                        ref="file"
+                        type="file"
+                        accept="image/*"
+                        @change="loadImage($event)"
+                        style="display: none"
+                />
+                <v-icon left>mdi-upload</v-icon>
+                이미지 업로드
+            </v-btn>
+            <v-btn
+                    v-if="image.src"
+                    outlined
+                    class="ml-2"
+                    @click="crop()"
+            >
+                <v-icon left>mdi-download</v-icon>
+                결과 다운로드
+            </v-btn>
+        </div>
+    </v-card>
+</template>
 <script>
     import { Cropper } from 'vue-advanced-cropper';
     import 'vue-advanced-cropper/dist/style.css';
@@ -93,91 +146,5 @@
         },
     };
 </script>
-
-<template>
-    <v-card>
-        <div class="upload-example__cropper-wrapper">
-            <cropper ref="cropper" class="upload-example__cropper" check-orientation :src="image.src" />
-            <div class="upload-example__reset-button" title="Reset Image" @click="reset()">
-                <img :src="require('@/assets/reset.svg')" />
-            </div>
-            <div class="upload-example__file-type" v-if="image.type">
-                {{ image.type }}
-            </div>
-        </div>
-        <div class="upload-example__buttons-wrapper">
-            <button class="upload-example__button" @click="$refs.file.click()">
-                <input ref="file" type="file" accept="image/*" @change="loadImage($event)" />
-                Upload image
-            </button>
-            <button v-if="image.src" class="upload-example__button" @click="crop()">Download result</button>
-        </div>
-    </v-card>
-</template>
-
-<style lang="scss">
-    .upload-example {
-        margin-top: 20px;
-        margin-bottom: 20px;
-        user-select: none;
-        &__cropper {
-            border: solid 1px #eee;
-            min-height: 300px;
-            max-height: 500px;
-            width: 100%;
-        }
-        &__cropper-wrapper {
-            position: relative;
-        }
-        &__reset-button {
-            position: absolute;
-            right: 20px;
-            bottom: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 42px;
-            width: 42px;
-            background: rgba(#3fb37f, 0.7);
-            transition: background 0.5s;
-            &:hover {
-                background: #3fb37f;
-            }
-        }
-        &__buttons-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-top: 17px;
-        }
-        &__button {
-            border: none;
-            outline: solid transparent;
-            color: white;
-            font-size: 16px;
-            padding: 10px 20px;
-            background: #3fb37f;
-            cursor: pointer;
-            transition: background 0.5s;
-            margin: 0 16px;
-            &:hover,
-            &:focus {
-                background: #38d890;
-            }
-            input {
-                display: none;
-            }
-        }
-        &__file-type {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: #0d0d0d;
-            border-radius: 5px;
-            padding: 0px 10px;
-            padding-bottom: 2px;
-            font-size: 12px;
-            color: white;
-        }
-    }
+<style scoped>
 </style>
