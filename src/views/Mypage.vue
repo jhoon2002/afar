@@ -144,6 +144,7 @@
                                     />
                                 </div>
                             </v-sheet>
+                            <input type="file" name="img" id="img" />
                             <v-card-actions
                                     class="px-5 pb-5"
                             >
@@ -162,6 +163,7 @@
                                         color="secondary"
                                         class="ml-2"
                                         style="padding-bottom: 2px"
+                                        @click="applyImage()"
                                 >
                                     수정 완료
                                 </v-btn>
@@ -283,7 +285,11 @@
         methods: {
             crop() {
                 const { canvas } = this.$refs.cropper.getResult();
+
+                //console.log("canvas====", canvas)
+
                 canvas.toBlob((blob) => {
+                    //console.log("blob", blob)
                     saveAs(blob);
                 }, this.image.type);
             },
@@ -334,6 +340,48 @@
                     image
                 }
             },
+            uploadImage() {
+                const { canvas } = this.$refs.cropper.getResult()
+                //console.log(canvas)
+                if (canvas) {
+                    const form = new FormData();
+                    canvas.toBlob(blob => {
+
+
+                        //let imgf = document.getElementById("img")
+                        //console.log("imgf", imgf, blob)
+
+                        //console.log("blob", blob)
+                        //form.append('imgfile', blob);
+                        //form.append('img', imgf.files[0]);
+                        form.append('img', blob);
+
+                        for (let key of form.entries()) {
+                            console.log(key)
+                        }
+
+                        // You can use axios, superagent and other libraries instead here
+                        //fetch('http://example.com/upload/', {
+                        //    method: 'POST',
+                        //    body: form,
+                        //});
+                        this.$http.post("/api/users/photo", form, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        })
+                        // Perhaps you should add the setting appropriate file format here
+                    }, this.image.type);
+                }
+            },
+            applyImage() {
+                try {
+                    this.uploadImage()
+                    this.photoMenu = false
+                } catch(e) {
+                    console.log("uploadImage 에러", e)
+                }
+            }
         },
         destroyed() {
             // Revoke the object URL, to allow the garbage collector to destroy the uploaded before file
