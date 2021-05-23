@@ -200,7 +200,7 @@
 <script>
     import GlobalMenu from "@/components/GlobalMenu.vue"
     import SectionTitle from "@/components/SectionTitle.vue"
-    import { removeToken } from "@/apis/token.js"
+    import { removeCookies } from "@/apis/token.js"
     export default {
         components: {
             GlobalMenu,
@@ -218,7 +218,7 @@
         },
         methods: {
             logout() {
-                removeToken()
+                removeCookies()
                 this.$router.push("/")
             },
             syncShow(e) {

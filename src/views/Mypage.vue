@@ -144,7 +144,6 @@
                                     />
                                 </div>
                             </v-sheet>
-                            <input type="file" name="img" id="img" />
                             <v-card-actions
                                     class="px-5 pb-5"
                             >
@@ -209,6 +208,7 @@
     </v-card>
 </template>
 <script>
+    import VueCookies from 'vue-cookies'
     import { Cropper, Preview } from 'vue-advanced-cropper';
     import 'vue-advanced-cropper/dist/style.css';
     import { saveAs } from 'file-saver';
@@ -302,6 +302,7 @@
             loadImage(event) {
                 // Reference to the DOM input element
                 const { files } = event.target;
+
                 // Ensure that you have a file before attempting to read it
                 if (files && files[0]) {
                     // 1. Revoke the object URL, to allow the garbage collector to destroy the uploaded before file
@@ -328,6 +329,7 @@
                             src: blob,
                             // Determine the image type to preserve it during the extracting the image from canvas:
                             type: getMimeType(e.target.result, files[0].type),
+                            originalname: files[0].name
                         };
                     };
                     // Start the reader job - read file as a data url (base64 format)
@@ -346,30 +348,33 @@
                 if (canvas) {
                     const form = new FormData();
                     canvas.toBlob(blob => {
-
-
                         //let imgf = document.getElementById("img")
-                        //console.log("imgf", imgf, blob)
+                        // form.append('img', imgf.files[0])
 
-                        //console.log("blob", blob)
-                        //form.append('imgfile', blob);
-                        //form.append('img', imgf.files[0]);
-                        form.append('img', blob);
+                        form.append('img', blob)
+                        form.append('originalname', this.image.originalname)
+                        form.append('userId', VueCookies.get("userId"))
 
-                        for (let key of form.entries()) {
-                            console.log(key)
-                        }
+                        // for (let key of form.entries()) {
+                        //     console.log(key)
+                        // }
 
                         // You can use axios, superagent and other libraries instead here
                         //fetch('http://example.com/upload/', {
                         //    method: 'POST',
                         //    body: form,
                         //});
-                        this.$http.post("/api/users/photo", form, {
+
+                        /* 아래 처럼 headers를 지정하면 "req.file"에 첨부파일의 정보가 포함되지 않음에 유의
+                        this.$http.post("/api/users/face", form, {
                             headers: {
                                 'Content-Type': 'multipart/form-data'
                             }
                         })
+                        */
+                        this.$http.post("/api/users/face", form)
+
+
                         // Perhaps you should add the setting appropriate file format here
                     }, this.image.type);
                 }

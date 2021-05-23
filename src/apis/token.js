@@ -6,7 +6,8 @@ export const login = async (userId, password) => {
         userId: userId,
         password: password
     })
-    VueCookies.set('token', ret.data.token, '120m')
+    putCookies(ret.data, "120m")
+    logCookies()
 }
 
 /*
@@ -20,13 +21,26 @@ export async function refreshToken() {
 export async function checkToken() {
     const ret = await http.get('/api/users/check-token')
     if (ret.status === 201) {
-        console.log("예전", VueCookies.get("token"))
-        console.log("갱신", ret.data.newToken)
-        VueCookies.remove('token')
-        VueCookies.set('token', ret.data.newToken, '120m')
+        removeCookies()
+        putCookies(ret.data, "120m")
+        logCookies("(갱신)")
     }
 }
 
-export const removeToken = () => {
+const putCookies = function( httpResData, interval )  {
+    VueCookies.set('token', httpResData.token, interval)
+    VueCookies.set('userId', httpResData.userId, interval)
+    VueCookies.set('name', httpResData.name, interval)
+}
+
+export const removeCookies = () => {
     VueCookies.remove('token')
+    VueCookies.remove('userId')
+    VueCookies.remove('name')
+}
+
+export const logCookies = (v="") => {
+    console.log("token" + v + ":", VueCookies.get("token"))
+    console.log("userId" + v + ":", VueCookies.get("userId"))
+    console.log("name" + v + ":", VueCookies.get("name"))
 }
