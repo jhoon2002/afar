@@ -14,6 +14,10 @@
             {{user.name}}
         </v-card-title>
 
+        <v-img
+                src="https://localhost:3000/files/faces/607e68e6bd257006b866e7ba.jpg"
+        ></v-img>
+
         <v-sheet
                 class="d-flex mt-8"
         >
@@ -242,7 +246,7 @@
         },
         data: function () {
             return {
-                user_id: "607e68e6bd257006b866e7ba",
+                temp_user_id: "607e68e6bd257006b866e7ba",
                 user: {},
                 items: [
                     {
@@ -281,6 +285,11 @@
                     image: null
                 }
             }
+        },
+        computed: {
+            //user_id() {
+            //    return VueCookies.get("_id")
+            //}
         },
         methods: {
             crop() {
@@ -351,29 +360,15 @@
                         //let imgf = document.getElementById("img")
                         // form.append('img', imgf.files[0])
 
-                        form.append('img', blob)
-                        form.append('originalname', this.image.originalname)
-                        form.append('userId', VueCookies.get("userId"))
+                        //console.log("file", blob)
+
+                        form.append('file', blob, VueCookies.get("_id") + "." + this.$util.getFileExt(this.image.originalname) )
 
                         // for (let key of form.entries()) {
                         //     console.log(key)
                         // }
 
-                        // You can use axios, superagent and other libraries instead here
-                        //fetch('http://example.com/upload/', {
-                        //    method: 'POST',
-                        //    body: form,
-                        //});
-
-                        /* 아래 처럼 headers를 지정하면 "req.file"에 첨부파일의 정보가 포함되지 않음에 유의
-                        this.$http.post("/api/users/face", form, {
-                            headers: {
-                                'Content-Type': 'multipart/form-data'
-                            }
-                        })
-                        */
                         this.$http.post("/api/users/face", form)
-
 
                         // Perhaps you should add the setting appropriate file format here
                     }, this.image.type);
@@ -396,7 +391,7 @@
         },
         async mounted() {
             try {
-                const ret = await this.$http.get("/api/users/" + this.user_id)
+                const ret = await this.$http.get("/api/users/" + this.temp_user_id)
                 this.user = ret.data.user
             } catch {
                 //

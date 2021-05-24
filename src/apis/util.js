@@ -116,5 +116,11 @@ export const util = {
         }
         s = (f % 2 === 1) ? "남" : "여"
         return y + juminNo.substr(0,2) + "-" + juminNo.substr(2,2) + "-" + juminNo.substr(4,2) + (sex ? ", " + s : "")
+    },
+
+    //확장자 구하기
+    getFileExt: function(filename) {
+        return filename.substring(filename.lastIndexOf('.') + 1, filename.length)
     }
+
 }
