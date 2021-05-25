@@ -25,6 +25,7 @@
     "filepond-plugin-image-preview": "^4.6.5",
     "he-tree-vue": "^2.0.10",
     "html-to-pdfmake": "^2.1.5",
+    "jsonwebtoken": "^8.5.1",
     "pdfmake": "^0.1.70",
     "vee-validate": "^3.4.5",
     "vue": "^2.6.11",

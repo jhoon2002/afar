@@ -121,6 +121,12 @@ export const util = {
     //확장자 구하기
     getFileExt: function(filename) {
         return filename.substring(filename.lastIndexOf('.') + 1, filename.length)
-    }
+    },
 
+    //토큰 파싱
+    parseJwt: function(token) {
+        const base64Payload = token.split('.')[1]
+        const payload = Buffer.from(base64Payload, 'base64')
+        return JSON.parse(payload)
+    }
 }

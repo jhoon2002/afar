@@ -6,7 +6,8 @@ import Mock from "@/views/Mock.vue"
 // import Layout from "@/views/Layout.vue"
 import SubLayout from "@/views/SubLayout.vue"
 import VueCookies from 'vue-cookies'
-import { checkToken } from "@/apis/token.js"
+import { checkToken, removeCookies, syncCookies } from "@/apis/access.js"
+import store from "@/store"
 
 Vue.use(VueRouter)
 
@@ -842,23 +843,27 @@ router.beforeEach(async (to, from, next) => {
     return next(false)
   }
 
-  // 토큰이 없으면 첫화면으로
-  if (!VueCookies.get("token")) {
+  if (VueCookies.get("token") && !store.state.user._id) {
+    await syncCookies()
+  }
+
+  if (!store.state.user._id) {
     if (to.path === "/") {
       return next()
     }
     return next("/")
   }
 
-  //1.토큰 검사
-  try {
-    await checkToken()
+  //토큰 검사
+  await checkToken()
+  if (store.state.user._id) {
     if (to.path === "/") {
       return next("/main")
     }
     showAndOn(to, routes, 0)
     return next()
-  } catch(e) {
+  } else {
+    removeCookies()
     if (to.path === "/") {
       return next()
     }

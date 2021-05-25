@@ -40,11 +40,14 @@
                     class="transparent px-6 py-4 d-flex"
             >
                 <v-avatar
-                        color="grey"
+                        color="grey lighten-1"
                         size="56"
                         class="mt-1"
                 >
-                    <v-icon large>ri-user-line</v-icon>
+                    <!--<v-icon large>ri-user-line</v-icon>-->
+                    <img
+                            :src="`${ $env.url + $store.state.user.faceURL }`"
+                    />
                 </v-avatar>
 
                 <v-sheet
@@ -200,7 +203,7 @@
 <script>
     import GlobalMenu from "@/components/GlobalMenu.vue"
     import SectionTitle from "@/components/SectionTitle.vue"
-    import { removeCookies } from "@/apis/token.js"
+    import { logout } from "@/apis/access.js"
     export default {
         components: {
             GlobalMenu,
@@ -218,7 +221,7 @@
         },
         methods: {
             logout() {
-                removeCookies()
+                logout()
                 this.$router.push("/")
             },
             syncShow(e) {

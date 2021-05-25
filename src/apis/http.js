@@ -21,9 +21,9 @@ instance.interceptors.request.use( (config) => {
     return Promise.reject(error);
 
     /*
-    if (store.state.auth.token !== null) {
+    if (store.state.user.token !== null) {
         config['headers'] = {
-            Authorization: `Bearer ${store.state.auth.token}`
+            Authorization: `Bearer ${store.state.user.token}`
         }
     }
     return config;

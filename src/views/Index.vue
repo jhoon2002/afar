@@ -33,7 +33,7 @@
             </v-card>
             <v-card elevation="0" style="width: 23rem" class="pt-16">
                 <v-card-title style="min-height: 5rem; line-height: 1.2">
-                    {{message}}
+                    {{ message }}
                 </v-card-title>
                 <v-card-text>
                     <validation-observer
@@ -41,14 +41,14 @@
                             v-slot="{ invalid, validated, handleSubmit }"
                     >
                         <validation-provider name="아이디" :rules="{ required: true }" v-slot="{ errors, valid }">
-                            <v-text-field label="아이디" v-model="userId"
+                            <v-text-field label="아이디" v-model="ffuserId"
                                           :error-messages="errors" :success="valid"
                                           @keyup.enter="handleSubmit(submit)"
                             ></v-text-field>
                         </validation-provider>
 
                         <validation-provider name="암호" :rules="{ required: true }" v-slot="{ errors, valid }">
-                            <v-text-field label="암호" v-model="password"
+                            <v-text-field label="암호" v-model="ffpassword"
                                           type="password"
                                           :error-messages="errors" :success="valid"
                                           @keyup.enter="handleSubmit(submit)"
@@ -264,17 +264,19 @@
     </v-app>
 </template>
 <script>
+    // import { store } from 'vuex'
+
+
     // import VueCookies from "vue-cookies"
-    import { login } from "@/apis/token.js"
+    // import { login } from "@/apis/access.js"
     //import { isUserId } from "@/api/db.js"
 
     export default {
         name: "Main",
         data: function() {
             return {
-                userId: "",
-                password: "",
-                message: "",
+                ffuserId: "",
+                ffpassword: "",
                 show1: false,
                 fuserId: "",
                 fname: "",
@@ -288,10 +290,17 @@
                 dialog2: false,
             }
         },
+        computed: {
+            message() {
+                return this.$store.state.user.message
+            }
+        },
         methods: {
             async submit () {
                 this.$refs.observer.validate()
+                await this.$store.dispatch('user/login', { userId: this.ffuserId, password: this.ffpassword })
 
+                /* vuex 사용 으로 아래 주석
                 try {
                     await login(this.userId, this.password)
                     this.message = ""
@@ -309,6 +318,7 @@
                     }
                     setTimeout(() => ( this.message = "\"시스템 문제로 로그인 할 수 없습니다.\"" ), 100)
                 }
+                */
             },
             reset() {
                 this.fuserId = ""

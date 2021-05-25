@@ -51,7 +51,7 @@
 <script>
   import GlobalMenu from "@/components/GlobalMenu.vue"
   import SectionTitle from "@/components/SectionTitle.vue"
-  import { removeToken } from "@/apis/token.js"
+  import { removeToken } from "@/apis/access.js"
   export default {
     components: {
       GlobalMenu,

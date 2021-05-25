@@ -14,23 +14,19 @@
             {{user.name}}
         </v-card-title>
 
-        <v-img
-                src="https://localhost:3000/files/faces/607e68e6bd257006b866e7ba.jpg"
-        ></v-img>
-
         <v-sheet
                 class="d-flex mt-8"
         >
             <div>
                 <v-avatar
                         color="grey lighten-2"
-                        size="65"
+                        size="75"
                         class="mt-1"
                 >
-                    <v-icon large>ri-user-line</v-icon>
+                    <img :src="`${ $env.url + $store.state.user.faceURL }`"/>
                 </v-avatar>
                 <div
-                        class="d-block mx-auto"
+                        class="d-block text-center"
                  >
                     <v-menu
                             v-model="photoMenu"
@@ -46,7 +42,6 @@
                                     small
                                     v-bind="attr"
                                     v-on="on"
-                                    class="ml-2"
                             >
                                 <v-icon small>mdi-pencil</v-icon>
                             </v-btn>
@@ -126,7 +121,7 @@
                                         </v-icon>
                                         이미지 업로드
                                     </v-btn>
-
+                                    <!--
                                     <v-btn
                                             v-if="image.src"
                                             outlined
@@ -136,7 +131,7 @@
                                         <v-icon left>mdi-download</v-icon>
                                         결과 다운로드
                                     </v-btn>
-
+                                    -->
                                 </div>
                                 <div class="ml-4">
                                     <preview
@@ -174,9 +169,11 @@
                         </v-card>
                     </v-menu>
                     <v-btn
+                            v-if="$store.state.user.face !== 'none.svg'"
                             icon
                             small
                             style="margin-left: -0.6rem"
+                            @click="deleteImage()"
                     >
                         <v-icon small>mdi-close</v-icon>
                     </v-btn>
@@ -212,7 +209,7 @@
     </v-card>
 </template>
 <script>
-    import VueCookies from 'vue-cookies'
+    // import VueCookies from 'vue-cookies'
     import { Cropper, Preview } from 'vue-advanced-cropper';
     import 'vue-advanced-cropper/dist/style.css';
     import { saveAs } from 'file-saver';
@@ -283,13 +280,9 @@
                 result: {
                     coordinates: null,
                     image: null
-                }
+                },
+                imgkey: 0
             }
-        },
-        computed: {
-            //user_id() {
-            //    return VueCookies.get("_id")
-            //}
         },
         methods: {
             crop() {
@@ -353,33 +346,62 @@
             },
             uploadImage() {
                 const { canvas } = this.$refs.cropper.getResult()
-                //console.log(canvas)
                 if (canvas) {
                     const form = new FormData();
-                    canvas.toBlob(blob => {
-                        //let imgf = document.getElementById("img")
-                        // form.append('img', imgf.files[0])
-
-                        //console.log("file", blob)
-
-                        form.append('file', blob, VueCookies.get("_id") + "." + this.$util.getFileExt(this.image.originalname) )
-
-                        // for (let key of form.entries()) {
-                        //     console.log(key)
-                        // }
-
-                        this.$http.post("/api/users/face", form)
-
-                        // Perhaps you should add the setting appropriate file format here
+                    canvas.toBlob( async (blob) => {
+                        form.append('file', blob, this.$user_id() + "." + this.$util.getFileExt(this.image.originalname) )
+                        form.append('user_id', this.$user_id())
+                        try {
+                            const ret = await this.$http.post("/api/users/face", form)
+                            const url = this.$env.facedir + ret.data.file.originalname + "?t=" + new Date().getTime()
+                            this.$store.commit("user/setFace", ret.data.file.originalname)
+                            this.$store.commit("user/setFaceURL", url)
+                        } catch(e) {
+                            console.log(e)
+                        }
                     }, this.image.type);
                 }
             },
-            applyImage() {
+            async applyImage() {
                 try {
                     this.uploadImage()
                     this.photoMenu = false
                 } catch(e) {
                     console.log("uploadImage 에러", e)
+                }
+            },
+            /*
+            updateImage() {
+                const image = document.getElementById("theText")
+                if(image.complete) {
+                    let new_image = new Image();
+                    //set up the new image
+                    new_image.id = "theText"
+                    new_image.src = this.$env.url + "/files/faces/607e68e6bd257006b866e7ba.jpg?t=" + new Date().getTime()
+                    // insert new image and remove old
+                    image.parentNode.insertBefore(new_image,image)
+                    image.parentNode.removeChild(image)
+                }
+            },
+            imageRefresh(img, timeout) {
+                setTimeout(function() {
+                        let d = new Date()
+                        let http = img.src
+                        if (http.indexOf("?d=") != -1) {
+                            http = http.split("?d=")[0]
+                        }
+                        img.src = http + '?d=' + d.getTime()
+                }, timeout)
+            }
+            */
+            async deleteImage() {
+                try {
+                    console.log("삭제 경로", "/api/users/face/" + this.$user_id() + "/" + this.$store.state.user.face)
+                    // return
+                    await this.$http.delete("/api/users/face/" + this.$user_id() + "/" + this.$store.state.user.face)
+                    this.$store.commit("user/resetFace")
+                } catch(e) {
+                    console.log(e)
                 }
             }
         },

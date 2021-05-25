@@ -521,7 +521,9 @@
                                             size="65"
                                             class="mt-1"
                                     >
-                                        <v-icon large>ri-user-line</v-icon>
+                                        <img
+                                                :src="`${ $env.url + $store.state.user.faceURL }`"
+                                        />
                                     </v-avatar>
                                 </v-col>
                                 <v-col cols="9">

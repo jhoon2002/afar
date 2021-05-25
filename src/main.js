@@ -9,19 +9,24 @@ import vueMoment from "vue-moment"
 import VueCookies from "vue-cookies"
 
 //util
-// import axios from "axios"
 import http from "@/apis/http.js"
 import { util } from "@/apis/util.js"
-import data from "@/data.js"
+import dummy from "@/dummy.js"
+import env from "@/env.js"
+
+//
+import "@/apis/common.js"
 
 //css
 import "@/assets/basic.css"
 
 Vue.use(vueMoment)
 Vue.use(VueCookies)
-Vue.prototype.$_DATA = data
+Vue.prototype.$dummy = dummy
+Vue.prototype.$env = env
 Vue.prototype.$http = http
 Vue.prototype.$util = util
+
 Vue.config.productionTip = false
 
 new Vue({
