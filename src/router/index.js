@@ -839,6 +839,11 @@ function showAndOn(to, routes, i) {
 
 router.beforeEach(async (to, from, next) => {
 
+  console.log("======== 라우터 ==========")
+  console.log("VueCookies.get('token')", VueCookies.get("token"))
+  console.log("store.state.user._id", store.state.user._id)
+  console.log("=========================")
+
   if (to.meta.isDirectory) {
     return next(false)
   }

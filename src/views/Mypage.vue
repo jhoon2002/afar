@@ -195,14 +195,146 @@
                 <div class="text-body-2 mt-2">
                     휴대폰
                 </div>
-                <div class="text-body-1">
+                <div class="text-body-1 d-flex">
+
                     {{ user.cellphone.substr(0, 3) }}-{{ user.cellphone.substr(3, 4) }}-{{ user.cellphone.substr(7, 4) }}
+
+                    <v-edit-dialog
+                            :return-value.sync="kkk"
+                            large
+                            save-text="저장"
+                            cancel-text="취소"
+                            @save="save('cellphone')"
+                            @cancel="cancel"
+                            @open="open('cellphone')"
+                            @close="close"
+                            class="ml-2"
+                    >
+                        <v-btn
+                                icon
+                                small
+                                color="secondary lighten-5"
+                                class="pb-1"
+                        >
+                            <v-icon small>mdi-pencil</v-icon>
+                        </v-btn>
+                        <template v-slot:input>
+                            <validation-observer ref="observer" v-slot="{}">
+                                <validation-provider
+                                        name="휴대폰"
+                                        :rules="{ required: true, cellphone: true }"
+                                        v-slot="{ errors, valid }">
+                                    <v-text-field
+                                            v-model="fcellphone"
+                                            label="휴대폰"
+                                            class="mt-4"
+                                            :error-messages="errors"
+                                            :success="valid"
+                                    ></v-text-field>
+                                </validation-provider>
+                            </validation-observer>
+                        </template>
+                    </v-edit-dialog>
+
                 </div>
                 <div class="text-body-2 mt-2">
                     이메일
                 </div>
-                <div class="text-body-1">
+                <div class="text-body-1 d-flex">
                     {{ user.email }}
+                    <v-edit-dialog
+                            :return-value.sync="kkk"
+                            large
+                            save-text="저장"
+                            cancel-text="취소"
+                            @save="save('email')"
+                            @cancel="cancel"
+                            @open="open('email')"
+                            @close="close"
+                            class="ml-2"
+                    >
+                        <v-btn
+                                icon
+                                small
+                                color="secondary lighten-5"
+                                class="pb-1"
+                        >
+                            <v-icon small>mdi-pencil</v-icon>
+                        </v-btn>
+                        <template v-slot:input>
+                            <validation-observer ref="observer" v-slot="{}">
+                                <validation-provider
+                                        name="이메일"
+                                        :rules="{ required: true, email: true }"
+                                        v-slot="{ errors, valid }">
+                                    <v-text-field
+                                            v-model="femail"
+                                            label="이메일"
+                                            class="mt-4"
+                                            :error-messages="errors"
+                                            :success="valid"
+                                    ></v-text-field>
+                                </validation-provider>
+                            </validation-observer>
+                        </template>
+                    </v-edit-dialog>
+
+                </div>
+                <div class="text-body-2 mt-2">
+                    비밀번호
+                </div>
+                <div class="text-body-1 d-flex">
+                    ******
+                    <v-edit-dialog
+                            :return-value.sync="kkk"
+                            large
+                            save-text="저장"
+                            cancel-text="취소"
+                            @save="save('email')"
+                            @cancel="cancel"
+                            @open="open('email')"
+                            @close="close"
+                            class="ml-2"
+                    >
+                        <v-btn
+                                icon
+                                small
+                                color="secondary lighten-5"
+                                class="pb-1"
+                        >
+                            <v-icon small>mdi-pencil</v-icon>
+                        </v-btn>
+                        <template v-slot:input>
+                            <validation-observer ref="observer" v-slot="{}">
+                                <v-sheet
+                                        class="px-3 py-7"
+                                >
+                                    <validation-provider name="기존 비밀번호" :rules="{ required: true, password: true }" v-slot="{ errors, valid }">
+                                        <v-text-field label="기존 비밀번호" v-model="foldPassword" :type="show1 ? 'text' : 'password'"
+                                                      :error-messages="errors" :success="valid"
+                                                      :append-icon="show1 ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+                                                      @click:append="show1 = !show1"
+                                        />
+                                    </validation-provider>
+                                    <validation-provider name="신규 비밀번호" :rules="{ required: true, password: true }" vid="confirmation" v-slot="{ errors, valid }">
+                                        <v-text-field label="신규 비밀번호" v-model="fpassword" :type="show1 ? 'text' : 'password'"
+                                                      :error-messages="errors" :success="valid"
+                                                      :append-icon="show1 ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+                                                      @click:append="show1 = !show1"
+                                        />
+                                    </validation-provider>
+                                    <validation-provider name="신규 비밀번호 확인" :rules="{ required: true, confirmed:'confirmation' }" v-slot="{ errors, valid }">
+                                        <v-text-field label="신규 비밀번호 확인" v-model="fconfirmPassword" :type="show1 ? 'text' : 'password'"
+                                                      :error-messages="errors" :success="valid" :success-messages="valid ? '일치합니다.' : ''"
+                                                      :append-icon="show1 ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+                                                      @click:append="show1 = !show1"
+                                        />
+                                    </validation-provider>
+                                </v-sheet>
+                            </validation-observer>
+                        </template>
+                    </v-edit-dialog>
+
                 </div>
             </div>
         </v-sheet>
@@ -281,7 +413,14 @@
                     coordinates: null,
                     image: null
                 },
-                imgkey: 0
+                imgkey: 0,
+                fcellphone: "",
+                femail: "",
+                foldPassword: "",
+                fpassword: "",
+                fconfirmPassword: "",
+                kkk: "",
+                show1: false
             }
         },
         methods: {
@@ -403,6 +542,43 @@
                 } catch(e) {
                     console.log(e)
                 }
+            },
+            async save(field) {
+                if ( !this.rule[field]( this['f' + field] ) ) {
+                    this.snack = true
+                    this.snackColor = "error"
+                    this.snackText = "입력값이 지정 형식에 맞지 않아 저장하지 않았습니다."
+                    return
+                }
+
+                try {
+                    let param = {}
+                    param[field] = this['f' + field]
+                    const ret = await this.$http.put("/api/users/" + this.$user_id(), param)
+                    this.user = ret.data.user
+                    this.snack = true
+                    this.snackColor = "success"
+                    this.snackText = "저장했습니다."
+                } catch {
+                    this.snack = true
+                    this.snackColor = "error"
+                    this.snackText = "저장에 실패했습니다."
+                }
+                return
+            },
+            cancel() {
+                this.snack = true
+                this.snackColor = "warning"
+                this.snackText = "취소했습니다."
+            },
+            open(field) {
+                this['f' + field] = this.user[field]
+                this.snack = true
+                this.snackColor = "info"
+                this.snackText = "수정 모드입니다."
+            },
+            close() {
+                // console.log('Dialog closed')
             }
         },
         destroyed() {

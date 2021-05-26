@@ -47,8 +47,8 @@
                             ></v-text-field>
                         </validation-provider>
 
-                        <validation-provider name="암호" :rules="{ required: true }" v-slot="{ errors, valid }">
-                            <v-text-field label="암호" v-model="ffpassword"
+                        <validation-provider name="비밀번호" :rules="{ required: true }" v-slot="{ errors, valid }">
+                            <v-text-field label="비밀번호" v-model="ffpassword"
                                           type="password"
                                           :error-messages="errors" :success="valid"
                                           @keyup.enter="handleSubmit(submit)"
@@ -265,11 +265,10 @@
 </template>
 <script>
     // import { store } from 'vuex'
-
-
     // import VueCookies from "vue-cookies"
     // import { login } from "@/apis/access.js"
     //import { isUserId } from "@/api/db.js"
+    import { logCookies } from "@/apis/access.js"
 
     export default {
         name: "Main",
@@ -309,7 +308,7 @@
                 } catch(e) {
                     this.message = ""
                     if (e.response.status === 403) {
-                        setTimeout(() => ( this.message = "\"아이디 또는 암호가 일치하지 않습니다.\"" ), 100)
+                        setTimeout(() => ( this.message = "\"아이디 또는 비밀번호가 일치하지 않습니다.\"" ), 100)
                         return
                     }
                     if (e.response.status === 401) {
@@ -353,6 +352,9 @@
             // this.$acl.onChange = newPermission => {
             //     console.log('Has changed to', newPermission)
             // }
+            console.log("<Index.vue>")
+            logCookies()
+            console.log("</Index.vue>")
         }
     }
 </script>
