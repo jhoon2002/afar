@@ -1,7 +1,7 @@
 import VueCookies from 'vue-cookies'
 import http from "@/apis/http"
 import store from "@/store"
-import jwt from "jsonwebtoken"
+// import jwt from "jsonwebtoken"
 import env from "@/env.js"
 
 const expiredInterval = "2m"
@@ -121,20 +121,17 @@ export const logout = () => {
     removeCookies()
 }
 
-const verifyToken = token => new Promise((resolve, reject) => {
+/*const verifyToken = token => new Promise((resolve, reject) => {
     jwt.verify(token, "U-Koz56^--Yui", function (err, decoded) {
         if (err) reject(err)
         resolve(decoded)
     })
-})
+})*/
 
-/*const getUser_idFromToken = async (token) => {
-
-    await http.get('/api/user/_id')
-
-    return
-}*/
-
+const getUser_idByToken = async () => {
+    const ret = await http.get('/api/users/_id/by-token')
+    return ret.data.user._id
+}
 
 //쿠기, 스토어 동기화
 export const syncCookies = async function() {
@@ -142,12 +139,12 @@ export const syncCookies = async function() {
     try {
         console.log(1)
         //쿠키에서 user._id를 검출하고 해당 사용자 정보를 얻어옴 
-        const user = await verifyToken(VueCookies.get('token'))
-        //await getUser_idFromToken(token)
+        // const user = await verifyToken(VueCookies.get('token'))
+        const user_id = await getUser_idByToken()
 
         console.log(2)
-        console.log("user", user)
-        const ret = await http.get('/api/users/' + user._id)
+        console.log("user_id", user_id)
+        const ret = await http.get('/api/users/' + user_id)
 
         console.log("syncCookies 실행 중, ret", ret)
 
