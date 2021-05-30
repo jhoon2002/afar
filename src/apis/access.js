@@ -4,52 +4,68 @@ import store from "@/store"
 // import jwt from "jsonwebtoken"
 import env from "@/env.js"
 
-const expiredInterval = "2m"
+// const intervalNumber = "4"
+// const intervalUnit = "s"
+// const interval = intervalNumber + intervalUnit
+
+/*
+ * <토큰 처리 방식>
+ * Request: 토큰은 항상 헤더의 'token'에 실어 보냄
+ * Response: 토큰이 생성되는 경우(신규, 갱신)에 한하여 헤더의 'newToken'으로 받음
+ * 저장: Response Interceptor 가 response.headers.newtoken 값이 있는 경우 (1)쿠키와 (2)스토어에 그 값을 저장
+ * 검사: (1)Vue 라우터를 통해 경로가 바뀌는 경우: Express 서버에 검사를 요청, 이때 토큰은 헤더의 'token'으로 보냄은 동일
+ *      (2)DB에 접근하는 경우: Express 서버에 서비스를 요청하게 되면 서버의 미들웨어(verifyToken)가 요청을 수행하기 전 검사를 수행,
+ *         이때 토큰은 헤더의 'token'으로 보냄은 동일
+ * 
+ * <토큰 갱신>
+ * 1. 토큰은 만료 전 일정 시간(갱신 시간) 내에 검사(1), (2)의 요청이 있는 경우, Express 서버는 새로운
+ *    토큰을 만들어 Response 함(201), 이때 토큰은 res.headers.newToken 에 담아 보냄
+ * 2. 갱신 시간 전에 검사(1), (2)의 요청이 있는 경우는 200 응답을 보내고 토큰은 보내지 않음, res.headers.newToken 값은 공백 ''
+ * 3. 갱신 시간 이후에 검사(1), (2)의 요청이 있는 경우는 front 에서 이미 토큰을 expire 하기 때문에 토큰을 전송하지 못함,
+ *    Express 는 400 응답. 간혹 416으로 응답 하는 경우가 있는 데, 이에 대해서는 해당 Express 코드 주석을 참고할 것
+ *
+ * <토큰 삭제>
+ * front 에서 (1)기간이 만료되거나(front에서 자동 삭제) (2)검사 결과 예외가 발생한 경우(400, 401, 416) 
+ * response 헤더에 'badToken' = 'true' 를 저장하여 Interceptor 에서 이를 감지하면 토큰 삭제
+ *
+ * 토큰의 저장과 삭제 시에는
+ *
+ */
+
 
 export const login = async (userId, password) => {
-    const ret = await http.post('/api/users/login', {
+    const {data} = await http.post('/api/users/login', {
         userId: userId,
         password: password
     })
-    putCookies(ret.data, expiredInterval)
-}
-
-/*
-export async function refreshToken() {
-    const ret = await http.post('/api/users/refresh-token')
-    VueCookies.set('token', ret.data.token, '60s')
-    return ret
-}
-*/
-
-export async function checkToken() {
-    console.log("-------checkToken 시작---------")
-    try {
-        const ret = await http.get('/api/users/check-token')
-        if (ret.status === 201) {
-            console.log("checkToken 결과 201 => 갱신")
-            removeCookies()
-            await updateCookies(ret.data, expiredInterval)
-        }
-        console.log("checkToken 결과 200, 또는 304 => 이상 없음(갱신 아님)")
-    } catch(e) {
-        console.log("checkToken 결과 예외 발생(기간 만료)", e)
-        removeCookies()
-    } finally {
-        console.log("--------checkToken 종료--------")
+    store.commit('user/set_id', data._id)
+    store.commit('user/setUserId', data.userId)
+    store.commit('user/setName', data.name)
+    if (data.face) {
+        store.commit("user/setFace", data.face)
+        store.commit("user/setFaceURL", env.facedir + data.face + "?t=" + new Date().getTime())
     }
 }
 
-const putCookies = function( httpResData, interval )  {
+export async function checkToken() {
+    try {
+        await http.get('/api/users/check-token')
+    } catch(e) {
+        console.group()
+        console.log("checkToken 결과: 예외,",
+            "status: " + e.response.status,
+            "data:", e.response.data, new Date(), e)
+        console.groupEnd()
+        // removeCookies() //헤더에서 삭제 수행
+    }
+}
+
+/*const putCookies = function( httpResData )  {
     //쿠키 저장
-    VueCookies.set('token', httpResData.token, interval)
-    // VueCookies.set('_id', httpResData._id, interval)
-    // VueCookies.set('userId', httpResData.userId, interval)
-    // VueCookies.set('name', httpResData.name, interval)
-    // VueCookies.set('face', httpResData.face, interval)
+    // VueCookies.set('token', httpResData.token, interval)
 
     //스토어 저장
-    store.commit('user/setToken', httpResData.token)
+    // store.commit('user/setToken', httpResData.token)
     store.commit('user/set_id', httpResData._id)
     store.commit('user/setUserId', httpResData.userId)
     store.commit('user/setName', httpResData.name)
@@ -57,12 +73,9 @@ const putCookies = function( httpResData, interval )  {
         store.commit("user/setFace", httpResData.face)
         store.commit("user/setFaceURL", env.facedir + httpResData.face + "?t=" + new Date().getTime())
     }
+}*/
 
-    console.log("putCookies 수행")
-    logCookies()
-}
-
-const updateCookies = async function( httpResData, interval )  {
+/*const updateCookies = async function( httpResData, interval )  {
     console.log("<<<<<<<< updateCookies 시작 >>>>>>>>>> ")
     //쿠키 저장
     VueCookies.set('token', httpResData.token, interval)
@@ -78,43 +91,32 @@ const updateCookies = async function( httpResData, interval )  {
     // store.commit('user/setName', httpResData.name)
     // store.commit("user/setFace", httpResData.face)
 
-    await syncCookies()
+    // await syncCookies()
 
     logCookies("(갱신)")
     console.log("<<<<<<<< updateCookies 종료 >>>>>>>>>> ")
-}
+}*/
 
 export const removeCookies = () => {
-    console.log("removeCookies 시작")
     //쿠기 삭제
     VueCookies.remove('token')
-    // VueCookies.remove('_id')
-    // VueCookies.remove('userId')
-    // VueCookies.remove('name')
-    // VueCookies.remove('face')
 
     //스토어 삭제
     store.commit('user/setToken', null)
     store.commit('user/set_id', null)
     store.commit('user/setUserId', null)
     store.commit('user/setName', null)
-    store.commit('user/setFace', null)
-    store.commit('user/setFaceURL', null)
-    console.log("removeCookies 종료")
+
+    //face 가 나오는 페이지에서 삭제 순간 오류 로그가 발생하는 현상(이미지를 순간적으로 http://localhost:3000/null 로 요청) 방지를 위해 삭제하지 않음
+    // store.commit('user/setFace', null)
+    // store.commit('user/setFaceURL', null)  //위와 동일
 }
 
 export const logCookies = (v="") => {
     console.log("token" + v + ":", VueCookies.get("token"))
-    // console.log("_id" + v + ":", VueCookies.get("_id"))
-    // console.log("userId" + v + ":", VueCookies.get("userId"))
-    // console.log("name" + v + ":", VueCookies.get("name"))
-    // console.log("face" + v + ":", VueCookies.get("face"))
-
     console.log("_id", store.state.user._id)
     console.log("userId", store.state.user.userId)
     console.log("name", store.state.user.name)
-    //console.log("face", store.state.user.face)
-    //console.log("faceURL", store.state.user.faceURL)
 }
 
 export const logout = () => {
@@ -128,41 +130,30 @@ export const logout = () => {
     })
 })*/
 
-const getUser_idByToken = async () => {
-    const ret = await http.get('/api/users/_id/by-token')
-    return ret.data.user._id
-}
+/*const getUser_idByToken = async () => {
+    const ret = await http.get('/api/users/_id/token')
+    return ret.data._id
+}*/
 
 //쿠기, 스토어 동기화
 export const syncCookies = async function() {
-    console.log("---syncCookies----")
     try {
-        console.log(1)
-        //쿠키에서 user._id를 검출하고 해당 사용자 정보를 얻어옴 
-        // const user = await verifyToken(VueCookies.get('token'))
-        const user_id = await getUser_idByToken()
+        //쿠키에서 user._id를 검출하고 해당 사용자 정보를 얻어옴
+        const { data: { _id }  } = await http.get('/api/users/_id/token')
+        const { data: { user } } = await http.get('/api/users/' + _id)
 
-        console.log(2)
-        console.log("user_id", user_id)
-        const ret = await http.get('/api/users/' + user_id)
-
-        console.log("syncCookies 실행 중, ret", ret)
-
-        store.commit('user/setToken', VueCookies.get('token'))
-        store.commit('user/set_id', ret.data.user._id)
-        store.commit('user/setUserId', ret.data.user.userId)
-        store.commit('user/setName', ret.data.user.name)
-        console.log(3)
-        if (ret.data.user.face) {
-            store.commit("user/setFace", ret.data.user.face)
-            store.commit("user/setFaceURL", env.facedir + ret.data.user.face + "?t=" + new Date().getTime())
+        // store.commit('user/setToken', VueCookies.get("token"))
+        store.commit('user/set_id', user._id)
+        store.commit('user/setUserId', user.userId)
+        store.commit('user/setName', user.name)
+        if (user.face) {
+            store.commit("user/setFace", user.face)
+            store.commit("user/setFaceURL", env.facedir + user.face + "?t=" + new Date().getTime())
         }
     } catch(e) {
-        //쿠키 기간이 만료되었거나 그 밖에 쿠키 검사 과정에서 예외 발생시 쿠키 제거
         console.log(e)
-        removeCookies()
+        // removeCookies() 삭제는 interceptor 에서 수행
     } finally {
         //
     }
-    console.log("---//syncCookies----")
 }

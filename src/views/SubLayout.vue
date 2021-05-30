@@ -10,7 +10,7 @@
             <v-card
                     flat
                     class="transparent py-6"
-                    @click="$router.push('/Main')"
+                    @click="$router.push('/Main').catch(()=>{})"
             >
                 <!--
                 <v-icon size="35" class="d-block red&#45;&#45;text j-rotation aaa">
@@ -49,6 +49,7 @@
                             :src="`${ $env.url + $store.state.user.faceURL }`"
                     />
                 </v-avatar>
+
 
                 <v-sheet
                         class="transparent ml-5"
@@ -166,16 +167,23 @@
             </div>
             <v-spacer></v-spacer>
             <!--<v-sheet class="transparent">현재 권한:</v-sheet>-->
-
+            <v-btn
+                    elevation="0"
+                    color="warning"
+                    small
+                    @click="$router.push('/admin/user/photo').catch(()=>{})"
+            >
+                Photo
+            </v-btn>
             <v-btn
                     elevation="0"
                     color="primary"
                     small
-                    @click="$router.push('/mypage')"
+                    class="ml-2"
+                    @click="$router.push('/mypage').catch(()=>{})"
             >
                 My page
             </v-btn>
-
             <v-btn small
                    color="blue"
                    elevation="0"
@@ -230,6 +238,9 @@
             selectBg(color) {
                 this.bg.backgroundColor = color
                 this.color = color
+            },
+            log(e) {
+                console.log(e)
             }
         },
         /*

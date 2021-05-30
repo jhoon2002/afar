@@ -491,9 +491,9 @@
                         form.append('file', blob, this.$user_id() + "." + this.$util.getFileExt(this.image.originalname) )
                         form.append('user_id', this.$user_id())
                         try {
-                            const ret = await this.$http.post("/api/users/face", form)
-                            const url = this.$env.facedir + ret.data.file.originalname + "?t=" + new Date().getTime()
-                            this.$store.commit("user/setFace", ret.data.file.originalname)
+                            const { data: { file: { originalname } } } = await this.$http.post("/api/users/face", form)
+                            const url = this.$env.facedir + originalname + "?t=" + new Date().getTime()
+                            this.$store.commit("user/setFace", originalname)
                             this.$store.commit("user/setFaceURL", url)
                         } catch(e) {
                             console.log(e)
@@ -554,8 +554,8 @@
                 try {
                     let param = {}
                     param[field] = this['f' + field]
-                    const ret = await this.$http.put("/api/users/" + this.$user_id(), param)
-                    this.user = ret.data.user
+                    const { data: { user } } = await this.$http.put("/api/users/" + this.$user_id(), param)
+                    this.user = user
                     this.snack = true
                     this.snackColor = "success"
                     this.snackText = "저장했습니다."
@@ -589,8 +589,8 @@
         },
         async mounted() {
             try {
-                const ret = await this.$http.get("/api/users/" + this.temp_user_id)
-                this.user = ret.data.user
+                const { data: { user } } = await this.$http.get("/api/users/" + this.temp_user_id)
+                this.user = user
             } catch {
                 //
             }

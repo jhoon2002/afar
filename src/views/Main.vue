@@ -4,14 +4,14 @@
     </v-card>
 </template>
 <script>
-    import { logCookies } from "@/apis/access.js"
+    // import { logCookies } from "@/apis/access.js"
 
     export default {
         name: "Main",
         mounted() {
-            console.log("<Main.vue>")
-            logCookies()
-            console.log("</Main.vue>")
+            // console.log("<Main.vue>")
+            // logCookies()
+            // console.log("</Main.vue>")
         }
     }
 

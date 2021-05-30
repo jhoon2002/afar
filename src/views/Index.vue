@@ -266,16 +266,17 @@
 <script>
     // import { store } from 'vuex'
     // import VueCookies from "vue-cookies"
-    // import { login } from "@/apis/access.js"
+    import { login } from "@/apis/access.js"
     //import { isUserId } from "@/api/db.js"
-    import { logCookies } from "@/apis/access.js"
+    // import { logCookies } from "@/apis/access.js"
 
     export default {
         name: "Main",
         data: function() {
             return {
-                ffuserId: "",
-                ffpassword: "",
+                message: "",
+                ffuserId: "jhoon",
+                ffpassword: "1111",
                 show1: false,
                 fuserId: "",
                 fname: "",
@@ -290,34 +291,30 @@
             }
         },
         computed: {
-            message() {
-                return this.$store.state.user.message
-            }
         },
         methods: {
             async submit () {
                 this.$refs.observer.validate()
-                await this.$store.dispatch('user/login', { userId: this.ffuserId, password: this.ffpassword })
+                // await this.$store.dispatch('user/login', { userId: this.ffuserId, password: this.ffpassword })
 
-                /* vuex 사용 으로 아래 주석
                 try {
-                    await login(this.userId, this.password)
+                    await login(this.ffuserId, this.ffpassword)
                     this.message = ""
                     // setTimeout(() => ( this.$router.push({ path: "/main" }) ), 300)
-                    this.$router.push({ path: "/Main" })
+                    this.$router.push({ path: "/Main" }).catch(()=>{})
                 } catch(e) {
                     this.message = ""
-                    if (e.response.status === 403) {
+                    const { status } = e.response
+                    if (status === 403) {
                         setTimeout(() => ( this.message = "\"아이디 또는 비밀번호가 일치하지 않습니다.\"" ), 100)
                         return
                     }
-                    if (e.response.status === 401) {
+                    if (status === 401) {
                         setTimeout(() => ( this.message = "\"토큰이 정상적으로 생성되지 않았습니다.\"" ), 100)
                         return
                     }
                     setTimeout(() => ( this.message = "\"시스템 문제로 로그인 할 수 없습니다.\"" ), 100)
                 }
-                */
             },
             reset() {
                 this.fuserId = ""
@@ -330,31 +327,13 @@
                 this.$refs.observer.reset()
             }
         },
-        //watch: {
-        //    fuserId: async function(val) {
-        //        if (val.length >= 4) {
-        //            try {
-        //                const ret = await isUserId(val)
-        //                if (ret.data.isUserId) {
-        //                    this.isUserIdMessage = "사용중인 아이디"
-        //                    this.$refs.observer.errors
-        //                    return
-        //                }
-        //                this.isUserIdMessage = "사용할 수 없는 아이디"
-        //                return
-        //            } catch {
-        //                //접속 에러
-        //            }
-        //        }
-        //    }
-        //},
         mounted () {
             // this.$acl.onChange = newPermission => {
             //     console.log('Has changed to', newPermission)
             // }
-            console.log("<Index.vue>")
-            logCookies()
-            console.log("</Index.vue>")
+            // console.log("<Index.vue>")
+            // logCookies()
+            // console.log("</Index.vue>")
         }
     }
 </script>
