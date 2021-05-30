@@ -82,10 +82,10 @@ instance.interceptors.response.use( (response) => {
         VueCookies.remove('token')
         VueCookies.set('token', newToken, interval)
         store.commit('user/setToken', newToken)
-        console.log(`%c<RES ICP>%c ${requestURL} => %c신규 토큰(저장) %c ${newToken.slice(-5)} %c ${moment().format("HH:mm:ss")} ${moment().add(intervalNumber, intervalUnit).format("HH:mm:ss")}`,
+        console.log(`%c<RES ICP>%c ${requestURL} => %c신규 토큰(저장) %c ${newToken && newToken.slice(-5)} %c ${moment().format("HH:mm:ss")} ${moment().add(intervalNumber, intervalUnit).format("HH:mm:ss")}`,
             'background:#f16c06; color: white', '', 'color: #f16c06', 'background: #333; color:white', '')
     } else {
-        console.log(`%c<RES ICP>%c ${requestURL} => %c정상 토큰 %c ${oldToken.slice(-5)} %c ${moment().format("HH:mm:ss")}`,
+        console.log(`%c<RES ICP>%c ${requestURL} => %c정상 토큰 %c ${oldToken && oldToken.slice(-5)} %c ${moment().format("HH:mm:ss")}`,
             'background:#3075e3; color: white', '', 'color: #3075e3', 'background: #333; color:white', '')
     }
     return response
@@ -104,13 +104,12 @@ instance.interceptors.response.use( (response) => {
     if (badToken) { // 'empty' or 무효된 토큰값
         VueCookies.remove('token')
         store.commit('user/setToken', null)
-        console.log(`%c<RES ICP>%c ${requestURL} => %c무효 토큰(삭제) %c ${badToken.slice(-5)} %c ${moment().format('HH:mm:ss')}`,
+        console.log(`%c<RES ICP>%c ${requestURL} => %c무효 토큰(삭제) %c ${badToken && badToken.slice(-5)} %c ${moment().format('HH:mm:ss')}`,
             'background:#c42f72; color: white', '', 'color: #c42f72', 'background: #333; color:white', '')
     } else {
-        console.log("%c<RES ICP>%c " + requestURL + " => %c토큰 문제 아닌 에러 %c " +  moment().format("HH:mm:ss"),
-        'background:red; color: white', '', 'color: red', '')
+        console.log(`%c<RES ICP>%c ${requestURL} => %c토큰 문제 아닌 에러%c ${moment().format('HH:mm:ss')}`,
+            'background:red; color: white', '', 'color: red', '')
     }
-
 
     // console.log( error.response.headers )
     // if (error.response.status === 422) {

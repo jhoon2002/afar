@@ -849,10 +849,12 @@ function showAndOn(to, routes, i) {
 
 router.beforeEach(async (to, from, next) => {
 
+    const { token, _id } = store.state.user
+
     console.log(`%c<라우터 진입>%c ${moment().format("HH:mm:ss")} ` +
         `Cookie token: %c ${ VueCookies.get("token") && VueCookies.get("token").slice(-5) } %c `  +
-        `Store token: ${ store.state.user.token && store.state.user.token.slice(-5) } ` +
-        `Store _id: ${ store.state.user._id && store.state.user._id.slice(-5) }`,
+        `Store token: ${ token && token.slice(-5) } ` +
+        `Store _id: ${ _id && _id.slice(-5) }`,
         'color: #f50092', '', 'background: #777; color: white', '')
 
     if (to.meta.isDirectory) {
