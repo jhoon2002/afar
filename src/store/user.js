@@ -13,7 +13,8 @@ export default {
         name: null,
         message: null,
         face: "none.svg",
-        faceURL: "files/faces/none.svg"
+        faceURL: "files/faces/none.svg",
+        color: "#31596c"
     },
     getters: {
         isLogin(state) {
@@ -48,6 +49,9 @@ export default {
         },
         setFaceURL(state, url) {
             state.faceURL = url
+        },
+        setColor(state, color) {
+            state.color = color
         },
         resetFace(state) {
             state.face = "none.svg"

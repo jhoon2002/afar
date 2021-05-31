@@ -867,36 +867,38 @@ router.beforeEach(async (to, from, next) => {
         await syncCookies()
     }
 
+    //로그인이 안된 상태: Index 로 이동
     if (!store.state.user.token) {
-        /*--- 아래 코드가 없으면 ROOT 이동 시, 무한루프에 빠짐 ---*/
+        // 아래 코드가 없으면 ROOT 이동 시, 무한루프에 빠짐
         if (to.path === "/" || to.path === "/auto-logout") {
             return next()
         }
-        /* ---*/
+        // 그밖의 경우
         return next("/")
     }
 
-    //토큰 검사
+    //로그인이 됐으면 우선 토큰 검사
     await checkToken()
 
-    //검사 후 이동
-    if (store.state.user.token) { //로그인 유지 상태
-        //ROOT 접근 시, main 으로 이동
+    //검사 결과 이동
+    if (!store.state.user.token) { // 검사 결과 토큰이 유효하지 않아 로그아웃된 상태
+
+        // 아래 코드가 없으면 to 가 ROOT 인 경우 이동 시, 무한루프에 빠짐
+        if (to.path === "/") {
+            return next()
+        }
+        // 그 밖에 경우, 안내 dialog 를 거쳐 ROOT 로 이동
+        return next("/auto-logout")
+
+    } else { // 검사 결과 유효한 토큰으로 확인되어 다음 루트로 이동
+        
+        // ROOT 접근 시, main 으로 이동
         if (to.path === "/") {
             return next("/main")
         }
         //그 밖의 경우, 해당 경로로 이동
         showAndOn(to, routes, 0)
         return next()
-
-    } else { //토큰이 유효하지 않아서 로그아웃된 상태
-        // 아래 코드가 없으면 to 가 ROOT 인 경우 이동 시, 무한루프에 빠짐
-        if (to.path === "/") {
-            return next()
-        }
-        // 그 밖에 경우, ROOT 로 이동
-        return next("/auto-logout")
-        // return next("/")
     }
 })
 

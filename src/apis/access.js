@@ -45,18 +45,20 @@ export const login = async (userId, password) => {
         store.commit("user/setFace", data.face)
         store.commit("user/setFaceURL", env.facedir + data.face + "?t=" + new Date().getTime())
     }
+    store.commit('user/setColor', data.color)
 }
 
 export async function checkToken() {
     try {
         await http.get('/api/users/check-token')
     } catch(e) {
+        //사실상 예외처리는 interceptor 에서 수행, 여긴 에러 출력만
         console.group()
         console.log("checkToken 결과: 예외,",
             "status: " + e.response.status,
             "data:", e.response.data, new Date(), e)
         console.groupEnd()
-        // removeCookies() //헤더에서 삭제 수행
+        // removeCookies() //interceptor 삭제 수행
     }
 }
 
@@ -150,6 +152,7 @@ export const syncCookies = async function() {
             store.commit("user/setFace", user.face)
             store.commit("user/setFaceURL", env.facedir + user.face + "?t=" + new Date().getTime())
         }
+        store.commit('user/setColor', user.color)
     } catch(e) {
         console.log(e)
         // removeCookies() 삭제는 interceptor 에서 수행

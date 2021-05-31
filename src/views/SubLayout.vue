@@ -3,8 +3,8 @@
         <v-navigation-drawer
                 app
                 dark
+                :color="$store.state.user.color"
                 :value="show"
-                :style="bg"
                 @input="syncShow"
         >
             <v-card
@@ -100,39 +100,12 @@
                     class="transparent text-center"
             >
                 <v-btn
+                        v-for="(color, index) in colors" :key="index"
                         icon
                         x-small
-                        @click="selectBg('#31596c')"
+                        @click="selectBg(color.bg)"
                 >
-                    <v-icon color="blue">mdi-checkbox-blank-circle</v-icon>
-                </v-btn>
-                <v-btn
-                        icon
-                        x-small
-                        @click="selectBg('#7A3C54')"
-                >
-                    <v-icon color="red">mdi-checkbox-blank-circle</v-icon>
-                </v-btn>
-                <v-btn
-                        icon
-                        x-small
-                        @click="selectBg('#2F664C')"
-                >
-                    <v-icon color="green">mdi-checkbox-blank-circle</v-icon>
-                </v-btn>
-                <v-btn
-                        icon
-                        x-small
-                        @click="selectBg('#424242')"
-                >
-                    <v-icon color="grey">mdi-checkbox-blank-circle</v-icon>
-                </v-btn>
-                <v-btn
-                        icon
-                        x-small
-                        @click="selectBg('#85582F')"
-                >
-                    <v-icon color="orange">mdi-checkbox-blank-circle</v-icon>
+                    <v-icon :color="color.btn">mdi-checkbox-blank-circle</v-icon>
                 </v-btn>
 
                 <v-menu
@@ -212,6 +185,7 @@
     import GlobalMenu from "@/components/GlobalMenu.vue"
     import SectionTitle from "@/components/SectionTitle.vue"
     import { logout } from "@/apis/access.js"
+
     export default {
         components: {
             GlobalMenu,
@@ -219,12 +193,35 @@
         },
         data: function () {
             return {
+                user: {},
                 show: true,
                 routes: this.$router.options.routes,
                 bg: {
-                    backgroundColor: '#31596c'
+                    backgroundColor: "#31596c"
                 },
-                color: "#31596c"
+                color: "#31596c",
+                colors: [
+                    {
+                        bg: "#31596c",
+                        btn: "blue"
+                    },
+                    {
+                        bg: "#7A3C54",
+                        btn: "red"
+                    },
+                    {
+                        bg: "#2F664C",
+                        btn: "green"
+                    },
+                    {
+                        bg: "#424242",
+                        btn: "grey"
+                    },
+                    {
+                        bg: "#85582F",
+                        btn: "orange"
+                    }
+                ]
             }
         },
         methods: {
@@ -235,14 +232,24 @@
             syncShow(e) {
                 this.show = e
             },
-            selectBg(color) {
-                this.bg.backgroundColor = color
-                this.color = color
+            async selectBg(color) {
+                // this.bg.backgroundColor = color
+                // this.color = color
+                //todo: color 저장
+                try {
+                    this.$store.commit("user/setColor", color)
+                    await this.$http.put("/api/users/" + this.user._id, { color: color })
+                } catch(e) {
+                    console.log(e)
+                }
             },
             log(e) {
                 console.log(e)
             }
         },
+        mounted() {
+            this.user = this.$store.state.user
+        }
         /*
         watch: {
             color(v) {

@@ -3,8 +3,8 @@ import VueCookies from "vue-cookies"
 import store from "@/store"
 import moment from "moment"
 
-const intervalNumber = "4"
-const intervalUnit = "s"
+const intervalNumber = "60"
+const intervalUnit = "min"
 const interval = intervalNumber + intervalUnit
 
 /* 
@@ -38,32 +38,15 @@ const instance = axios.create({
 instance.interceptors.request.use( (config) => {
 
     config.headers.token = VueCookies.get("token")
-
     return config
 
 }, function (error) {
 
-    // Do something with request error
     return Promise.reject(error)
 
-    /*
-    if (store.state.user.token !== null) {
-        config['headers'] = {
-            Authorization: `Bearer ${store.state.user.token}`
-        }
-    }
-    return config
-    */
- })
+})
 
 instance.interceptors.response.use( (response) => {
-
-    // store.commit('error/setValidationError', {})
-    
-    /*
-     * response.headers.newtoken 은 토큰이 생성되거나 새 토큰으로 갱신될 때 존재
-     * 이때 newToken은 쿠키와 스토어에 저장
-     */
 
     const {
         headers: {
@@ -77,19 +60,15 @@ instance.interceptors.response.use( (response) => {
         }
     } = response
 
-    if (verifiedToken === oldToken) {
-        //store.commit('user/setToken', oldToken) //sync를 위해서 스토어에 재저장(화면 refresh의 경우 필요)
+    if (verifiedToken === oldToken) { //verifiedToken 또는 oldToken 이 null 이거나 '' 이면 아래 error 로 빠진 상태
         console.log(`%c<RES ICP>%c ${requestURL} => %c정상 토큰 %c ${verifiedToken && verifiedToken.slice(-5)} %c ${moment().format("HH:mm:ss")}`,
             'background:#3075e3; color: white', '', 'color: #3075e3', 'background: #333; color:white', '')
     } else {
-        // const { newtoken: newToken } = response.headers //애초 headers 내에서는 소문자로 저장되기 때문에, Camel case로 변경
-        //VueCookies.remove('token')
-        //VueCookies.set('token', newToken, interval)
-        //store.commit('user/setToken', newToken)
         console.log(`%c<RES ICP>%c ${requestURL} => %c신규 토큰(저장) %c ${verifiedToken && verifiedToken.slice(-5)} %c ${moment().format("HH:mm:ss")} ${moment().add(intervalNumber, intervalUnit).format("HH:mm:ss")}`,
             'background:#f16c06; color: white', '', 'color: #f16c06', 'background: #333; color:white', '')
     }
 
+    //토큰 저장
     VueCookies.set('token', verifiedToken, interval)
     store.commit("user/setToken", verifiedToken)
     return response
@@ -97,9 +76,9 @@ instance.interceptors.response.use( (response) => {
 }, (error) => {
 
     const {
-        //headers: {
-        //    "verified-token": verifiedToken
-        //},
+        headers: {
+           "verified-token": verifiedToken
+        },
         config: {
             url: requestURL
         },
@@ -108,24 +87,22 @@ instance.interceptors.response.use( (response) => {
         }
     } = error.response
 
-    if (msg === "NO_TOKEN" || msg === "EXPIRED_TOKEN" || msg === "INVALID_TOKEN") {
+    //VerifyToken 과정에서 발생한 예외
+    if ( ["NO_TOKEN", "EXPIRED_TOKEN", "INVALID_TOKEN"].includes(msg) ) {
+        
+        //토큰 삭제
         VueCookies.remove('token')
         store.commit('user/setToken', "")
-        console.log(`%c<RES ICP>%c ${requestURL} => %c무효 토큰(삭제) %c %c ${moment().format('HH:mm:ss')}`,
+        console.log(`%c<RES ICP>%c ${requestURL} => %c무효 토큰(${msg}) 삭제 %c ${verifiedToken && verifiedToken.slice(-5)} %c ${moment().format('HH:mm:ss')}`,
             'background:#c42f72; color: white', '', 'color: #c42f72', 'background: #333; color:white', '')
+        return Promise.reject(error)
     }
 
-    //else {
-    //    console.log(`%c<RES ICP>%c ${requestURL} => %c토큰 문제 아닌 에러%c ${moment().format('HH:mm:ss')}`,
-    //        'background:red; color: white', '', 'color: red', '')
-    //}
+    //다른 일반 예외, VerifyToken 은 통과했으므로 여기서 발생한 토큰은 저장
+    VueCookies.set('token', verifiedToken, interval)
+    store.commit("user/setToken", verifiedToken)
+    return Promise.reject(error)
 
-    // console.log( error.response.headers )
-    // if (error.response.status === 422) {
-        // store.commit('error/setValidationError', error.response.data.data)
-    // } else {
-        return Promise.reject(error)
-    // }
 })
 
 export default instance
