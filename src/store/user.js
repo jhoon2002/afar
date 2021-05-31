@@ -61,7 +61,7 @@ export default {
                 await login(payload.userId, payload.password)
                 // token, _id, userId, name 등은 api(access.js)에서 처리
                 commit('setMessage', "")
-                router.push({ path: "/Main" })
+                router.push({ path: "/main" })
             } catch(e) {
                 commit('setMessage', "")
                 if (e.response.status === 403) {

@@ -301,7 +301,7 @@
                     await login(this.ffuserId, this.ffpassword)
                     this.message = ""
                     // setTimeout(() => ( this.$router.push({ path: "/main" }) ), 300)
-                    this.$router.push({ path: "/Main" }).catch(()=>{})
+                    this.$router.push({ path: "/main" }).catch(()=>{})
                 } catch(e) {
                     this.message = ""
                     const { status } = e.response

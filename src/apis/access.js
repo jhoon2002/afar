@@ -142,7 +142,7 @@ export const syncCookies = async function() {
         const { data: { _id }  } = await http.get('/api/users/_id/token')
         const { data: { user } } = await http.get('/api/users/' + _id)
 
-        // store.commit('user/setToken', VueCookies.get("token"))
+        store.commit('user/setToken', VueCookies.get("token"))
         store.commit('user/set_id', user._id)
         store.commit('user/setUserId', user.userId)
         store.commit('user/setName', user.name)

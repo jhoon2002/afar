@@ -296,3 +296,8 @@ getHen()
 
 Promise.all ( [getApple(), getBanana()] ).then(fruits => ....)
 
+
+=============================
+
+Primitive type => number, string, boolean, null, undefined  => 복사할 경우 deep copy = 값 복사
+Obbject type => object(array, object, etc..all)  => 복사할 경우 reference 만.. = 주소 복사
