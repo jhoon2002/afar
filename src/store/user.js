@@ -13,7 +13,7 @@ export default {
         name: null,
         message: null,
         face: "none.svg",
-        faceURL: "files/faces/none.svg",
+        //faceURL: "files/faces/none.svg",
         color: "#31596c"
     },
     getters: {
@@ -55,8 +55,8 @@ export default {
         },
         resetFace(state) {
             state.face = "none.svg"
-            state.faceURL = "files/faces/none.svg"
-            console.log("state.faceURL", state.faceURL)
+            //state.faceURL = "files/faces/none.svg"
+            //console.log("state.faceURL", state.faceURL)
         }
     },
     actions: {

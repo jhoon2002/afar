@@ -1,6 +1,9 @@
 import Vue from "vue"
 import store from "@/store"
 
+Vue.prototype.$token =() => {
+    return store.state.user.token
+}
 Vue.prototype.$user_id = () => {
     return store.state.user._id
 }

@@ -3,7 +3,7 @@
         <v-navigation-drawer
                 app
                 dark
-                :color="$store.state.user.color"
+                :color="color"
                 :value="show"
                 @input="syncShow"
         >
@@ -55,7 +55,7 @@
                         class="transparent ml-5"
                 >
                     <div class="text-h6">
-                        여종훈
+                        {{ $userName() }}
                     </div>
                     <div>
                         처리할 결재
@@ -110,6 +110,7 @@
 
                 <v-menu
                         :close-on-content-click="false"
+                        @input="pickBg($event)"
                 >
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn
@@ -127,7 +128,6 @@
                             dot-size="25"
                             swatches-max-height="200"
                             show-swatches
-                            @input="selectBg"
                     ></v-color-picker>
                 </v-menu>
             </v-card>
@@ -196,10 +196,7 @@
                 user: {},
                 show: true,
                 routes: this.$router.options.routes,
-                bg: {
-                    backgroundColor: "#31596c"
-                },
-                color: "#31596c",
+                color: "",
                 colors: [
                     {
                         bg: "#31596c",
@@ -234,7 +231,7 @@
             },
             async selectBg(color) {
                 // this.bg.backgroundColor = color
-                // this.color = color
+                 this.color = color
                 //todo: color 저장
                 try {
                     this.$store.commit("user/setColor", color)
@@ -245,18 +242,23 @@
             },
             log(e) {
                 console.log(e)
+            },
+            async pickBg(e) {
+                if (e === false) { //창이 닫힐 때
+                    this.$store.commit("user/setColor", this.color)
+                    await this.$http.put("/api/users/" + this.user._id, { color: this.color })
+                }
             }
         },
         mounted() {
             this.user = this.$store.state.user
-        }
-        /*
-        watch: {
-            color(v) {
-                this.bg.backgroundColor = v
-            }
-        }
-        */
+            this.color = this.$store.state.user.color || "#31596c"
+        },
+        //watch: {
+        //    color(v) {
+        //        this.$store.commit("user/setColor", v)
+        //    }
+        //}
     }
 </script>
 <style scoped>

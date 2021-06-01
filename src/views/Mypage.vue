@@ -23,8 +23,9 @@
                         size="75"
                         class="mt-1"
                 >
-                    <img :src="`${ $env.url + $store.state.user.faceURL }`"/>
+                    <img :src="`${ $env.url + $env.facedir + user.face }`"/>
                 </v-avatar>
+                    {{ user.face }}
                 <div
                         class="d-block text-center"
                  >
@@ -169,7 +170,7 @@
                         </v-card>
                     </v-menu>
                     <v-btn
-                            v-if="$store.state.user.face !== 'none.svg'"
+                            v-if="user.face !== 'none.svg'"
                             icon
                             small
                             style="margin-left: -0.6rem"
@@ -535,9 +536,9 @@
             */
             async deleteImage() {
                 try {
-                    console.log("삭제 경로", "/api/users/face/" + this.$user_id() + "/" + this.$store.state.user.face)
+                    console.log("삭제 경로", "/api/users/face/" + this.$user_id() + "/" + this.user.face)
                     // return
-                    await this.$http.delete("/api/users/face/" + this.$user_id() + "/" + this.$store.state.user.face)
+                    await this.$http.delete("/api/users/face/" + this.$user_id() + "/" + this.user.face)
                     this.$store.commit("user/resetFace")
                 } catch(e) {
                     console.log(e)
@@ -589,7 +590,7 @@
         },
         async mounted() {
             try {
-                const { data: { user } } = await this.$http.get("/api/users/" + this.temp_user_id)
+                const { data: { user } } = await this.$http.get("/api/users/" + this.$user_id())
                 this.user = user
             } catch {
                 //
