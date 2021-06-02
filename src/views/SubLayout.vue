@@ -45,9 +45,7 @@
                         class="mt-1"
                 >
                     <!--<v-icon large>ri-user-line</v-icon>-->
-                    <img
-                            :src="`${ $env.url + $store.state.user.faceURL }`"
-                    />
+                    <img :src="`${$env.url}${$env.facedir}${user.face}?t=${user.t}`"/>
                 </v-avatar>
 
 
@@ -153,7 +151,7 @@
                     color="primary"
                     small
                     class="ml-2"
-                    @click="$router.push('/mypage').catch(()=>{})"
+                    @click="$router.push('/mypage')"
             >
                 My page
             </v-btn>

@@ -2,7 +2,7 @@ import VueCookies from 'vue-cookies'
 import http from "@/apis/http"
 import store from "@/store"
 // import jwt from "jsonwebtoken"
-import env from "@/env.js"
+// import env from "@/env.js"
 
 // const intervalNumber = "4"
 // const intervalUnit = "s"
@@ -41,10 +41,10 @@ export const login = async (userId, password) => {
     store.commit('user/set_id', data._id)
     store.commit('user/setUserId', data.userId)
     store.commit('user/setName', data.name)
-    if (data.face) {
-        store.commit("user/setFace", data.face)
-        store.commit("user/setFaceURL", env.facedir + data.face + "?t=" + new Date().getTime())
-    }
+    store.commit('user/setJumin', data.jumin)
+    store.commit('user/setCellphone', data.cellphone)
+    store.commit('user/setEmail', data.email)
+    store.commit("user/setFace", data.face)
     store.commit('user/setColor', data.color)
 }
 
@@ -108,10 +108,13 @@ export const removeCookies = () => {
     store.commit('user/set_id', null)
     store.commit('user/setUserId', null)
     store.commit('user/setName', null)
+    store.commit('user/setJumin', null)
+    store.commit('user/setCellphone', null)
+    store.commit('user/setEmail', null)
+    store.commit('user/setColor', null)
 
     //face 가 나오는 페이지에서 삭제 순간 오류 로그가 발생하는 현상(이미지를 순간적으로 http://localhost:3000/null 로 요청) 방지를 위해 삭제하지 않음
     // store.commit('user/setFace', null)
-    // store.commit('user/setFaceURL', null)  //위와 동일
 }
 
 export const logCookies = (v="") => {
@@ -148,11 +151,12 @@ export const syncCookies = async function() {
         store.commit('user/set_id', user._id)
         store.commit('user/setUserId', user.userId)
         store.commit('user/setName', user.name)
-        if (user.face) {
-            store.commit("user/setFace", user.face)
-            store.commit("user/setFaceURL", env.facedir + user.face + "?t=" + new Date().getTime())
-        }
+        store.commit('user/setJumin', user.jumin)
+        store.commit('user/setCellphone', user.cellphone)
+        store.commit('user/setEmail', user.email)
+        store.commit("user/setFace", user.face)
         store.commit('user/setColor', user.color)
+
     } catch(e) {
         console.log(e)
         // removeCookies() 삭제는 interceptor 에서 수행

@@ -1,6 +1,6 @@
 <template>
     <v-card
-            v-if="user.name"
+            v-if="$userName()"
             width="500"
             class="pa-10"
     >
@@ -11,7 +11,7 @@
         -->
 
         <v-card-title class="pa-0">
-            {{user.name}}
+            {{ user.name }}
         </v-card-title>
 
         <v-sheet
@@ -23,9 +23,8 @@
                         size="75"
                         class="mt-1"
                 >
-                    <img :src="`${ $env.url + $env.facedir + user.face }`"/>
+                    <img :src="`${ $env.url }${ $env.facedir }${ user.face }?t=${ user.t }`"/>
                 </v-avatar>
-                    {{ user.face }}
                 <div
                         class="d-block text-center"
                  >
@@ -170,7 +169,7 @@
                         </v-card>
                     </v-menu>
                     <v-btn
-                            v-if="user.face !== 'none.svg'"
+                            v-if="$userFace() !== 'none.svg'"
                             icon
                             small
                             style="margin-left: -0.6rem"
@@ -185,20 +184,20 @@
                     이름
                 </div>
                 <div class="text-h6">
-                    {{ user.name }}
+                    {{ $userName() }}
                 </div>
                 <div class="text-body-2 mt-2">
                     생년월일
                 </div>
                 <div class="text-body-1">
-                    {{ $util.toBirthday(user.jumin, true) }}
+                    {{ $util.toBirthday( $userJumin() , true) }}
                 </div>
                 <div class="text-body-2 mt-2">
                     휴대폰
                 </div>
                 <div class="text-body-1 d-flex">
 
-                    {{ user.cellphone.substr(0, 3) }}-{{ user.cellphone.substr(3, 4) }}-{{ user.cellphone.substr(7, 4) }}
+                    {{ $userCellphone().substr(0, 3) }}-{{ $userCellphone().substr(3, 4) }}-{{ $userCellphone().substr(7, 4) }}
 
                     <v-edit-dialog
                             :return-value.sync="kkk"
@@ -242,7 +241,7 @@
                     이메일
                 </div>
                 <div class="text-body-1 d-flex">
-                    {{ user.email }}
+                    {{ $userEmail() }}
                     <v-edit-dialog
                             :return-value.sync="kkk"
                             large
@@ -421,7 +420,8 @@
                 fpassword: "",
                 fconfirmPassword: "",
                 kkk: "",
-                show1: false
+                show1: false,
+                t: ""
             }
         },
         methods: {
@@ -493,9 +493,10 @@
                         form.append('user_id', this.$user_id())
                         try {
                             const { data: { file: { originalname } } } = await this.$http.post("/api/users/face", form)
-                            const url = this.$env.facedir + originalname + "?t=" + new Date().getTime()
+                            //const url = this.$env.facedir + originalname + "?t=" + new Date().getTime()
+                            this.t = new Date().getTime()
                             this.$store.commit("user/setFace", originalname)
-                            this.$store.commit("user/setFaceURL", url)
+                            //this.$store.commit("user/setFaceURL", url)
                         } catch(e) {
                             console.log(e)
                         }
@@ -536,9 +537,9 @@
             */
             async deleteImage() {
                 try {
-                    console.log("삭제 경로", "/api/users/face/" + this.$user_id() + "/" + this.user.face)
+                    console.log("삭제 경로", "/api/users/face/" + this.$user_id() + "/" + this.$userFace())
                     // return
-                    await this.$http.delete("/api/users/face/" + this.$user_id() + "/" + this.user.face)
+                    await this.$http.delete("/api/users/face/" + this.$user_id() + "/" + this.$userFace())
                     this.$store.commit("user/resetFace")
                 } catch(e) {
                     console.log(e)
@@ -590,8 +591,8 @@
         },
         async mounted() {
             try {
-                const { data: { user } } = await this.$http.get("/api/users/" + this.$user_id())
-                this.user = user
+                //const { data: { user } } = await this.$http.get("/api/users/" + this.$user_id())
+                this.user = this.$user()
             } catch {
                 //
             }

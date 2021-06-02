@@ -81,6 +81,7 @@
                     ></v-simple-checkbox>
                 </template>
                 -->
+
                 <template v-for="header in headers"
                           v-slot:[`item.${header.value}`]="{ expand, index, item, isExpanded, isMobile, isSelected, select, headers }">
                     <slot

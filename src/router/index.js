@@ -847,7 +847,18 @@ function showAndOn(to, routes, i) {
     }
 }
 
+//beforeEach를 실행하고 컴포넌트 http 등을 모두 처리한 후 마지막에 호출됨
+/*router.beforeResolve( (to, from, next) => {
+
+    console.log("(...)form.path", from.path, "to.path", to.path)
+
+    next()
+
+})*/
+
 router.beforeEach(async (to, from, next) => {
+
+    console.log("form.path", from.path, "to.path", to.path)
 
     const { token, _id } = store.state.user
 

@@ -11,10 +11,13 @@ export default {
         _id: null,
         userId: null,
         name: null,
-        message: null,
+        jumin: null,
+        cellphone: null,
+        email: null,
         face: "none.svg",
         //faceURL: "files/faces/none.svg",
-        color: "#31596c"
+        color: "#31596c",
+        t: ""
     },
     getters: {
         isLogin(state) {
@@ -41,14 +44,20 @@ export default {
         setName(state, name) {
             state.name = name
         },
+        setJumin(state, jumin) {
+            state.jumin = jumin
+        },
+        setCellphone(state, cellphone) {
+            state.cellphone = cellphone
+        },
+        setEmail(state, email) {
+            state.email = email
+        },
         setMessage(state, message) {
             state.message = message
         },
         setFace(state, face) {
             state.face = face
-        },
-        setFaceURL(state, url) {
-            state.faceURL = url
         },
         setColor(state, color) {
             state.color = color
@@ -57,7 +66,10 @@ export default {
             state.face = "none.svg"
             //state.faceURL = "files/faces/none.svg"
             //console.log("state.faceURL", state.faceURL)
-        }
+        },
+        setT(state, t) {
+            state.t = t
+        },
     },
     actions: {
         async login( { commit }, payload ) {
