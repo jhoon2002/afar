@@ -15,7 +15,7 @@
                        small
                        class="px-1"
                 >
-                    사용자등록
+                    사용자 등록
                 </v-btn>
             </template>
 
@@ -63,7 +63,6 @@
                 <v-stepper-items>
                     <v-stepper-content
                             step="1"
-                            class="px-7 pt-3 pb-7"
                     >
                         <validation-observer
                                 ref="ob1"
@@ -72,7 +71,9 @@
                             <v-card
                                     flat
                                     height="28rem"
-                                    class="px-10 pt-0 pb-16"
+                                    max-height="28rem"
+                                    mim-height="28rem"
+                                    class="px-13"
                             >
                                 <v-sheet
                                         class="text-h6"
@@ -83,8 +84,8 @@
                                                 v-model="switchAll"
                                                 on-icon="ri-checkbox-circle-line"
                                                 off-icon="ri-checkbox-blank-circle-line"
-                                                class="text-h6 ml-2"
                                                 hide-details
+                                                class="text-h6 mt-0"
                                                 @change="agreeAll"
                                         >
                                             <template v-slot:label>
@@ -329,10 +330,8 @@
                             </v-card-actions>
                         </validation-observer>
                     </v-stepper-content>
-
                     <v-stepper-content
                             step="2"
-                            class="pa-7"
                     >
                         <validation-observer
                                 ref="ob2"
@@ -341,7 +340,7 @@
                             <v-card
                                     flat
                                     height="28rem"
-                                    class="pa-16"
+                                    class="px-16 pt-15 mx-10"
                             >
                                 <br/>
                                 <validation-provider
@@ -377,7 +376,7 @@
                                                     maxlength="6"
                                                     :error-messages="errors"
                                                     :success="valid"
-                                                    style="max-width: 10rem"
+                                                    style="max-width: 12rem"
                                                     @input="$util.nextFocus($event, 6, 'input-jumin2')"
                                             />
                                         </validation-provider>
@@ -430,7 +429,6 @@
                                                     :error-messages="errors"
                                                     :success="valid"
                                                     class="ml-1"
-                                                    style="width: 16.3rem"
                                                     :append-icon="show1 ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
                                                     @click:append="show1 = !show1"
                                                     @keydown="$util.prevFocus($event, 'input-jumin3', 'input-jumin2')"
@@ -470,7 +468,6 @@
                     </v-stepper-content>
                     <v-stepper-content
                             step="3"
-                            class="pa-7"
                     >
                         <validation-observer
                                 ref="ob3"
@@ -479,7 +476,7 @@
                             <v-card
                                     flat
                                     height="28rem"
-                                    class="px-16 py-7"
+                                    class="px-16 pt-7 mx-4"
                             >
                                 <v-row>
                                     <v-col cols="12" class="py-2">
