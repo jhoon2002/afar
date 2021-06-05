@@ -77,7 +77,7 @@ const routes = [
                 },
             },
             {
-                name: "마이 페이지",
+                name: "마이페이지",
                 path: "/mypage",
                 component: () => import("@/views/Mypage.vue"),
                 invisible: true,

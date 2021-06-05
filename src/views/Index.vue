@@ -32,7 +32,7 @@
                 </v-sheet>
             </v-card>
             <v-card elevation="0" style="width: 23rem" class="pt-16">
-                <v-card-title style="min-height: 5rem; line-height: 1.2">
+                <v-card-title style="min-height: 5rem; line-height: 1.2" class="text-body-1">
                     {{ message }}
                 </v-card-title>
                 <v-card-text>
@@ -67,146 +67,8 @@
 
                 <v-card-text>
                     <v-sheet class="d-flex">
-                        <v-dialog
-                                v-model="dialog"
-                                max-width="40rem"
-                                width="40rem"
-                                persistent
-                        >
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-btn v-bind="attrs"
-                                       v-on="on"
-                                       text
-                                       small
-                                       class="px-1"
-                                >
-                                    사용자등록
-                                </v-btn>
-                            </template>
-                            <v-card elevation="0">
-                                <v-card-title>
-                                    사용자 등록
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                            icon
-                                            @click="reset(), dialog=false"
-                                            style="margin-right: -0.5rem"
-                                    >
-                                        <v-icon>mdi-close</v-icon>
-                                    </v-btn>
-                                </v-card-title>
-                                <v-divider></v-divider>
-                                <v-card-text class="pt-8">
-                                    <!-- '검사' 버튼 사용시 v-slot 안에 validate 추가(현재는 사용 안함) -->
-                                    <validation-observer
-                                            ref="observer"
-                                            v-slot="{ invalid, validated, handleSubmit }"
-                                    >
 
-                                        <v-row>
-                                            <v-col cols="6">
-                                                <validation-provider name="이름" :rules="{ required: true, name: true }" v-slot="{ errors, valid }">
-                                                    <v-text-field label="이름" v-model="fname"
-                                                                  :error-messages="errors" :success="valid"
-                                                    ></v-text-field>
-                                                </validation-provider>
-                                            </v-col>
-                                            <v-col cols="6">
-                                                <validation-provider name="주민등록번호" :rules="{ required: true, jumin: true}" v-slot="{ errors, valid }">
-                                                    <v-text-field label="주민등록번호" v-model="fjumin"
-                                                                  :error-messages="errors" :success="valid"
-                                                    ></v-text-field>
-                                                </validation-provider>
-                                            </v-col>
-                                        </v-row>
-
-                                        <v-row>
-                                            <v-col cols="6">
-                                                <validation-provider name="아이디" :rules="{ required: true, id: true, duplicated: true }" v-slot="{ errors, valid}">
-                                                    <v-text-field label="아이디" v-model="fuserId"
-                                                                  :error-messages="errors" :success="valid" :success-messages="valid ? '사용할 수 있는 아이디' : ''"
-                                                    ></v-text-field>
-                                                </validation-provider>
-                                            </v-col>
-                                            <v-col cols="6">
-                                                {{isUserIdMessage}}
-                                            </v-col>
-                                        </v-row>
-
-                                        <v-row>
-                                            <v-col cols="6">
-                                                <validation-provider name="비밀번호" :rules="{ required: true, password: true }" vid="confirmation" v-slot="{ errors, valid }">
-                                                    <v-text-field label="비밀번호" v-model="fpassword" :type="show1 ? 'text' : 'password'"
-                                                                  :error-messages="errors" :success="valid"
-                                                                  :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                                                                  @click:append="show1 = !show1"
-                                                    ></v-text-field>
-                                                </validation-provider>
-                                            </v-col>
-                                            <v-col cols="6">
-                                                <validation-provider name="비밀번호 확인" :rules="{ required: true, confirmed:'confirmation' }" v-slot="{ errors, valid }">
-                                                    <v-text-field label="비밀번호 확인" v-model="fconfirmPassword" :type="show1 ? 'text' : 'password'"
-                                                                  :error-messages="errors" :success="valid" :success-messages="valid ? '일치합니다.' : ''"
-                                                                  :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                                                                  @click:append="show1 = !show1"
-                                                    ></v-text-field>
-                                                </validation-provider>
-                                            </v-col>
-                                        </v-row>
-
-                                        <v-row>
-                                            <v-col cols="6">
-                                                <validation-provider name="휴대폰" :rules="{ required: true, cellphone: true }" v-slot="{ errors, valid }">
-                                                    <v-text-field label="휴대폰" v-model="fcellphone"
-                                                                  :error-messages="errors" :success="valid"
-                                                    ></v-text-field>
-                                                </validation-provider>
-                                            </v-col>
-                                            <v-col cols="6">
-                                                <validation-provider name="이메일" :rules="{ required: true, email: true }" v-slot="{ errors, valid }">
-                                                    <v-text-field label="이메일" v-model="femail" type="email"
-                                                                  :error-messages="errors" :success="valid"
-                                                    ></v-text-field>
-                                                </validation-provider>
-                                            </v-col>
-                                        </v-row>
-
-                                        <v-card-actions>
-                                            <v-spacer></v-spacer>
-                                            <v-btn
-                                                    @click="reset"
-                                                    color="pink"
-                                                    elevation="0"
-                                                    outlined
-                                                    class="text-body-1"
-                                                    style="padding-bottom: 2px"
-                                            >
-                                                초기화
-                                            </v-btn>
-                                            <!--
-                                            <v-btn
-                                                    class="ml-2"
-                                                    color="info"
-                                                    @click="validate()"
-                                            >
-                                                검사
-                                            </v-btn>
-                                            -->
-                                            <v-btn
-                                                    color="secondary"
-                                                    elevation="0"
-                                                    outlined
-                                                    @click="handleSubmit(submit)"
-                                                    class="ml-2 text-body-1"
-                                                    style="padding-bottom: 2px"
-                                            >
-                                                확인
-                                            </v-btn>
-                                        </v-card-actions>
-                                    </validation-observer>
-                                </v-card-text>
-                              </v-card>
-                        </v-dialog>
+                        <register />
 
                         <v-dialog
                                 v-model="dialog2"
@@ -269,25 +131,19 @@
     import { login } from "@/apis/access.js"
     //import { isUserId } from "@/api/db.js"
     // import { logCookies } from "@/apis/access.js"
+    import Register from "@/components/Register.vue"
 
     export default {
-        name: "Main",
+        name: "Index",
+        components: {
+            Register
+        },
         data: function() {
             return {
                 message: "",
                 ffuserId: "jhoon",
                 ffpassword: "1111",
-                show1: false,
-                fuserId: "",
-                fname: "",
-                fpassword: "",
-                fconfirmPassword: "",
-                fcellphone: "",
-                femail: "",
-                fjumin: "",
-                isUserIdMessage: "",
-                dialog: false,
-                dialog2: false,
+                dialog2: false
             }
         },
         computed: {
@@ -309,22 +165,8 @@
                         setTimeout(() => ( this.message = "\"아이디 또는 비밀번호가 일치하지 않습니다.\"" ), 100)
                         return
                     }
-                    if (status === 401) {
-                        setTimeout(() => ( this.message = "\"토큰이 정상적으로 생성되지 않았습니다.\"" ), 100)
-                        return
-                    }
                     setTimeout(() => ( this.message = "\"시스템 문제로 로그인 할 수 없습니다.\"" ), 100)
                 }
-            },
-            reset() {
-                this.fuserId = ""
-                this.fname = ""
-                this.fjumin = ""
-                this.fcellphone = ""
-                this.femail = ""
-                this.fpassword = ""
-                this.fconfirmPassword = ""
-                this.$refs.observer.reset()
             }
         },
         mounted () {

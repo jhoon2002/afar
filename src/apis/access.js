@@ -34,18 +34,18 @@ import store from "@/store"
 
 
 export const login = async (userId, password) => {
-    const {data} = await http.post('/api/users/login', {
+    const { data: { user } } = await http.post('/api/users/login', {
         userId: userId,
         password: password
     })
-    store.commit('user/set_id', data._id)
-    store.commit('user/setUserId', data.userId)
-    store.commit('user/setName', data.name)
-    store.commit('user/setJumin', data.jumin)
-    store.commit('user/setCellphone', data.cellphone)
-    store.commit('user/setEmail', data.email)
-    store.commit("user/setFace", data.face)
-    store.commit('user/setColor', data.color)
+    store.commit('user/set_id', user._id)
+    store.commit('user/setUserId', user.userId)
+    store.commit('user/setName', user.name)
+    store.commit('user/setJumin', user.jumin)
+    store.commit('user/setCellphone', user.cellphone)
+    store.commit('user/setEmail', user.email)
+    store.commit("user/setFace", user.face)
+    store.commit('user/setColor', user.color)
 }
 
 export async function checkToken() {
@@ -61,43 +61,6 @@ export async function checkToken() {
         // removeCookies() //interceptor 삭제 수행
     }
 }
-
-/*const putCookies = function( httpResData )  {
-    //쿠키 저장
-    // VueCookies.set('token', httpResData.token, interval)
-
-    //스토어 저장
-    // store.commit('user/setToken', httpResData.token)
-    store.commit('user/set_id', httpResData._id)
-    store.commit('user/setUserId', httpResData.userId)
-    store.commit('user/setName', httpResData.name)
-    if (httpResData.face) {
-        store.commit("user/setFace", httpResData.face)
-        store.commit("user/setFaceURL", env.facedir + httpResData.face + "?t=" + new Date().getTime())
-    }
-}*/
-
-/*const updateCookies = async function( httpResData, interval )  {
-    console.log("<<<<<<<< updateCookies 시작 >>>>>>>>>> ")
-    //쿠키 저장
-    VueCookies.set('token', httpResData.token, interval)
-    // VueCookies.set('_id', VueCookies.get("_id"), interval)
-    // VueCookies.set('userId', VueCookies.get("userId"), interval)
-    // VueCookies.set('name', VueCookies.get("name"), interval)
-    // VueCookies.set('face', VueCookies.get("face"), interval)
-
-    //스토어 저장
-    // store.commit('user/setToken', httpResData.token)
-    // store.commit('user/set_id', httpResData._id)
-    // store.commit('user/setUserId', httpResData.userId)
-    // store.commit('user/setName', httpResData.name)
-    // store.commit("user/setFace", httpResData.face)
-
-    // await syncCookies()
-
-    logCookies("(갱신)")
-    console.log("<<<<<<<< updateCookies 종료 >>>>>>>>>> ")
-}*/
 
 export const removeCookies = () => {
     //쿠기 삭제
@@ -117,28 +80,9 @@ export const removeCookies = () => {
     // store.commit('user/setFace', null)
 }
 
-export const logCookies = (v="") => {
-    console.log("token" + v + ":", VueCookies.get("token"))
-    console.log("_id", store.state.user._id)
-    console.log("userId", store.state.user.userId)
-    console.log("name", store.state.user.name)
-}
-
 export const logout = () => {
     removeCookies()
 }
-
-/*const verifyToken = token => new Promise((resolve, reject) => {
-    jwt.verify(token, "U-Koz56^--Yui", function (err, decoded) {
-        if (err) reject(err)
-        resolve(decoded)
-    })
-})*/
-
-/*const getUser_idByToken = async () => {
-    const ret = await http.get('/api/users/_id/token')
-    return ret.data._id
-}*/
 
 //쿠기, 스토어 동기화
 export const syncCookies = async function() {

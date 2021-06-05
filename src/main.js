@@ -27,6 +27,7 @@ Vue.prototype.$env = env
 Vue.prototype.$http = http
 Vue.prototype.$util = util
 
+
 Vue.config.productionTip = false
 
 new Vue({

@@ -88,7 +88,7 @@
                         </tr>
                         <tr>
                             <td>휴대폰</td>
-                            <td>{{ $util.cellphonePhase(user.cellphone) }}</td>
+                            <td>{{ $util.toCellphone(user.cellphone) }}</td>
                             <td>
                                 <v-edit-dialog
                                         :return-value.sync="kkk"

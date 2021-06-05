@@ -22,7 +22,7 @@
                 </span>
             </template>
             <template v-slot:item.cellphone="{ item }">
-                {{ $util.cellphonePhase(item.cellphone) }}
+                {{ $util.toCellphone(item.cellphone) }}
             </template>
             <template v-slot:view="{ targetId, dialog, close }">
                 <user-view :userId="targetId" :dialog="dialog" @close="close"></user-view>

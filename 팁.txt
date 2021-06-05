@@ -301,3 +301,46 @@ Promise.all ( [getApple(), getBanana()] ).then(fruits => ....)
 
 Primitive type => number, string, boolean, null, undefined  => 복사할 경우 deep copy = 값 복사
 Obbject type => object(array, object, etc..all)  => 복사할 경우 reference 만.. = 주소 복사
+
+------------------------------
+
+<arrow(=>) 함수>
+anonymous 함수는 arrow로 사용 가능
+ex)
+array.forEach( function( a, index ) {
+    return abc(a)
+}
+여기서 function이 anonymous 함수임, 즉 이름이 없음
+array.forEach( (a, index) => {
+    return abc(a)
+}
+
+만약 콜백함수의 { } 안의 내용이 한줄이면 { }를 생략하고 이렇게 축약 가능
+array.forEach( (a, index) => return abc(a) )
+
+만약, 그 한줄이 return 이면 return 생략 가능
+array.forEach( (a, index) => abc(a) )
+
+만약, 받아오는 인자가 한개 리턴 함수의 인자도 같은 거라면, 이렇게 축약 가능
+array.forEach( (a) => abc(a) ) 라면,
+array.forEach( abc )
+
+-----------------
+
+배열 관련 꼭 필요한 api 10가지
+join
+split
+reverse
+slice
+find
+filter
+map
+some
+reduce
+응용 ex) const result = students
+         .map((student) => student.score)
+         .filter((score) => score >= 50)
+         .join()
+sort
+
+--------------------

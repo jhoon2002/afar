@@ -96,7 +96,10 @@ export const util = {
     },
 
     //생년월일 표시
-    toBirthday: (juminNo, sex=false) => {
+    toBirthday: (juminNo, sex=false, connector="-") => {
+
+        if (!juminNo) return
+
         const f = juminNo.substr(6, 1)
         let y = ""
         let s = ""
@@ -115,7 +118,18 @@ export const util = {
                 break
         }
         s = (f % 2 === 1) ? "남" : "여"
-        return y + juminNo.substr(0,2) + "-" + juminNo.substr(2,2) + "-" + juminNo.substr(4,2) + (sex ? ", " + s : "")
+        return y + juminNo.substr(0,2) + connector + juminNo.substr(2,2) + connector + juminNo.substr(4,2) + (sex ? ", " + s : "")
+    },
+
+    //휴대폰 번호 표시
+    toCellphone: (num, connectString="-") => {
+
+        if (!num) return
+        if (num.length !== 10 && num.length !== 11) return
+
+        return num.substr(0,3) + connectString
+            + num.substr(3, num.length - 7) + connectString
+            + num.substr(num.length - 4, 4)
     },
 
     //확장자 구하기
@@ -128,5 +142,45 @@ export const util = {
         const base64Payload = token.split('.')[1]
         const payload = Buffer.from(base64Payload, 'base64')
         return JSON.parse(payload)
+    },
+
+    //input 글자수 충족시 포커스 이동
+    nextFocus: function(event, shoulder, destinationId) {
+        if (event.length >= shoulder) {
+            document.getElementById(destinationId).focus()
+        }
+        return
+    },
+
+    prevFocus: function (event, startingId, destinationId) {
+        if (event.key === 'Backspace' && !document.getElementById(startingId).value) {
+            document.getElementById(destinationId).focus()
+        }
+        return
+    },
+
+    // 01, 02, 001, 002 같은 문자열 만들기
+    leadingZeros: function (data, length, rep) {
+        data = String(data)
+        while(data.length < length) {
+            data = rep +""+ data
+        }
+        return data
+    },
+
+    // 연월일 유효성 검사 @Param String yyyymmdd
+    isValidDate: function (inYmd) {
+        const year = inYmd.substring(0, 4)
+        const month = inYmd.substring(4, 6)
+        const day = inYmd.substring(6, 8)
+
+        const d = new Date(year, month - 1, day)
+
+        if (d.getFullYear().toString() === year
+            && this.leadingZeros((d.getMonth() + 1), 2, '0') === month
+            && this.leadingZeros(d.getDate(), 2, '0') === day) {
+            return true
+        }
+        return false
     }
 }

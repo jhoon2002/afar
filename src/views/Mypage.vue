@@ -1,15 +1,9 @@
 <template>
     <v-card
-            v-if="$userName()"
+            v-if="user.name"
             width="500"
             class="pa-10"
     >
-        <!--
-        <v-breadcrumbs
-                :items="items"
-        ></v-breadcrumbs>
-        -->
-
         <v-card-title class="pa-0">
             {{ user.name }}
         </v-card-title>
@@ -23,8 +17,11 @@
                         size="75"
                         class="mt-1"
                 >
-                    <img :src="`${ $env.url }${ $env.facedir }${ user.face }?t=${ user.t }`"/>
+                    <img :src="`${$env.url}${$env.facedir}${user.face}?t=${user.t}`"/>
                 </v-avatar>
+
+                <!--<json-viewer :value="user" />-->
+
                 <div
                         class="d-block text-center"
                  >
@@ -169,7 +166,7 @@
                         </v-card>
                     </v-menu>
                     <v-btn
-                            v-if="$userFace() !== 'none.svg'"
+                            v-if="user.face !== this.$env.face"
                             icon
                             small
                             style="margin-left: -0.6rem"
@@ -184,21 +181,19 @@
                     이름
                 </div>
                 <div class="text-h6">
-                    {{ $userName() }}
+                    {{ user.name }}
                 </div>
                 <div class="text-body-2 mt-2">
                     생년월일
                 </div>
                 <div class="text-body-1">
-                    {{ $util.toBirthday( $userJumin() , true) }}
+                    {{ $util.toBirthday( user.jumin, true) }}
                 </div>
                 <div class="text-body-2 mt-2">
                     휴대폰
                 </div>
                 <div class="text-body-1 d-flex">
-
-                    {{ $userCellphone().substr(0, 3) }}-{{ $userCellphone().substr(3, 4) }}-{{ $userCellphone().substr(7, 4) }}
-
+                    {{ $util.toCellphone( user.cellphone ) }}
                     <v-edit-dialog
                             :return-value.sync="kkk"
                             large
@@ -241,7 +236,7 @@
                     이메일
                 </div>
                 <div class="text-body-1 d-flex">
-                    {{ $userEmail() }}
+                    {{ $store.state.user.email }}
                     <v-edit-dialog
                             :return-value.sync="kkk"
                             large
@@ -342,9 +337,10 @@
 </template>
 <script>
     // import VueCookies from 'vue-cookies'
-    import { Cropper, Preview } from 'vue-advanced-cropper';
-    import 'vue-advanced-cropper/dist/style.css';
-    import { saveAs } from 'file-saver';
+    import { Cropper, Preview } from 'vue-advanced-cropper'
+    import 'vue-advanced-cropper/dist/style.css'
+    import { saveAs } from 'file-saver'
+    // import JsonViewer from 'vue-json-viewer'
     // This function is used to detect the actual image type,
     function getMimeType(file, fallback = null) {
         const byteArray = new Uint8Array(file).subarray(0, 4);
@@ -371,7 +367,8 @@
         name: "Mypage",
         components: {
             Cropper,
-            Preview
+            Preview,
+            // JsonViewer
         },
         data: function () {
             return {
@@ -489,13 +486,13 @@
                 if (canvas) {
                     const form = new FormData();
                     canvas.toBlob( async (blob) => {
-                        form.append('file', blob, this.$user_id() + "." + this.$util.getFileExt(this.image.originalname) )
-                        form.append('user_id', this.$user_id())
+                        form.append('file', blob, this.user._id + "." + this.$util.getFileExt(this.image.originalname) )
+                        form.append('user_id', this.user._id)
                         try {
                             const { data: { file: { originalname } } } = await this.$http.post("/api/users/face", form)
                             //const url = this.$env.facedir + originalname + "?t=" + new Date().getTime()
-                            this.t = new Date().getTime()
                             this.$store.commit("user/setFace", originalname)
+                            this.$store.commit("user/setT", new Date().getTime())
                             //this.$store.commit("user/setFaceURL", url)
                         } catch(e) {
                             console.log(e)
@@ -537,9 +534,9 @@
             */
             async deleteImage() {
                 try {
-                    console.log("삭제 경로", "/api/users/face/" + this.$user_id() + "/" + this.$userFace())
+                    console.log("삭제 경로", "/api/users/face/" + this.user._id + "/" + this.user.face)
                     // return
-                    await this.$http.delete("/api/users/face/" + this.$user_id() + "/" + this.$userFace())
+                    await this.$http.delete("/api/users/face/" + this.user._id + "/" + this.user.face)
                     this.$store.commit("user/resetFace")
                 } catch(e) {
                     console.log(e)
@@ -556,7 +553,7 @@
                 try {
                     let param = {}
                     param[field] = this['f' + field]
-                    const { data: { user } } = await this.$http.put("/api/users/" + this.$user_id(), param)
+                    const { data: { user } } = await this.$http.put("/api/users/" + this.user._id, param)
                     this.user = user
                     this.snack = true
                     this.snackColor = "success"
@@ -589,10 +586,20 @@
                 URL.revokeObjectURL(this.image.src);
             }
         },
+        // computed: {
+        //     checkUser() {
+        //         return this.$store.state.user
+        //     }
+        // },
+        // watch:{
+        //     checkUser(val) {
+        //         this.user = val
+        //     }
+        // },
         async mounted() {
             try {
                 //const { data: { user } } = await this.$http.get("/api/users/" + this.$user_id())
-                this.user = this.$user()
+                this.user = this.$store.state.user
             } catch {
                 //
             }

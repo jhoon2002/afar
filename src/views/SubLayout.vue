@@ -53,7 +53,7 @@
                         class="transparent ml-5"
                 >
                     <div class="text-h6">
-                        {{ $userName() }}
+                        {{ user.name }}
                     </div>
                     <div>
                         처리할 결재

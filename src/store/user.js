@@ -14,9 +14,9 @@ export default {
         jumin: null,
         cellphone: null,
         email: null,
-        face: "none.svg",
+        face: null,
         //faceURL: "files/faces/none.svg",
-        color: "#31596c",
+        color: null,
         t: ""
     },
     getters: {
@@ -63,7 +63,7 @@ export default {
             state.color = color
         },
         resetFace(state) {
-            state.face = "none.svg"
+            state.face = this.$env.face
             //state.faceURL = "files/faces/none.svg"
             //console.log("state.faceURL", state.faceURL)
         },
