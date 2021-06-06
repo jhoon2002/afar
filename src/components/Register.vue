@@ -323,8 +323,9 @@
                                         outlined
                                         class="ml-2 text-body-1"
                                         style="padding-bottom: 2px"
-                                        @click="handleSubmit(nextss)"
+                                        @click="handleSubmit(()=>nextStep(2))"
                                 >
+                                    <v-icon left>mdi-arrow-right</v-icon>
                                     다음 단계
                                 </v-btn>
                             </v-card-actions>
@@ -414,8 +415,8 @@
                                                     required: true,
                                                     numeric: true,
                                                     length: 6,
-                                                    isJumin: { jumin1: jumin1, jumin2: jumin2 },
-                                                    juminCode: { jumin1: jumin1, jumin2: jumin2 }
+                                                    juminCode: { jumin1: jumin1, jumin2: jumin2 },
+                                                    isJumin: { jumin1: jumin1, jumin2: jumin2 }
                                                 }"
                                                 v-slot="{ errors, valid }"
                                         >
@@ -459,8 +460,9 @@
                                         outlined
                                         class="ml-2 text-body-1"
                                         style="padding-bottom: 2px"
-                                        @click="handleSubmit(nextStep)"
+                                        @click="handleSubmit(()=>nextStep(3))"
                                 >
+                                    <v-icon left>mdi-arrow-right</v-icon>
                                     다음 단계
                                 </v-btn>
                             </v-card-actions>
@@ -554,6 +556,7 @@
                                         style="padding-bottom: 2px"
                                         @click="handleSubmit(submit)"
                                 >
+                                    <v-icon left>ri-download-line</v-icon>
                                     등록
                                 </v-btn>
                             </v-card-actions>
@@ -615,37 +618,29 @@
         data: function () {
             return {
                 dialog: false,
+                step: 1,
                 switchAll: false,
                 switch1: false,
                 switch2: false,
                 switch3: false,
                 switch4: false,
                 switch5: false,
-                tooltip2: false,
-                tooltip3: false,
                 userId: "",
                 password: "",
                 confirmPassword: "",
-                name: "",
-                jumin: "",
-                jumin1: "",
-                jumin2: "",
-                jumin3: "",
-                juminValue: "",
+                name: "이병헌",
+                jumin1: "720911",
+                jumin2: "1",
+                jumin3: "018111",
                 cellphone: "",
                 email: "",
                 face: "",
                 color: "",
-                isUserIdMessage: "",
                 show1: false,
                 show2: false,
                 bottomSheet1: false,
-                bottomSheet2: false,
-                step: 1,
+                bottomSheet2: false
             }
-        },
-        computed: {
-
         },
         methods: {
             agreeAll(e) {
@@ -656,58 +651,20 @@
                 this.switch5 = e
                 return
             },
-            isTooltip(errMsg)  {
-                if (!errMsg) return false
-                if (errMsg.length > 0) return true
-                return false
-            },
-            nextss() {
-                this.$refs.ob1.validate()
-                this.step = 2
-            },
-            aaa() {
-                this.$refs.form.setErrors({
-                    email: ['이메일에러'],
-                    password: ['비밀번호 에러'],
-                    password2: ['비밀번호2 에러']
-                })
-            },
-            bbb() {
-                this.$refs.ob2.setErrors({
-                    password2: ['비밀번호2 에러']
-                })
-            },
-            // onSubmit () {
-            //     this.$refs.form.setErrors({
-            //         email: ['This email is already taken']
-            //     })
-            // },
-            nextStep() {
-                // this.$refs.ob2.setErrors({
-                //     jumin3: ['비밀번호2 에러']
-                // })
-                this.$refs.ob2.validate()
-                this.step = 3
+            async nextStep(step) {
+                this.$refs["ob"+ (step - 1)].validate()
+                this.step = step
+                if (step === 3) {
+                    try {
+                        const { data: { user: one } } = await this.$http.get("/api/users/jumin/" + this.jumin1 + this.jumin2 + this.jumin3)
+                        this.cellphone = one.cellphone
+                        this.email = one.email
+                    } catch(e) {
+                        // console.log(e)
+                    }
+                }
             },
             resetAll() {
-                // this.switchAll = false
-                // this.switch1 = false
-                // this.switch2 = false
-                // this.switch3 = false
-                // this.switch4 = false
-                // this.switch5 = false
-                // this.name = ""
-                // this.jumin1 = ""
-                // this.jumin2 = ""
-                // this.jumin3 = ""
-                // this.userId = ""
-                // this.password = ""
-                // this.confirmPassword = ""
-                // this.cellphone = ""
-                // this.email = ""
-                // this.$refs.ob1.reset()
-                // this.$refs.ob2.reset()
-                // this.$refs.ob3.reset()
                 this.reset1()
                 this.reset2()
                 this.reset3()
@@ -720,6 +677,7 @@
                 this.switch4 = false
                 this.switch5 = false
                 this.$refs.ob1.reset()
+                setTimeout( () => this.$refs.ob1.reset(), 500) //잠시 후 한번더 해야 깨끗히 리셋
             },
             reset2() {
                 this.name = ""
@@ -727,6 +685,7 @@
                 this.jumin2 = ""
                 this.jumin3 = ""
                 this.$refs.ob2.reset()
+                setTimeout( () => this.$refs.ob2.reset(), 500)
             },
             reset3() {
                 this.name = ""
@@ -736,27 +695,66 @@
                 this.cellphone = ""
                 this.email = ""
                 this.$refs.ob3.reset()
+                setTimeout( () => this.$refs.ob3.reset(), 500)
             },
-
             async submit() {
                 this.$refs.ob3.validate()
                 try {
-                    await this.$http.post("/api/users/new", {
-                        userId: this.userId,
-                        password: this.password,
-                        name: this.name,
-                        jumin: this.jumin1 + this.jumin2 + this.jumin3,
-                        cellphone: this.cellphone,
-                        email: this.email,
-                        face: this.$env.face,
-                        color: this.$env.color
+                    const { data: { user: registeredUser } } = await this.$http.post("/api/users/new", {
+                        user: {
+                            userId: this.userId,
+                            password: this.password,
+                            name: this.name,
+                            jumin: this.jumin1 + this.jumin2 + this.jumin3,
+                            cellphone: this.cellphone,
+                            email: this.email,
+                            face: this.$env.face,
+                            color: this.$env.color,
+                            agree: {
+                                terms: this.switch1,
+                                info: this.switch2,
+                                jumin: this.switch3,
+                                email: this.switch4,
+                                sms: this.switch5
+                            }
+                        }
                     })
+                    this.resetAll()
+                    this.step = 1
                     this.dialog = false
                     this.bottomSheet1 = true
+                    this.$emit("registered", registeredUser.userId)
                 } catch(e) {
                     console.log(e)
                     this.bottomSheet2 = true
                 }
+            },
+            turnOffSwitch(v) {
+                if (v === false) {
+                    this.switchAll = false
+                }
+            },
+            test() {
+                this.dialog = false
+                this.$emit("registered", "jhoon")
+            }
+
+        },
+        watch: {
+            switch1: function(v) {
+                this.turnOffSwitch(v)
+            },
+            switch2: function(v) {
+                this.turnOffSwitch(v)
+            },
+            switch3: function(v) {
+                this.turnOffSwitch(v)
+            },
+            switch4: function(v) {
+                this.turnOffSwitch(v)
+            },
+            switch5: function(v) {
+                this.turnOffSwitch(v)
             }
         }
     }

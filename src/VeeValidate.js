@@ -170,16 +170,23 @@ extend('isJumin', {
         const jumin = jumin1 + jumin2 + value
         try {
             const response = await isJumin(jumin)
-            // 같은 주민번호 있음: 200, 없음: 204
+            // 200(정상 등록자, 아이디 / 주민번호 모두 보유자)
             if (response.status === 200) {
-                return false
+                return "이미 등록된 번호"
             }
+            //201(사전등록자), 204(미등록자) 는 pass
             return true
-        } catch {
-            return false
+        } catch { //시스템 에러는 검증이 불가하므로 false, 에러 메시지가 문제.. 이미 등록된 번호로 나옴
+            return '시스템 에러(관리자에게 문의)'
         }
     },
-    message: "이미 등록된 번호"
+    // message: (field, values) => {
+    //     console.log(values)
+    //     if (values.reason === "NICE_H_TRY") {
+    //         return "시스템 에러, 관리자에게 문의 필요"
+    //     }
+    //     return "이미 등록된 번호"
+    // }
 });
 
 extend('alwaysFalse', {

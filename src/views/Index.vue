@@ -41,16 +41,18 @@
                             v-slot="{ invalid, validated, handleSubmit }"
                     >
                         <validation-provider name="아이디" :rules="{ required: true }" v-slot="{ errors, valid }">
-                            <v-text-field label="아이디" v-model="ffuserId"
+                            <v-text-field id="input-id" label="아이디" v-model="fuserId"
                                           :error-messages="errors" :success="valid"
                                           @keyup.enter="handleSubmit(submit)"
                             ></v-text-field>
                         </validation-provider>
 
                         <validation-provider name="비밀번호" :rules="{ required: true }" v-slot="{ errors, valid }">
-                            <v-text-field label="비밀번호" v-model="ffpassword"
-                                          type="password"
+                            <v-text-field id="input-password" label="비밀번호" v-model="fpassword"
                                           :error-messages="errors" :success="valid"
+                                          :type="show ? 'text' : 'password'"
+                                          :append-icon="show ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+                                          @click:append="show = !show"
                                           @keyup.enter="handleSubmit(submit)"
                             ></v-text-field>
                         </validation-provider>
@@ -68,7 +70,7 @@
                 <v-card-text>
                     <v-sheet class="d-flex">
 
-                        <register />
+                        <register @registered="putId" />
 
                         <v-dialog
                                 v-model="dialog2"
@@ -115,7 +117,7 @@
                                     >
                                         확인
                                     </v-btn>
-                                    <v-spacer></v-spacer>
+                                    <v-spacer></v-spacer>아
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
@@ -141,9 +143,10 @@
         data: function() {
             return {
                 message: "",
-                ffuserId: "jhoon",
-                ffpassword: "1111",
-                dialog2: false
+                fuserId: "",
+                fpassword: "",
+                dialog2: false,
+                show: false
             }
         },
         computed: {
@@ -151,10 +154,10 @@
         methods: {
             async submit () {
                 this.$refs.observer.validate()
-                // await this.$store.dispatch('user/login', { userId: this.ffuserId, password: this.ffpassword })
+                // await this.$store.dispatch('user/login', { userId: this.fuserId, password: this.fpassword })
 
                 try {
-                    await login(this.ffuserId, this.ffpassword)
+                    await login(this.fuserId, this.fpassword)
                     this.message = ""
                     // setTimeout(() => ( this.$router.push({ path: "/main" }) ), 300)
                     this.$router.push({ path: "/main" }).catch(()=>{})
@@ -167,6 +170,23 @@
                     }
                     setTimeout(() => ( this.message = "\"시스템 문제로 로그인 할 수 없습니다.\"" ), 100)
                 }
+            },
+            async putId() {
+                this.fuserId = ""
+                // const arr = e.split('')
+                // for (const c of arr) {
+                //     this.fuserId = this.fuserId + c
+                //     await setTimeout( ()=>{}, 1000 )
+                // }
+                this.fuserId = "j"
+                setTimeout( ()=>{ console.log(1) }, 2000 )
+                this.fuserId = this.fuserId + "h"
+                setTimeout( ()=>{ console.log(2) }, 2000 )
+                this.fuserId = this.fuserId + "o"
+                setTimeout( ()=>{ console.log(3) }, 2000 )
+                this.fuserId = this.fuserId + "o"
+                setTimeout( ()=>{ console.log(4) }, 2000 )
+                this.fuserId = this.fuserId + "n"
             }
         },
         mounted () {
@@ -179,6 +199,11 @@
         }
     }
 </script>
+<style>
+    input#input-id, input#input-password {
+        letter-spacing: 3px;
+    }
+</style>
 <style scoped>
     .logo {
         font-family: 'Inconsolata', monospace;

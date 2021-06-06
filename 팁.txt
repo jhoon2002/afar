@@ -344,3 +344,8 @@ reduce
 sort
 
 --------------------
+
+Vue 안 ( data, watch 등 ) 에서는 화살표 함수 사용 불가,
+화살표 함수는 상위 컨텍스트에서 바인딩 되므로 Vue 인스턴스가 아님.
+
+출처: https://stackoverflow.com/questions/42242682/this-is-undefined-in-vue-js-watcher
