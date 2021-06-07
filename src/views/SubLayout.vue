@@ -151,7 +151,7 @@
                     color="primary"
                     small
                     class="ml-2"
-                    @click="$router.push('/mypage')"
+                    @click="$router.push('/mypage').catch(()=>{})"
             >
                 My page
             </v-btn>

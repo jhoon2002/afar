@@ -83,12 +83,13 @@ instance.interceptors.response.use( (response) => {
             url: requestURL
         },
         data: {
+            type,
             msg
         }
     } = error.response
 
     //VerifyToken 과정에서 발생한 예외
-    if ( ["NO_TOKEN", "EXPIRED_TOKEN", "INVALID_TOKEN"].includes(msg) ) {
+    if ( type === "DELETE_REQUIRED" ) {
         
         //토큰 삭제
         VueCookies.remove('token')
