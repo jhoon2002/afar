@@ -60,6 +60,12 @@ instance.interceptors.response.use( (response) => {
         }
     } = response
 
+    // 로그인 전 (회원 가입 중... 등)
+    if (!verifiedToken && !oldToken) {
+        console.log("<RES ICP> " + requestURL)
+        return response
+    }
+
     if (verifiedToken === oldToken) { //verifiedToken 또는 oldToken 이 null 이거나 '' 이면 아래 error 로 빠진 상태
         console.log(`%c<RES ICP>%c ${requestURL} => %c정상 토큰 %c ${verifiedToken && verifiedToken.slice(-5)} %c ${moment().format("HH:mm:ss")}`,
             'background:#3075e3; color: white', '', 'color: #3075e3', 'background: #333; color:white', '')
@@ -71,6 +77,7 @@ instance.interceptors.response.use( (response) => {
     //토큰 저장
     VueCookies.set('token', verifiedToken, interval)
     store.commit("user/setToken", verifiedToken)
+
     return response
 
 }, (error) => {

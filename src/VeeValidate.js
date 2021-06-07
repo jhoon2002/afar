@@ -1,13 +1,10 @@
 import Vue from "vue";
-
 import { ValidationObserver, ValidationProvider, extend, localize } from 'vee-validate';
 import { required, numeric, length, min, max, email, regex, confirmed } from 'vee-validate/dist/rules';
-
 import ko from 'vee-validate/dist/locale/ko.json';
-
 import { isUserId, isJumin } from "@/apis/db.js"
-
 import { util } from "@/apis/util.js"
+import http from "@/apis/http"
 
 localize('ko', ko);
 
@@ -48,6 +45,8 @@ extend('regex', {
     ...regex,
     message: "형식 불일치"
 });
+
+//TRUE: PASS(green), FALSE: FAIL(red)
 extend('name', {
     validate(value) {
         let pattern = /^([a-zA-Z]+\s?|[가-힣])+[a-zA-Z가-힣]$/;
@@ -71,7 +70,7 @@ extend("juminValidate", {
     message: "올바르지 않은 번호"
 });
 
-extend("juminCode", {
+extend("jumin-multi", {
     params: ["jumin1", "jumin2"],
     validate: (value, { jumin1, jumin2 } ) => {
         const jumin = jumin1 + jumin2 + value
@@ -164,29 +163,36 @@ extend('jumin1', {
     message: "잘못된 번호"
 });
 
+//회원 가입시 가입된 주민등록번호 여부 검사
 extend('isJumin', {
     params: ["jumin1", "jumin2"],
     validate: async (value, { jumin1, jumin2 } ) => {
         const jumin = jumin1 + jumin2 + value
         try {
-            const response = await isJumin(jumin)
-            // 200(정상 등록자, 아이디 / 주민번호 모두 보유자)
-            if (response.status === 200) {
+            const res = await http.get("/api/users/jumin/" + jumin)
+
+            // 미등록자 => PASS(green)
+            if (res.status === 200 && !res.data.user) {
+                // console.log("미등록자 pass green")
+                return true
+            }
+
+            // 사전 등록자(아이디는 아직 없고, 주민번호만 보유) => PASS(green)
+            if (res.status === 200 && !res.data.user.userId) {
+                // console.log("사전 등록자 pass green")
+                return true
+            }
+
+            // 정상 등록자(아아디와 주민번호 모두 보유) => FAIL(red)
+            if (res.status === 200) {
+                // console.log("정상 등록자 fail red")
                 return "이미 등록된 번호"
             }
-            //201(사전등록자), 204(미등록자) 는 pass
-            return true
-        } catch { //시스템 에러는 검증이 불가하므로 false, 에러 메시지가 문제.. 이미 등록된 번호로 나옴
-            return '시스템 에러(관리자에게 문의)'
+
+        } catch { // 시스템 에러는 검증이 불가하므로 false, 에러 메시지가 문제.. 이미 등록된 번호로 나옴
+            return '시스템 에러(관리자에 문의)'
         }
-    },
-    // message: (field, values) => {
-    //     console.log(values)
-    //     if (values.reason === "NICE_H_TRY") {
-    //         return "시스템 에러, 관리자에게 문의 필요"
-    //     }
-    //     return "이미 등록된 번호"
-    // }
+    }
 });
 
 extend('alwaysFalse', {

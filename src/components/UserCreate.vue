@@ -33,7 +33,7 @@
                         <v-col cols="6">
                             <validation-provider
                                     name="주민등록번호"
-                                    :rules="{ required: true, jumin: true, juminValidate: true, juminDuplicated: true }"
+                                    :rules="{ required: true, jumin: true, juminValidate: true, isJumin: true }"
                                     v-slot="{ errors, valid }"
                             >
                                 <v-text-field label="주민등록번호" v-model="fjumin"
