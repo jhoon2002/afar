@@ -63,14 +63,14 @@ extend("jumin", {
     message: "'―' 없이 숫자만 13자리 입력"
 });
 
-extend("juminValidate", {
+extend("juminSingle", {
     validate(value) {
         return util.juminValidate(value)
     },
     message: "올바르지 않은 번호"
 });
 
-extend("jumin-multi", {
+extend("juminMulti", {
     params: ["jumin1", "jumin2"],
     validate: (value, { jumin1, jumin2 } ) => {
         const jumin = jumin1 + jumin2 + value

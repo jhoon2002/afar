@@ -415,7 +415,7 @@
                                                     required: true,
                                                     numeric: true,
                                                     length: 6,
-                                                    juminCode: { jumin1: jumin1, jumin2: jumin2 },
+                                                    juminMulti: { jumin1: jumin1, jumin2: jumin2 },
                                                     isJumin: { jumin1: jumin1, jumin2: jumin2 }
                                                 }"
                                                 v-slot="{ errors, valid }"
@@ -705,7 +705,9 @@
                             userId: this.userId,
                             password: this.password,
                             name: this.name,
-                            jumin: this.jumin1 + this.jumin2 + this.jumin3,
+                            jumin1: this.jumin1,
+                            jumin2: this.jumin2,
+                            jumin3: this.jumin3,
                             cellphone: this.cellphone,
                             email: this.email,
                             face: this.$env.face,

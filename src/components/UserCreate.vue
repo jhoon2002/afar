@@ -33,7 +33,7 @@
                         <v-col cols="6">
                             <validation-provider
                                     name="주민등록번호"
-                                    :rules="{ required: true, jumin: true, juminValidate: true, isJumin: true }"
+                                    :rules="{ required: true, jumin: true, juminSingle: true, isJumin: true }"
                                     v-slot="{ errors, valid }"
                             >
                                 <v-text-field label="주민등록번호" v-model="fjumin"
@@ -140,9 +140,11 @@
             async submit () {
                 this.$refs.observer.validate()
                 try {
-                    const ret = await this.$http.post("/api/users", {
+                    const ret = await this.$http.post("/api/users/new", {
                         name: this.fname,
-                        jumin: this.fjumin,
+                        jumin1: this.fjumin.substr(0, 6),
+                        jumin2: this.fjumin.substr(6,1),
+                        jumin3: this.fjumin.substr(7, 6),
                         cellphone: this.fcellphone,
                         email: this.femail
                     })
