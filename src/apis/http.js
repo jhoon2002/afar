@@ -109,6 +109,7 @@ instance.interceptors.response.use( (response) => {
     //다른 일반 예외, VerifyToken 은 통과했으므로 여기서 발생한 토큰은 저장
     VueCookies.set('token', verifiedToken, interval)
     store.commit("user/setToken", verifiedToken)
+    console.log("[http.js]", msg)
     return Promise.reject(error)
 
 })
