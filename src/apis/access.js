@@ -50,7 +50,7 @@ export const login = async (userId, password) => {
 
 export async function checkToken() {
     try {
-        await http.get('/api/users/check-token')
+        await http.get('/api/token/verify')
     } catch(e) {
         //사실상 예외처리는 interceptor 에서 수행, 여긴 에러 출력만
         console.group()
@@ -88,8 +88,9 @@ export const logout = () => {
 export const syncCookies = async function() {
     try {
         //쿠키에서 user._id를 검출하고 해당 사용자 정보를 얻어옴
-        const { data: { _id }  } = await http.get('/api/users/_id/token')
-        const { data: { user } } = await http.get('/api/users/' + _id)
+        // const { data: { _id }  } = await http.get("/api/users/_id")
+        // const { data: { user } } = await http.get("/api/users/_id/" + _id)
+        const { data: { user } } = await http.get("/api/users/token/token-is-in-header")
 
         store.commit('user/setToken', VueCookies.get("token"))
         store.commit('user/set_id', user._id)

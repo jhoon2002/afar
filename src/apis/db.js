@@ -45,7 +45,7 @@ export function create(model, obj) {
 }
 
 export const isUserId = (userId) => {
-    return http.post("/api/users/is-userid", { userId: userId})
+    return http.get("/api/users/userid/" + userId)
 }
 
 export const isJumin = (juminNo) => {
@@ -54,5 +54,5 @@ export const isJumin = (juminNo) => {
 
 export const getUsersByUserIdName = (keyword) => {
     if (!keyword) return
-    return http.get("/api/users/is-useridname/" + keyword)
+    return http.get("/api/users/userid-name/" + keyword)
 }

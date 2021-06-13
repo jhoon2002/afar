@@ -239,7 +239,7 @@
         methods: {
             async load(id) {
                 try {
-                    let ret = await this.$http.get("/api/users/" + id).catch(console.log)
+                    let ret = await this.$http.get("/api/users/_id/" + id).catch(console.log)
                     this.user = ret.data.user
                 } catch {
                     //

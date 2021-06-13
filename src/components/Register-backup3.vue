@@ -327,7 +327,7 @@
             async submit() {
                 this.$refs.ob2.validate()
                 try {
-                    await this.$http.post("/api/users/new", {
+                    await this.$http.post("/api/users/by-user", {
                         userId: this.userId,
                         password: this.password,
                         name: this.name,

@@ -489,7 +489,7 @@
                         form.append('file', blob, this.user._id + "." + this.$util.getFileExt(this.image.originalname) )
                         form.append('user_id', this.user._id)
                         try {
-                            const { data: { file: { originalname } } } = await this.$http.post("/api/users/face", form)
+                            const { data: { file: { originalname } } } = await this.$http.post("/api/files/face", form)
                             //const url = this.$env.facedir + originalname + "?t=" + new Date().getTime()
                             this.$store.commit("user/setFace", originalname)
                             this.$store.commit("user/setT", new Date().getTime())
@@ -534,9 +534,9 @@
             */
             async deleteImage() {
                 try {
-                    console.log("삭제 경로", "/api/users/face/" + this.user._id + "/" + this.user.face)
+                    console.log("삭제 경로", "/api/files/face/" + this.user._id + "/" + this.user.face)
                     // return
-                    await this.$http.delete("/api/users/face/" + this.user._id + "/" + this.user.face)
+                    await this.$http.delete("/api/files/face/" + this.user._id + "/" + this.user.face)
                     this.$store.commit("user/resetFace")
                 } catch(e) {
                     console.log(e)
@@ -598,7 +598,7 @@
         // },
         async mounted() {
             try {
-                //const { data: { user } } = await this.$http.get("/api/users/" + this.$user_id())
+                //const { data: { user } } = await this.$http.get("/api/users/_id/" + this.$user_id())
                 this.user = this.$store.state.user
             } catch {
                 //

@@ -140,7 +140,7 @@
             async submit () {
                 this.$refs.observer.validate()
                 try {
-                    const ret = await this.$http.post("/api/users/new", {
+                    const ret = await this.$http.post("/api/users/by-admin", {
                         name: this.fname,
                         jumin1: this.fjumin.substr(0, 6),
                         jumin2: this.fjumin.substr(6,1),

@@ -164,11 +164,11 @@
                 } catch(e) {
                     this.message = ""
                     const { status } = e.response
-                    if (status === 403) {
+                    if (status === 400) {
                         setTimeout(() => ( this.message = "\"아이디 또는 비밀번호가 일치하지 않습니다.\"" ), 100)
                         return
                     }
-                    setTimeout(() => ( this.message = "\"시스템 문제로 로그인 할 수 없습니다.\"" ), 100)
+                    setTimeout(() => ( this.message = "\"알 수 없는 이유로 로그인 할 수 없습니다. 관리자에게 문의하시기 바랍니다.\"" ), 100)
                 }
             },
             async putId() {

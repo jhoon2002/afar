@@ -768,7 +768,7 @@
             async editStaff(node) {
                 this.loadingStaff = true
                 try {
-                    const ret = await this.$http.get("/api/users/" + node.user_id)
+                    const ret = await this.$http.get("/api/users/_id/" + node.user_id)
                     this.httpUser = ret.data.user
                 } catch {
                     //

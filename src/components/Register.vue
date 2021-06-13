@@ -482,7 +482,7 @@
                             >
                                 <v-row>
                                     <v-col cols="12" class="py-2">
-                                        <validation-provider name="아이디" :rules="{ required: true, id: true, duplicated: true }" v-slot="{ errors, valid}">
+                                        <validation-provider name="아이디" :rules="{ required: true, id: true, userIdDuplicated: true }" v-slot="{ errors, valid}">
                                             <v-text-field label="아이디" v-model="userId"
                                                           :error-messages="errors" :success="valid" :success-messages="valid ? '사용할 수 있는 아이디' : ''"
                                             ></v-text-field>
@@ -700,7 +700,7 @@
             async submit() {
                 this.$refs.ob3.validate()
                 try {
-                    const { data: { user: registeredUser } } = await this.$http.post("/api/users/new", {
+                    const { data: { user: registeredUser } } = await this.$http.post("/api/users/by-user", {
                         user: {
                             userId: this.userId,
                             password: this.password,
